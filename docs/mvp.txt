@@ -1,0 +1,5 @@
+o  Receive DSL as one big string
+o  Output draw2d object
+o  github.com/llgcode/draw2d
+o  Test queries draw2d object
+o  Cmd line wrapper that makes png from dsl file

@@ -1,0 +1,4 @@
+o  Specify MVP
+o  Analysis
+o  Design
+o  Start on tiny bit and optimize tooling
