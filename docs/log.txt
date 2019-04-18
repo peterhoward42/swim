@@ -1,8 +1,37 @@
 *  Specify MVP
 *  OOD Design
 *  package and type naming
-o  change repo name away from swim to interaction
-o  change alias to match
+*  change repo name away from swim to interaction
+*  change alias to match
 o  Start on tiny bit and optimize tooling
+    o  Parser
+      *  Study and note participle - not worth it 
+      *  See how complex by hand parser would be
+      o  Revise parser type names
+
+
+----------------------------------------------------------------------------
+Manual Parser
+----------------------------------------------------------------------------
+
+o  line ds comprises
+    o  orgin text, orig line number
+    o  kw
+    o  lane operands list of 1 or 2 cap letters
+    o  msglines (list of strings, one for each line)
+
+o  parse as follows
+    o  capture kw and lane operands in one go with tight regex
+    o  capture rest with catchall
+    o  process rest by
+        o  trim
+        o  split on pie
+        o  trim components
+
+o  post parse validation
+    o  capture lane strings in order - ensuring single cap letter
+    o  insist lane operands exist as lanes
+    o  insist full and dash have two lane operands
+    o  insiste that all types except stop has some non empty msglines
 
 
