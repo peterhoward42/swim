@@ -7,7 +7,10 @@ o  Start on tiny bit and optimize tooling
     o  Parser
       *  Study and note participle - not worth it 
       *  See how complex by hand parser would be
-      o  Revise parser type names
+      *  Revise parser type names
+      *  Decide exact parser names and contract by tdd
+      o  onward tdd
+         o  doh - must be in go folder structure
 
 
 ----------------------------------------------------------------------------

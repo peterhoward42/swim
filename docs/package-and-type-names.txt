@@ -11,6 +11,7 @@ geom.Model
 geom.Render
 
 parser.Parser
+parser.LineModel
 
 sizing.Horz
 sizing.Style
