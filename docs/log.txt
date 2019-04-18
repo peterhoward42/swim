@@ -1,4 +1,8 @@
-o  Specify MVP
-o  Analysis
-o  Design
+*  Specify MVP
+*  OOD Design
+*  package and type naming
+o  change repo name away from swim to interaction
+o  change alias to match
 o  Start on tiny bit and optimize tooling
+
+
