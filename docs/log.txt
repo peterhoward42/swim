@@ -10,7 +10,12 @@ o  Start on tiny bit and optimize tooling
       *  Revise parser type names
       *  Decide exact parser names and contract by tdd
       o  onward tdd
-         o  doh - must be in go folder structure
+        *  correct input type for parser?
+        *  proper input for test
+        o  start coding algo below and check for run to completion
+          o  regex for kw, laneoperand, rest
+
+        o  put in some error handling that knows about line and lin number
 
 
 ----------------------------------------------------------------------------
