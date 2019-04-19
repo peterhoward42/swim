@@ -15,14 +15,9 @@ o  Start on tiny bit and optimize tooling
         *  start coding algo below and check for run to completion
         *  regex for kw, laneoperand, rest
         *  return ParsedLine to Parse() method
-        o  switch to kw being constants
-        o  lexical validation of what comes back to Parse()
-        o  unit test out to just parser features
         o  move on to  build dsl model to return
-        o  validation
-
-        o  put in some error handling that knows about line and lin number
-
+            o  code the build
+            o  code the test
 
 ----------------------------------------------------------------------------
 Manual Parser

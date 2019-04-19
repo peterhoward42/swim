@@ -12,7 +12,7 @@ import (
 type Parser struct{}
 
 // Parse is the parsing invocation method.
-func (p *Parser) Parse(input *bufio.Scanner) (parseLines []ParsedLine, err error) {
+func (p *Parser) Parse(input *bufio.Scanner) ([]*ParsedLine, error) {
 	lines := []*ParsedLine{}
 	for input.Scan() {
 		line := input.Text()
@@ -21,8 +21,6 @@ func (p *Parser) Parse(input *bufio.Scanner) (parseLines []ParsedLine, err error
 		}
 		parsedLine, err := p.parseLine(line)
 		if err != nil {
-			s := err.Error()
-			fmt.Printf("XXXX: %v", s)
 			return nil, err
 		}
 		lines = append(lines, parsedLine)
@@ -30,13 +28,14 @@ func (p *Parser) Parse(input *bufio.Scanner) (parseLines []ParsedLine, err error
 	if err := input.Err(); err != nil {
 		return nil, err
 	}
-	return nil, nil
+	return lines, nil
 }
 
 //----------------------------------------------------------------------------
 // Private Below
 //----------------------------------------------------------------------------
 
+// todo these literals should be constants
 const kwRe = `(lane|full|dash|stop|self)`
 const lanesOperandRe = `([A-Z][A-Z]?)` // ? means zero or one
 const theRestRe = `(.*$)`
