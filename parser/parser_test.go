@@ -6,24 +6,9 @@ import (
 	"testing"
 )
 
-var referenceInput = `
-lane A  SL App
-lane B  Core Permissions API
-lane C  SL Admin API | edit_facilities | endpoint
-
-full AC  edit_facilities( | payload, user_token)
-full CB  get_user_permissions( | token)
-dash BC  permissions_list
-stop B
-self C   [has EDIT_FACILITIES permission] | store changes etc
-dash CA  status_ok, payload
-self C   [no permission]
-dash CA  status_not_authorized
-`
-
 func TestWithCorrectInput(t *testing.T) {
 	p := &Parser{}
-	reader := strings.NewReader(referenceInput)
+	reader := strings.NewReader(ReferenceInput)
 	parsedLines, err := p.Parse(bufio.NewScanner(reader))
 	if err != nil {
 		t.Errorf("Parse(): %v", err)
@@ -38,6 +23,10 @@ func TestWithCorrectInput(t *testing.T) {
 	// lanes cited in the lanes operand.
 
 	pl := parsedLines[4]
+
+	if fullText := pl.FullText; fullText != "full CB  get_user_permissions( | token)" {
+		t.Errorf("Wrong full text <%v>,", fullText)
+	}
 	if kw := pl.KeyWord; kw != "full" {
 		t.Errorf("Wrong keyword %v, should be <full>", kw)
 	}

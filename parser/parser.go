@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+
+	umli "github.com/peterhoward42/umlinteraction"
 )
 
 // Parser is capable of parsing lines of DSL text to provide a more
@@ -36,7 +38,8 @@ func (p *Parser) Parse(input *bufio.Scanner) ([]*ParsedLine, error) {
 //----------------------------------------------------------------------------
 
 // todo these literals should be constants
-const kwRe = `(lane|full|dash|stop|self)`
+
+var kwRe = "(" + strings.Join(umli.AllKeywords, "|") + ")"
 const lanesOperandRe = `([A-Z][A-Z]?)` // ? means zero or one
 const theRestRe = `(.*$)`
 
@@ -58,6 +61,6 @@ func (p *Parser) parseLine(line string) (*ParsedLine, error) {
 		}
 	}
 
-	pl := NewParsedLine(kw, lanes, labelSegments)
+	pl := NewParsedLine(line, kw, lanes, labelSegments)
 	return pl, nil
 }

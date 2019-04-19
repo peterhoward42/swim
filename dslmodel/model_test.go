@@ -1,23 +1,44 @@
 package dslmodel
 
 import (
+	"bufio"
+	umli "github.com/peterhoward42/umlinteraction"
+	"strings"
 	"testing"
+
+	"github.com/peterhoward42/umlinteraction/parser"
 )
 
-var referenceInput = `
-lane A  SL App
-lane B  Core Permissions API
-lane C  SL Admin API | edit_facilities | endpoint
-
-full AC  edit_facilities( | payload, user_token)
-full CB  get_user_permissions( | token)
-dash BC  permissions_list
-stop B
-self C   [has EDIT_FACILITIES permission] | store changes etc
-dash CA  status_ok, payload
-self C   [no permission]
-dash CA  status_not_authorized
-`
-
 func TestBuildWithCorrectInput(t *testing.T) {
+	// Use the Parser as shortcut to get hold of list of ParsedLines.
+	p := &parser.Parser{}
+	reader := strings.NewReader(parser.ReferenceInput)
+	parsedLines, err := p.Parse(bufio.NewScanner(reader))
+	if err != nil {
+		t.Errorf("Parse(): %v", err)
+	}
+	// Now we can exercise the DSL model builder
+	model := NewModel()
+	err = model.Build(parsedLines)
+	if err != nil {
+		t.Errorf("Failed to Build() with error: %v", err)
+	}
+
+	// A few sanity checks
+	if len(model.Statements) != 11 {
+		t.Errorf("Wrong number Statements built")
+	}
+
+	// Sniff around the statement corresponding to:
+	// 		dash CA  status_ok, payload
+	stmt := model.Statements[8]
+	if stmt.Keyword != umli.Dash {
+		t.Errorf("Wrong keyword")
+	}
+	if stmt.ReferencedLanes[0].LaneName != "C" {
+		t.Errorf("Wrong lane referenced")
+	}
+	if stmt.ReferencedLanes[1].LaneName != "A" {
+		t.Errorf("Wrong lane referenced")
+	}
 }

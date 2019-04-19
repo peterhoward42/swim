@@ -3,44 +3,21 @@
 *  package and type naming
 *  change repo name away from swim to interaction
 *  change alias to match
-o  Start on tiny bit and optimize tooling
-    o  Parser
-      *  Study and note participle - not worth it 
-      *  See how complex by hand parser would be
-      *  Revise parser type names
-      *  Decide exact parser names and contract by tdd
-      o  onward tdd
-        *  correct input type for parser?
-        *  proper input for test
-        *  start coding algo below and check for run to completion
-        *  regex for kw, laneoperand, rest
-        *  return ParsedLine to Parse() method
-        o  move on to  build dsl model to return
-            o  code the build
-            o  code the test
+*  Start on tiny bit and optimize tooling
+    *  Parser
+    *  DSLModel
+o  Do the geometry model and test it is good for draw2d
+    o  Design model scope
 
 ----------------------------------------------------------------------------
-Manual Parser
+Geom Model Scope
 ----------------------------------------------------------------------------
-
-o  line ds comprises
-    o  orgin text, orig line number
-    o  kw
-    o  lane operands list of 1 or 2 cap letters
-    o  msglines (list of strings, one for each line)
-
-o  parse as follows
-    o  capture kw and lane operands in one go with tight regex
-    o  capture rest with catchall
-    o  process rest by
-        o  trim
-        o  split on pie
-        o  trim components
-
-o  post parse validation
-    o  capture lane strings in order - ensuring single cap letter
-    o  insist lane operands exist as lanes
-    o  insist full and dash have two lane operands
-    o  insiste that all types except stop has some non empty msglines
-
-
+*  Refresh the contract available in draw2d
+o  Assumptions
+    o  The units for lines, spacings and positions are mm.
+    o  Renderers should size text at 10pt, i.e. circa 3.5mm high
+    o  Some of the sizing and spacing of vector graphics will assume this
+o  Primitives needed:
+    o  Line, (style, arrow style)
+    o  Rect
+    o  Text, h and v just, incl centre
