@@ -32,5 +32,8 @@ dash CA  status_not_authorized
 func TestRunsToCompletion(t *testing.T) {
     p := &Parser{}
     reader := strings.NewReader(referenceInput)
-	p.Parse(bufio.NewScanner(reader))
+    _, err := p.Parse(bufio.NewScanner(reader))
+    if err != nil {
+        t.Errorf("Parse(): %v", err)
+    }
 }
