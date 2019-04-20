@@ -7,5 +7,5 @@ type Statement struct {
 	Keyword         string
 	LaneName        string       // For <lane> statements.
 	ReferencedLanes []*Statement // When lane operands are present
-	LabelLines      []string     // Each line of text in the label
+	LabelSegments   []string     // Each line of text in the label
 }

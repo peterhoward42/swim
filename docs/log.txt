@@ -7,7 +7,10 @@
     *  Parser
     *  DSLModel
 o  Do the geometry model and test it is good for draw2d
-    o  Design model scope
+    *  Design model scope
+    o  Define the types
+    o  Define a draw2d renderer of a geom model
+    o  Do a test with draw2d to validate
 
 ----------------------------------------------------------------------------
 Geom Model Scope

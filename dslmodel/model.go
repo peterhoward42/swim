@@ -7,16 +7,16 @@ import (
 	"github.com/peterhoward42/umlinteraction/parser"
 )
 
-// Model encapsulates a programmatic model of some text written in the
-// DSL. It aims to provide something more convenient for the diagram building
+// Model encapsulates a programmatic, higher-level model of a DSL script.
+// It aims to provide something more convenient for the diagram building
 // stages to consume as input than the text form, and to decouple the diagram
 // building system from the DSL Parser.
 type Model struct {
 	// Every type of input line can be represented in a Statement object.
-	// The Statements attribute here is what models their *sequence*.
+	// The Statements attribute here is to model their *sequence*.
 	Statements []*Statement
-	// This map provides the Statement that encapsulates a Lane description
-	// keyed on its letter.
+	// This map provides a lookup for the Statements that define lanes. Keyed on
+	// the lane letter.
 	LaneLookup map[string]*Statement
 }
 
@@ -54,13 +54,14 @@ func (m *Model) lane(line *parser.ParsedLine) error {
 	statement := &Statement{}
 	statement.Keyword = line.KeyWord
 	statement.LaneName = line.Lanes[0]
-	statement.LabelLines = line.LabelSegments
+	statement.LabelSegments = line.LabelSegments
 
 	m.Statements = append(m.Statements, statement)
 	m.LaneLookup[statement.LaneName] = statement
 	return nil
 }
 
+// interactions deals both with <full> and <dash> statements.
 func (m *Model) interaction(line *parser.ParsedLine) error {
 	statement := &Statement{}
 	statement.Keyword = line.KeyWord
@@ -72,7 +73,7 @@ func (m *Model) interaction(line *parser.ParsedLine) error {
 		return fmt.Errorf("this line: <%v> should have two lanes specified", line.FullText)
 	}
 	statement.ReferencedLanes = laneStatements
-	statement.LabelLines = line.LabelSegments
+	statement.LabelSegments = line.LabelSegments
 
 	m.Statements = append(m.Statements, statement)
 	return nil
@@ -89,7 +90,7 @@ func (m *Model) self(line *parser.ParsedLine) error {
 		return fmt.Errorf("this line: <%v> should have only one lane specified", line.FullText)
 	}
 	statement.ReferencedLanes = laneStatements
-	statement.LabelLines = line.LabelSegments
+	statement.LabelSegments = line.LabelSegments
 
 	m.Statements = append(m.Statements, statement)
 	return nil
@@ -106,7 +107,7 @@ func (m *Model) stop(line *parser.ParsedLine) error {
 		return fmt.Errorf("this line: <%v> should have only one lane specified", line.FullText)
 	}
 	statement.ReferencedLanes = laneStatements
-	statement.LabelLines = line.LabelSegments
+	statement.LabelSegments = line.LabelSegments
 
 	m.Statements = append(m.Statements, statement)
 	return nil

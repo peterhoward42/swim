@@ -10,7 +10,7 @@ import (
 )
 
 // Parser is capable of parsing lines of DSL text to provide a more
-// conventient, model based representation.
+// conventient, model based representation of the text.
 type Parser struct{}
 
 // Parse is the parsing invocation method.
@@ -33,27 +33,28 @@ func (p *Parser) Parse(input *bufio.Scanner) ([]*ParsedLine, error) {
 	return lines, nil
 }
 
-//----------------------------------------------------------------------------
-// Private Below
-//----------------------------------------------------------------------------
+// Example input: "dash BC  foo bar | baz"
 
-// todo these literals should be constants
-
+// Regex for choice of keywords - e.g. <dash>
 var kwRe = "(" + strings.Join(umli.AllKeywords, "|") + ")"
-const lanesOperandRe = `([A-Z][A-Z]?)` // ? means zero or one
+
+// Regex for (in this case) <BC>. Allows one or two letters.
+const lanesOperandRe = `([A-Z][A-Z]?)`
+
+// Everything that's left over.
 const theRestRe = `(.*$)`
 
+// Put it all together expecting whitespace between <dash> and <BC>
 var lineRe = regexp.MustCompile(kwRe + `\s+` + lanesOperandRe + `\s*` + theRestRe)
 
 func (p *Parser) parseLine(line string) (*ParsedLine, error) {
-	// Example input: "dash BC  foo bar | baz"
 	segments := lineRe.FindStringSubmatch(line)
 	if len(segments) == 0 {
 		return nil, fmt.Errorf("parseLine() input line malformed: %v", line)
 	}
 	kw := segments[1]
-	lanes := strings.Split(segments[2], "")
-	labelSegments := []string{}
+	lanes := strings.Split(segments[2], "") // Splits into constituent letters.
+	labelSegments := []string{}             // Split label section at pipe characters.
 	for _, seg := range strings.Split(segments[3], "|") {
 		seg := strings.TrimSpace(seg)
 		if len(seg) != 0 {
