@@ -6,21 +6,24 @@
 *  Start on tiny bit and optimize tooling
     *  Parser
     *  DSLModel
-o  Do the geometry model and test it is good for draw2d
+o  Do the geometry model and test it is good for json or yaml serialisation
+    *  Firm up this package's contract wrt output
     *  Design model scope
     o  Define the types
-    o  Define a draw2d renderer of a geom model
-    o  Do a test with draw2d to validate
+o  Test up a JSON serializer
 
 ----------------------------------------------------------------------------
 Geom Model Scope
 ----------------------------------------------------------------------------
 *  Refresh the contract available in draw2d
 o  Assumptions
-    o  The units for lines, spacings and positions are mm.
-    o  Renderers should size text at 10pt, i.e. circa 3.5mm high
-    o  Some of the sizing and spacing of vector graphics will assume this
+    o  DI the canvas size e.g. 297 x 210
+    o  No units implied despite approximation to mm
+    o  All the geom calcs will then be abstract multiple of pixels
 o  Primitives needed:
-    o  Line, (style, arrow style)
-    o  Rect
-    o  Text, h and v just, incl centre
+    o  Line, (style, arrow)
+    o  Text with justification
+----------------------------------------------------------------------------
+Contract for output
+----------------------------------------------------------------------------
+o  YAML - json - exact same shape as Geom Model

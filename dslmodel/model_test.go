@@ -1,3 +1,6 @@
+/*
+Package dslmodel encapsulates a domain-specic-language (DSL) script.
+*/
 package dslmodel
 
 import (

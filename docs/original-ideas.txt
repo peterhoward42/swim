@@ -2,7 +2,7 @@
 Requirements
 ----------------------------------------------------------------------------
 o  A go package to let you specify an UML Interaction diagram using
-   a very terse DSL, and get back a diagram.
+   a very minimal DSL, and get back a diagram.
 o  Aim for more or less instantaneous performance good enough for
    as-you type realtime feedback.
 o  Aim for widely portable ouput diagram formats
@@ -83,3 +83,6 @@ Rendering
 Consider using https://github.com/llgcode/draw2d
 This library provides an object you can render to programmatially, which
 can then output to multiple formats
+
+Even better:
+https://godoc.org/github.com/fogleman/gg

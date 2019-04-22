@@ -1,3 +1,5 @@
+// Package parser provides the Parser type, which is capable of parsing lines
+// of DSL text to provide a structured representation of the text fields.
 package parser
 
 import (
