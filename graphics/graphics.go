@@ -3,7 +3,8 @@ Package graphics encapsulates the vector-graphics output of the umlinteraction p
 It provides the Diagram type, comprising little more than a set of Line
 objects, and Text objects.
 
-The aim is that these be easily renderable into diverse graphics formats.
+The aim is that these be easily renderable into diverse graphics formats, or serialized
+into JSON or YAML.
 
 The size units used are abstract pixels.
 */
@@ -17,28 +18,27 @@ type Model struct {
 	Labels []*Label
 }
 
-// Line represents a line, optionally with an arrow at the X2, Y2 end.
+// NewModel instantiates a Model and initializes it ready to use.
+func NewModel(width, height int) *Model {
+	return &Model{width, height, []*Line{}, []*Label{}}
+}
+
+// Line represents a line, optionally with an arrow at the (X2, Y2) end.
 type Line struct {
 	X1, X2, Y1, Y2 int
 	Arrow          bool
-	Dashed         bool // or Full
+	Dashed         bool // vs. Full
 }
 
-// Justification is an enumerated type for vertical or horizontal justifications.
-type Justification int
 
 // Constants to define members of the Justification types.
 const (
-	Left Justification = iota
-	Right
-	Top
-	Bottom
-	Centre
+	Left = "Left"
+	Right = "Right"
+	Top = "Top"
+	Bottom = "Bottom"
+	Centre = "Centre"
 )
-
-func (j Justification) String() string {
-	return [...]string{"Left", "Right", "Top", "Bottom", "Centre"}[j]
-}
 
 // Label encapsulates a (potentially) multi-line label in terms of a position,
 // justification and its consituent lines of text.
@@ -46,6 +46,6 @@ type Label struct {
 	LinesOfText []string
 	// Anchor point about which the justifications are applied
 	X, Y  int
-	HJust Justification
-	VJust Justification
+	HJust string
+	VJust string
 }

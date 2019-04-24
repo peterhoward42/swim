@@ -5,13 +5,9 @@ dslmodel.Model
 dslmodel.Statement
 
 geom.Layouteng
-
-graphics.Model
-graphics.Line
-graphics.Text
+geom.Model
 
 serialize.JSON
-serialize.YAML
 
 parser.Parser
 parser.LineModel
