@@ -10,7 +10,15 @@
     *  Firm up this package's contract wrt output
     *  Design model scope
     *  Define the types
-*  Test up a JSON serializer  
+*  Test up a JSON serializer
+o  Improve parser
+    o  Don't use regex (speed)
+    o  Go straight to dslmodel
+    o  Global error formatter taking lineNo and original line
+    o  Provide dsl model with line number and original
+    o  Remove needless error checks, that will be revealed later
+    o  Replace tests with gomega
+    o  Make sure errors include original and line number
 
 o  Come back to:
     o  Replace existing tests with gomega calls

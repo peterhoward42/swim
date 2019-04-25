@@ -4,26 +4,28 @@ package parser
 
 import (
 	"bufio"
-	"fmt"
-	"regexp"
 	"strings"
 
 	umli "github.com/peterhoward42/umlinteraction"
 )
 
 // Parser is capable of parsing lines of DSL text to provide a more
-// conventient, model based representation of the text.
+// convenient, model based representation of the text. It does not
+// thoroughly validate what it finds - leaving that to become self
+// evident when it is interpreted.
 type Parser struct{}
 
 // Parse is the parsing invocation method.
-func (p *Parser) Parse(input *bufio.Scanner) ([]*ParsedLine, error) {
-	lines := []*ParsedLine{}
+func (p *Parser) Parse(input *bufio.Scanner) ([]*dslmodel.Statement, error) {
+	lines := []*dslmodel.Statement{}
+	lineNo := 0
 	for input.Scan() {
 		line := input.Text()
+		lineNo += 1
 		if len(strings.TrimSpace(line)) == 0 {
 			continue
 		}
-		parsedLine, err := p.parseLine(line)
+		parsedLine, err := p.parseLine(line, lineNo)
 		if err != nil {
 			return nil, err
 		}
@@ -35,35 +37,13 @@ func (p *Parser) Parse(input *bufio.Scanner) ([]*ParsedLine, error) {
 	return lines, nil
 }
 
-// Example input: "dash BC  foo bar | baz"
-
-// Regex for choice of keywords - e.g. <dash>
-var kwRe = "(" + strings.Join(umli.AllKeywords, "|") + ")"
-
-// Regex for (in this case) <BC>. Allows one or two letters.
-const lanesOperandRe = `([A-Z][A-Z]?)`
-
-// Everything that's left over.
-const theRestRe = `(.*$)`
-
-// Put it all together expecting whitespace between <dash> and <BC>
-var lineRe = regexp.MustCompile(kwRe + `\s+` + lanesOperandRe + `\s*` + theRestRe)
-
-func (p *Parser) parseLine(line string) (*ParsedLine, error) {
-	segments := lineRe.FindStringSubmatch(line)
-	if len(segments) == 0 {
-		return nil, fmt.Errorf("parseLine() input line malformed: %v", line)
+func (p *Parser) parseLine(line string, lineNo int) (*ParsedLine, error) {
+	words := strings.Split(line, " ")
+	if len(words < 2) {
+		return nil, p.error(line, lineNo, "Must have at least 2 words.")
 	}
-	kw := segments[1]
-	lanes := strings.Split(segments[2], "") // Splits into constituent letters.
-	labelSegments := []string{}             // Split label section at pipe characters.
-	for _, seg := range strings.Split(segments[3], "|") {
-		seg := strings.TrimSpace(seg)
-		if len(seg) != 0 {
-			labelSegments = append(labelSegments, seg)
-		}
-	}
-
-	pl := NewParsedLine(line, kw, lanes, labelSegments)
-	return pl, nil
+	keyWord := words[0]
+	lanesReferenced := strings.Split(words[1], "")
+	labelSegments := p.isolateLabelsConstituentLines(words[2:])
+	return dslmodel.NewStatement(line, lineNo, keyWord, lanesReferenced, labelSegments)
 }

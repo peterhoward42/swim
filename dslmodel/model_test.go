@@ -1,4 +1,4 @@
-/
+
 package dslmodel
 
 import (
