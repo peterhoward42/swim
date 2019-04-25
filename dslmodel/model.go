@@ -7,14 +7,12 @@ building system from the DSL Parser.
 package dslmodel
 
 import (
-	"fmt"
-
+"regexp"
 	umli "github.com/peterhoward42/umlinteraction"
-	"github.com/peterhoward42/umlinteraction/parser"
 )
 
 // Model is the primary model class for the package.
-// Representing the scripts as an ordered sequence of Statement(s).
+// Representing a DSL script as an ordered sequence of Statement(s).
 type Model struct {
 	Statements []*Statement
 	// This map provides a lookup for the Statements that define lanes. Keyed on
@@ -22,93 +20,31 @@ type Model struct {
 	LaneLookup map[string]*Statement
 }
 
+
+var singleLetterRe = regexp.MustCompile(`[A-Z]`)
+
 // NewModel constructs a usable Model.
-func NewModel() *Model {
-	return &Model{
-		Statements: []*Statement{},
-		LaneLookup: map[string]*Statement{},
-	}
-}
-
-// Build populates a Model by interpreting the list of ParsedLine structures
-// provided.
-func (m *Model) Build(inputLines []*parser.ParsedLine) error {
-	for _, line := range inputLines {
-		statement := &Statement{}
-		m.Statements = append(m.Statements, statement)
-		statement.Keyword = line.KeyWord
-		statement.LabelSegments = line.LabelSegments
-
-		switch line.KeyWord {
-		case umli.Lane:
-			m.lane(line, statement)
-		case umli.Full:
-			m.interaction(line, statement)
-		case umli.Dash:
-			m.interaction(line, statement)
-		case umli.Self:
-			m.self(line, statement)
-		case umli.Stop:
-			m.stop(line, statement)
-		default:
-			return fmt.Errorf("Build(): Unknown keyword <%v>", line.KeyWord)
+func NewModel(statements []*Statement) (*Model, error) {
+	model := &Model {statements, map[string]*Statement{}}
+	// Populate the lookup table of lane letters to the corresponding
+	// Statement.
+	for _, statement := range model.Statements {
+		// The parser has made the statement's ReferencedLanes single character
+		// strings already, but we must check there is only one, and that it
+		// is a capital letter.
+		if statement.Keyword == umli.Lane {
+			if len(statement.ReferencedLanes) != 1 {
+				return nil, umli.DSLError(statement.DSLText, statement.LineNo, 
+				"Lane name must a be a single capital letter.")
+			}
+			laneName := statement.ReferencedLanes[0]
+			if !singleLetterRe.MatchString(laneName) {
+				 return nil, umli.DSLError(statement.DSLText, statement.LineNo, 
+					"Lane name must a be a single capital letter.")
+			}
+			model.LaneLookup[laneName] = statement
 		}
 	}
-	return nil
+	return model, nil
 }
 
-func (m *Model) lane(line *parser.ParsedLine, statement *Statement) error {
-	statement.LaneName = line.Lanes[0]
-	m.LaneLookup[statement.LaneName] = statement
-	return nil
-}
-
-// interactions deals both with <full> and <dash> statements.
-func (m *Model) interaction(line *parser.ParsedLine, statement *Statement) error {
-	laneStatements, err := m.findLaneStatements(line.Lanes)
-	if err != nil {
-		return fmt.Errorf("This line: <%v> refers to an unknown lane", line.FullText)
-	}
-	if len(laneStatements) != 2 {
-		return fmt.Errorf("this line: <%v> should have two lanes specified", line.FullText)
-	}
-	statement.ReferencedLanes = laneStatements
-	return nil
-}
-
-func (m *Model) self(line *parser.ParsedLine, statement *Statement) error {
-	laneStatements, err := m.findLaneStatements(line.Lanes)
-	if err != nil {
-		return fmt.Errorf("this line: <%v> refers to an unknown lane", line.FullText)
-	}
-	if len(laneStatements) != 1 {
-		return fmt.Errorf("this line: <%v> should have only one lane specified", line.FullText)
-	}
-	statement.ReferencedLanes = laneStatements
-	return nil
-}
-
-func (m *Model) stop(line *parser.ParsedLine, statement *Statement) error {
-	laneStatements, err := m.findLaneStatements(line.Lanes)
-	if err != nil {
-		return fmt.Errorf("This line: <%v> refers to an unknown lane", line.FullText)
-	}
-	if len(laneStatements) != 1 {
-		return fmt.Errorf("this line: <%v> should have only one lane specified", line.FullText)
-	}
-	statement.ReferencedLanes = laneStatements
-	return nil
-}
-
-// findLaneStatements searches for previously captured *Lane* Statements.
-func (m *Model) findLaneStatements(laneLetters []string) ([]*Statement, error) {
-	statements := []*Statement{}
-	for _, letter := range laneLetters {
-		statement, ok := m.LaneLookup[letter]
-		if ok == false {
-			return nil, fmt.Errorf("Line refers to unknown lane: <%v>", letter)
-		}
-		statements = append(statements, statement)
-	}
-	return statements, nil
-}
