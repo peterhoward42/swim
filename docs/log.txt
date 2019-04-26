@@ -14,7 +14,10 @@
 o  Improve parser
     *  code
     o  fix tests for parser
+        o  don't need line number in parseline
+        o  check all tests now present
     o  remove redundant checking in statement builder
+    o  statement builder no longer has to reconcile lanes
     o  Don't use regex (speed)
     o  Go straight to dslmodel
     o  Global error formatter taking lineNo and original line

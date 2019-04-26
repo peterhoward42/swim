@@ -10,42 +10,100 @@ import (
 
 func TestErrorMsgWhenTooFewWords(t *testing.T) {
 	assert := assert.New(t)
-	p := &Parser{}
+	p := NewParser()
 	reader := strings.NewReader(`Lane`)
 	_, err := p.Parse(bufio.NewScanner(reader))
 	assert.NotNil(err)
 	assert.EqualError(
 		err,
-		"Error on this line <Lane> (line: 1): Must have at least 2 words.")
+		"Error on this line <Lane> (line: 1): must have at least 2 words")
 }
 
 func TestErrorMsgWhenKeywordIsUnrecognized(t *testing.T) {
 	assert := assert.New(t)
-	p := &Parser{}
+	p := NewParser()
 	reader := strings.NewReader(`foo bar`)
 	_, err := p.Parse(bufio.NewScanner(reader))
 	assert.NotNil(err)
 	assert.EqualError(
 		err,
-		"Error on this line <foo bar> (line: 1): Unrecognized keyword: foo.")
+		"Error on this line <foo bar> (line: 1): unrecognized keyword: foo")
 }
 
 func TestErrorMsgWhenLaneIsNotSingleUpperCaseLetterForStopAndLane(t *testing.T) {
 	assert := assert.New(t)
-	p := &Parser{}
-	do single test case to get form of error msg 
-	test all cases
-	for _, dsl := range []string{"stop AB", "laneAB", "stop a", "lane a", "stop 7", "lane 7"} {
-		reader := strings.NewReader(dsl)
-		_, err := p.Parse(bufio.NewScanner(reader))
+	p := NewParser()
+
+	// Few cases to look at details of error message.
+	reader := strings.NewReader("lane AB")
+	_, err := p.Parse(bufio.NewScanner(reader))
+	assert.NotNil(err)
+	assert.EqualError(err,
+		"Error on this line <lane AB> (line: 1): Lane name must be single, upper case letter")
+	reader = strings.NewReader("lane a")
+	_, err = p.Parse(bufio.NewScanner(reader))
+	assert.NotNil(err)
+	assert.EqualError(err,
+		"Error on this line <lane a> (line: 1): Lane name must be single, upper case letter")
+
+		// Make sure it behaves the same way with the only other keywords that
+		// requires a single lane to be specified: "stop".
+		reader = strings.NewReader("stop a")
+		_, err = p.Parse(bufio.NewScanner(reader))
 		assert.NotNil(err)
-		assert.Equal("expected", err.Error()[:84])
+		assert.EqualError(err,
+			"Error on this line <stop a> (line: 1): Lane name must be single, upper case letter")
+
+	// Make sure it behaves the same way with the other keywords that
+	// requires a single lane to be specified: "stop".
+	reader = strings.NewReader("stop a")
+	_, err = p.Parse(bufio.NewScanner(reader))
+	assert.NotNil(err)
+	assert.EqualError(err,
+		"Error on this line <stop a> (line: 1): Lane name must be single, upper case letter")
+
+	// Make sure it behaves the same way with the other keywords that
+	// requires a single lane to be specified: "self".
+	reader = strings.NewReader("self a")
+	_, err = p.Parse(bufio.NewScanner(reader))
+	assert.NotNil(err)
+	assert.EqualError(err,
+		"Error on this line <self a> (line: 1): Lane name must be single, upper case letter")
 	}
-}
+
+
+func TestErrorMsgWhenTheKeywordsThatExpectTwoLanesDontSpecifyTwoUCLetters(t *testing.T) {
+	assert := assert.New(t)
+	p := NewParser()
+
+	// A few different scenarios
+
+	// Upper case letter but only one of them, <full> keyword
+	reader := strings.NewReader("full A")
+	_, err := p.Parse(bufio.NewScanner(reader))
+	assert.NotNil(err)
+	assert.EqualError(err,
+		"Error on this line <full A> (line: 1): Lanes specified must be two, upper case letters")
+
+	// Two letters but wrong case - dash keyword
+	reader = strings.NewReader("dash ab")
+	_, err = p.Parse(bufio.NewScanner(reader))
+	assert.NotNil(err)
+	assert.EqualError(err,
+		"Error on this line <dash ab> (line: 1): Lanes specified must be two, upper case letters")
+
+	// Two characters but one is not a letter - dash keyword
+	reader = strings.NewReader("dash A3")
+	_, err = p.Parse(bufio.NewScanner(reader))
+	assert.NotNil(err)
+	assert.EqualError(err,
+		"Error on this line <dash A3> (line: 1): Lanes specified must be two, upper case letters")
+	}
+
 
 func TestItIgnoresBlankLines(t *testing.T) {
 	assert := assert.New(t)
-	p := &Parser{}
+	p := NewParser()
 	reader := strings.NewReader(`
 		lane A  SL App
 
@@ -58,7 +116,7 @@ func TestItIgnoresBlankLines(t *testing.T) {
 
 func TestItCapturesLabelTextWithNoLineBreaksIn(t *testing.T) {
 	assert := assert.New(t)
-	p := &Parser{}
+	p := NewParser()
 	reader := strings.NewReader(`
 		lane A  SL App
 	`)
@@ -70,7 +128,7 @@ func TestItCapturesLabelTextWithNoLineBreaksIn(t *testing.T) {
 
 func TestItCapturesLabelTextWithLineBreaksIn(t *testing.T) {
 	assert := assert.New(t)
-	p := &Parser{}
+	p := NewParser()
 	reader := strings.NewReader(`
 		lane A  The quick | brown fox | etc
 	`)
@@ -84,9 +142,18 @@ func TestItCapturesLabelTextWithLineBreaksIn(t *testing.T) {
 	assert.Equal("etc", statements[0].LabelSegments[2])
 }
 
+func TestErrorMessageWhenAnUnknownLaneIsReferenced(t *testing.T) {
+	assert := assert.New(t)
+	p := NewParser()
+	reader := strings.NewReader(`lane A  foo`)
+	_, err := p.Parse(bufio.NewScanner(reader))
+	assert.Nil(err)
+	assert.EqualError(err, "wont")
+}
+
 func TestSamplingOutputWithReferenceInput(t *testing.T) {
 	assert := assert.New(t)
-	p := &Parser{}
+	p := NewParser()
 	reader := strings.NewReader(ReferenceInput)
 	statements, err := p.Parse(bufio.NewScanner(reader))
 	assert.Nil(err)
@@ -98,8 +165,6 @@ func TestSamplingOutputWithReferenceInput(t *testing.T) {
 
 /*
 add more complete checking in parser
-	lanes spec is one char for lane and for stop, two for all others
-	lanes are uc letters
 	lanes addressed got seen already
 	lanes have label
 	full,dash,self have label

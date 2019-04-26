@@ -8,16 +8,22 @@ import (
 	"strings"
 	"fmt"
 	re "regexp"
+	"errors"
 
 	umli "github.com/peterhoward42/umlinteraction"
 	 "github.com/peterhoward42/umlinteraction/dslmodel"
 )
 
 // Parser is capable of parsing lines of DSL text to provide a more
-// convenient, model based representation of the text. It does not
-// thoroughly validate what it finds - leaving that to become self
-// evident when it is interpreted.
-type Parser struct{}
+// convenient, model based representation of the text.
+type Parser struct{
+	knownLanes map[string]*dslmodel.Statement
+}
+
+// NewParser creates a new Parser, ready to use,
+func NewParser() *Parser {
+	return &Parser{make (map[string]*dslmodel.Statement) }
+}
 
 // Parse is the parsing invocation method.
 func (p *Parser) Parse(input *bufio.Scanner) ([]*dslmodel.Statement, error) {
@@ -29,9 +35,9 @@ func (p *Parser) Parse(input *bufio.Scanner) ([]*dslmodel.Statement, error) {
 		if len(strings.TrimSpace(line)) == 0 {
 			continue
 		}
-		statement, err := p.parseLine(line, lineNo)
+		statement, err := p.parseLine(line)
 		if err != nil {
-			return nil, err
+			return nil, umli.DSLError(line, lineNo, err.Error())
 		}
 		statements = append(statements, statement)
 	}
@@ -42,33 +48,40 @@ func (p *Parser) Parse(input *bufio.Scanner) ([]*dslmodel.Statement, error) {
 }
 
 var singleUCLetter = re.MustCompile(`^[A-Z]$`)
+var twoUCLetters = re.MustCompile(`^[A-Z][A-Z]$`)
 
 // parseLine parses the text present in a single line of DSL, into
 // the fields expected, and packages the result into a dslmodel.Statement.
-func (p *Parser) parseLine(line string, lineNo int) (*dslmodel.Statement, error) {
+func (p *Parser) parseLine(line string) (*dslmodel.Statement, error) {
+	// Fail fast when < 2 words.
 	words := strings.Split(line, " ")
 	if len(words) < 2 {
-		return nil, umli.DSLError(line, lineNo, "Must have at least 2 words.")
+		return nil, errors.New("must have at least 2 words")
 	}
+	// Fail fast on unrecognized keyword.
 	keyWord := words[0]
 	if !strings.Contains(strings.Join(umli.AllKeywords, " "), keyWord) {
-		return nil, umli.DSLError(line, lineNo, fmt.Sprintf("Unrecognized keyword: %s.", keyWord))
+		return nil, fmt.Errorf("unrecognized keyword: %s", keyWord)
 	}
+	// Validate and reconcile the lanes referenced in the second word.
 	laneNamesOperand := words[1]
-	if keyWord == umli.Lane || keyWord == umli.Stop {
-		if !singleUCLetter.MatchString(laneNamesOperand) {
-			return nil, umli.DSLError(
-				line, lineNo, fmt.Sprintf(
-				"Lane name must be single, upper case letter: %s.", laneNamesOperand))
-		}
+	lanesReferenced, err := p.parseLanesOperand(laneNamesOperand, keyWord)
+	if err != nil {
+		return nil, err
 	}
-	lanesReferenced := strings.Split(laneNamesOperand, "")
+	
 	// Isolate label text by stripping what we have already consumed.
 	labelText := strings.Replace(line, keyWord, "", 1)
 	labelText = strings.Replace  (labelText, words[1], "", 1)
 	labelIndividualLines := p.isolateLabelConstituentLines(labelText)
-	return dslmodel.NewStatement(
-		line, lineNo, keyWord, lanesReferenced, labelIndividualLines), nil
+	statement := dslmodel.NewStatement(keyWord, lanesReferenced, labelIndividualLines)
+
+	// Keep track of *Lane* statements
+	if statement.Keyword == umli.Lane {
+		p.knownLanes[statement.LaneName] = statement
+	}
+
+	return statement, nil
 }
 
 // isolateLabelConstituentLines takes the label text from a DSL line and
@@ -87,4 +100,38 @@ func (p *Parser) isolateLabelConstituentLines(labelText string) []string {
 		}
 	}	
 	return constituentLines
+}
+
+// parseLanesOperand makes sure the lanes that are specified in the second
+// word of a DSL line are properly formed. This depends on the keyword.
+// It also maintains a look up table of lane name to corresponding Lane 
+// statement in the parser.
+func (p *Parser) parseLanesOperand(laneNamesOperand, keyWord string) ([]*dslmodel.Statement, error){
+
+	// Fail fast on statement types that require a single lane to be specified,
+	// when this is not so.
+
+	if keyWord == umli.Lane || keyWord == umli.Stop || keyWord == umli.Self {
+		if !singleUCLetter.MatchString(laneNamesOperand) {
+			return nil, errors.New("Lane name must be single, upper case letter")
+		}
+	}
+	// Same sort of thing where two lanes must be specified.
+	if keyWord == umli.Full || keyWord == umli.Dash {
+		if !twoUCLetters.MatchString(laneNamesOperand) {
+			return nil, errors.New("Lanes specified must be two, upper case letters")
+		}
+	}
+
+	// Make sure the lanes referenced exist.
+	laneStatements := []*dslmodel.Statement{}
+	laneLetters := strings.Split(laneNamesOperand, "")
+	for _, laneLetter := range laneLetters {
+		laneStatement, ok := p.knownLanes[laneLetter];
+		if !ok {
+			return nil, fmt.Errorf("Unknown lane: %v", laneLetter)
+		}
+		laneStatements = append(laneStatements, laneStatement)
+	}
+	return laneStatements, nil
 }
