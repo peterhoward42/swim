@@ -1,5 +1,9 @@
 package dslmodel
 
+import (
+	umli "github.com/peterhoward42/umlinteraction"
+)
+
 // Statement is an object that can represent any of the input line
 // types in the DSL - and provides a superset of attributes for the data each must
 // be qualified with.
@@ -15,11 +19,16 @@ type Statement struct {
 
 // NewStatement instantiates a Statement, ready to use.
 func NewStatement(line string, lineNo int, keyWord string,
-	lanesReferenced []string, labelIndividualLines []string) *Statement{
+		lanesReferenced []string, labelIndividualLines []string) *Statement{
+	laneName := ""
+	if keyWord == umli.Lane {
+		laneName = lanesReferenced[0]
+	}
 	return &Statement{
 		DSLText :line, 
 		LineNo : lineNo,
 		Keyword : keyWord,
+		LaneName: laneName,
 		ReferencedLanes: lanesReferenced,
 		LabelSegments: labelIndividualLines,
 	}

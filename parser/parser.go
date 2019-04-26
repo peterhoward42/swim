@@ -23,7 +23,7 @@ func (p *Parser) Parse(input *bufio.Scanner) ([]*dslmodel.Statement, error) {
 	lineNo := 0
 	for input.Scan() {
 		line := input.Text()
-		lineNo += 1
+		lineNo++
 		if len(strings.TrimSpace(line)) == 0 {
 			continue
 		}
@@ -31,44 +31,45 @@ func (p *Parser) Parse(input *bufio.Scanner) ([]*dslmodel.Statement, error) {
 		if err != nil {
 			return nil, err
 		}
-		statements = append(statements, statements)
+		statements = append(statements, statement)
 	}
 	if err := input.Err(); err != nil {
 		return nil, err
 	}
-	return lines, nil
+	return statements, nil
 }
 
 // parseLine parses the text present in a single line of DSL, into
 // the fields expected, and packages the result into a dslmodel.Statement.
 func (p *Parser) parseLine(line string, lineNo int) (*dslmodel.Statement, error) {
 	words := strings.Split(line, " ")
-	if len(words < 2) {
+	if len(words) < 2 {
 		return nil, umli.DSLError(line, lineNo, "Must have at least 2 words.")
 	}
 	keyWord := words[0]
 	lanesReferenced := strings.Split(words[1], "")
 	// Isolate label text by stripping what we have already consumed.
-	labelText := strings.Replace(line, keyWord, "")
-	labelText = strings.Replace(labelText, words[1], "")
+	labelText := strings.Replace(line, keyWord, "", 1)
+	labelText = strings.Replace  (labelText, words[1], "", 1)
 	labelIndividualLines := p.isolateLabelConstituentLines(labelText)
-	return dslmodel.NewStatement(line, lineNo, keyWord, lanesReferenced, labelIndividualLines)
+	return dslmodel.NewStatement(
+		line, lineNo, keyWord, lanesReferenced, labelIndividualLines), nil
 }
 
-// isolateLabelsConstituentLines takes the label text from a DSL line and
+// isolateLabelConstituentLines takes the label text from a DSL line and
 // splits it into the constituent lines according to its author's intent.
 // I.e. by splitting it at "|" delimiters. Note the removal of whitespace
 // either side of any "|" present.
 // E.g. From this: "edit_facilities( | payload, user_token)"
 // It produces: []string{"edit_facilities(", "payload, user_token)"}
-func (p *Parser) isolateLabelsConsituentLines(labelText string) []string {
+func (p *Parser) isolateLabelConstituentLines(labelText string) []string {
 	segments := strings.Split(labelText, "|")
-	consituentLines := []string{}
+	constituentLines := []string{}
 	for _, seg := range segments {
-		seg := strings.Trim(seg)
+		seg := strings.TrimSpace(seg)
 		if len(seg) != 0 {
 			constituentLines = append(constituentLines, seg)
 		}
-		return constituentLines
-	}
+	}	
+	return constituentLines
 }

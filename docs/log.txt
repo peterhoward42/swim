@@ -12,6 +12,9 @@
     *  Define the types
 *  Test up a JSON serializer
 o  Improve parser
+    *  code
+    o  fix tests for parser
+    o  remove redundant checking in statement builder
     o  Don't use regex (speed)
     o  Go straight to dslmodel
     o  Global error formatter taking lineNo and original line
