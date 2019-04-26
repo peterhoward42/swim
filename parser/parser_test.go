@@ -28,7 +28,7 @@ func TestErrorMsgWhenKeywordIsUnrecognized(t *testing.T) {
 		"Error on this line <foo bar> (line: 1): unrecognized keyword: foo")
 }
 
-func TestErrorMsgWhenLaneIsNotSingleUpperCaseLetterForStopAndLane(t *testing.T) {
+func TestErrorMsgWhenLaneIsNotSingleUCLetterForStopAndLane(t *testing.T) {
 	assert := assert.New(t)
 	p := NewParser()
 
@@ -65,7 +65,8 @@ func TestErrorMsgWhenLaneIsNotSingleUpperCaseLetterForStopAndLane(t *testing.T) 
 		"Error on this line <self a> (line: 1): Lane name must be single, upper case letter")
 }
 
-func TestErrorMsgWhenTheKeywordsThatExpectTwoLanesDontSpecifyTwoUCLetters(t *testing.T) {
+func TestErrorMsgForKeywordsThatExpectTwoLanesDontSpecifyTwoUCLetters(
+	t *testing.T) {
 	assert := assert.New(t)
 	p := NewParser()
 

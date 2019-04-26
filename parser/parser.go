@@ -88,7 +88,7 @@ func (p *Parser) parseLine(line string) (*dslmodel.Statement, error) {
 	statement.Keyword = keyWord
 	statement.LabelSegments = labelIndividualLines
 	statement.ReferencedLanes = lanesReferenced
-	
+
 	// A few extra steps for *Lane* statements
 	if statement.Keyword == umli.Lane {
 		statement.LaneName = laneNamesOperand
@@ -119,19 +119,22 @@ func (p *Parser) isolateLabelConstituentLines(labelText string) []string {
 // word of a DSL line are properly formed. This depends on the keyword.
 // It also maintains a look up table of lane name to corresponding Lane
 // statement in the parser.
-func (p *Parser) parseLanesOperand(laneNamesOperand, keyWord string) ([]*dslmodel.Statement, error) {
+func (p *Parser) parseLanesOperand(
+	laneNamesOperand, keyWord string) ([]*dslmodel.Statement, error) {
 
 	// Fail fast on statement types that require a single lane to be specified,
 	// when this is not so.
 	if keyWord == umli.Lane || keyWord == umli.Stop || keyWord == umli.Self {
 		if !singleUCLetter.MatchString(laneNamesOperand) {
-			return nil, errors.New("Lane name must be single, upper case letter")
+			return nil,
+				errors.New("Lane name must be single, upper case letter")
 		}
 	}
 	// Same sort of thing where two lanes must be specified.
 	if keyWord == umli.Full || keyWord == umli.Dash {
 		if !twoUCLetters.MatchString(laneNamesOperand) {
-			return nil, errors.New("Lanes specified must be two, upper case letters")
+			return nil,
+				errors.New("Lanes specified must be two, upper case letters")
 		}
 	}
 	// Capture ptrs to the lane Statement being referenced by the second word.

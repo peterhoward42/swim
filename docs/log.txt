@@ -7,18 +7,8 @@
     *  Parser
     *  DSLModel
 *  Do the geometry model and test it is good for json or yaml serialisation
-    *  Firm up this package's contract wrt output
-    *  Design model scope
-    *  Define the types
-*  Test up a JSON serializer
 *  Refactor parser and improve tests
 o  Line length go fmt?
-
-o  Come back to:
-    o  Replace existing tests with gomega calls
-    o  Must be way to do parser and dslmodel in less code?
-        o  Be interesting to try a fully automated parsing library
-    o  Error reporting from parser to include line number and offending line
 
 ----------------------------------------------------------------------------
 Geom Model Scope

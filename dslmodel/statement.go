@@ -6,8 +6,8 @@
 package dslmodel
 
 // Statement is an object that can represent any of the input line
-// types in the DSL - and provides a superset of attributes for the data each must
-// be qualified with.
+// types in the DSL - and provides a superset of attributes for the data each
+// must be qualified with.
 type Statement struct {
 	Keyword         string
 	LaneName        string       // For <lane> statements.
@@ -16,10 +16,10 @@ type Statement struct {
 }
 
 // NewStatement instantiates a Statement, ready to use.
-func NewStatement() *Statement{
-	
+func NewStatement() *Statement {
+
 	return &Statement{
 		ReferencedLanes: []*Statement{},
-		LabelSegments: []string{},
+		LabelSegments:   []string{},
 	}
 }

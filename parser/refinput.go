@@ -1,8 +1,7 @@
 package parser
 
 // ReferenceInput is a convenient example DSL script for testing.
-const ReferenceInput = 
-`lane A  SL App
+const ReferenceInput = `lane A  SL App
 lane B  Core Permissions API
 lane C  SL Admin API | edit_facilities | endpoint
 

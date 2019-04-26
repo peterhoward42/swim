@@ -30,12 +30,11 @@ type Line struct {
 	Dashed         bool // vs. Full
 }
 
-
 // Constants to define members of the Justification types.
 const (
-	Left = "Left"
-	Right = "Right"
-	Top = "Top"
+	Left   = "Left"
+	Right  = "Right"
+	Top    = "Top"
 	Bottom = "Bottom"
 	Centre = "Centre"
 )
