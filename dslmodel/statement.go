@@ -1,12 +1,9 @@
 // Package dslmodel provides the Statement type, which makes it possible
 // to compose a structured representation of a DSL script by using a list
 // of Statement(s). It aims to decouple the downstream diagram building
-// system from the Parser and to provide it with a clean and validated input model.
+// system from the Parser and to provide it with a clean and fully
+// validated input model.
 package dslmodel
-
-import (
-	umli "github.com/peterhoward42/umlinteraction"
-)
 
 // Statement is an object that can represent any of the input line
 // types in the DSL - and provides a superset of attributes for the data each must
@@ -19,16 +16,10 @@ type Statement struct {
 }
 
 // NewStatement instantiates a Statement, ready to use.
-func NewStatement(keyWord string,
-		lanesReferenced []*Statement, labelSegments []string) *Statement{
-	laneName := ""
-	if keyWord == umli.Lane {
-		laneName = lanesReferenced[0].LaneName
-	}
+func NewStatement() *Statement{
+	
 	return &Statement{
-		Keyword : keyWord,
-		LaneName: laneName,
-		ReferencedLanes: lanesReferenced,
-		LabelSegments: labelSegments,
+		ReferencedLanes: []*Statement{},
+		LabelSegments: []string{},
 	}
 }
