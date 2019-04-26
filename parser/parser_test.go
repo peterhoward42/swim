@@ -18,6 +18,31 @@ func TestErrorMsgWhenTooFewWords(t *testing.T) {
 		err,
 		"Error on this line <Lane> (line: 1): Must have at least 2 words.")
 }
+
+func TestErrorMsgWhenKeywordIsUnrecognized(t *testing.T) {
+	assert := assert.New(t)
+	p := &Parser{}
+	reader := strings.NewReader(`foo bar`)
+	_, err := p.Parse(bufio.NewScanner(reader))
+	assert.NotNil(err)
+	assert.EqualError(
+		err,
+		"Error on this line <foo bar> (line: 1): Unrecognized keyword: foo.")
+}
+
+func TestErrorMsgWhenLaneIsNotSingleUpperCaseLetterForStopAndLane(t *testing.T) {
+	assert := assert.New(t)
+	p := &Parser{}
+	do single test case to get form of error msg 
+	test all cases
+	for _, dsl := range []string{"stop AB", "laneAB", "stop a", "lane a", "stop 7", "lane 7"} {
+		reader := strings.NewReader(dsl)
+		_, err := p.Parse(bufio.NewScanner(reader))
+		assert.NotNil(err)
+		assert.Equal("expected", err.Error()[:84])
+	}
+}
+
 func TestItIgnoresBlankLines(t *testing.T) {
 	assert := assert.New(t)
 	p := &Parser{}
@@ -71,9 +96,8 @@ func TestSamplingOutputWithReferenceInput(t *testing.T) {
 	assert.Equal("B", aLane.LaneName)
 }
 
-
+/*
 add more complete checking in parser
-	kw is from known set known
 	lanes spec is one char for lane and for stop, two for all others
 	lanes are uc letters
 	lanes addressed got seen already

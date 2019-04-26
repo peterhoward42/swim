@@ -6,6 +6,8 @@ package parser
 import (
 	"bufio"
 	"strings"
+	"fmt"
+	re "regexp"
 
 	umli "github.com/peterhoward42/umlinteraction"
 	 "github.com/peterhoward42/umlinteraction/dslmodel"
@@ -39,6 +41,8 @@ func (p *Parser) Parse(input *bufio.Scanner) ([]*dslmodel.Statement, error) {
 	return statements, nil
 }
 
+var singleUCLetter = re.MustCompile(`^[A-Z]$`)
+
 // parseLine parses the text present in a single line of DSL, into
 // the fields expected, and packages the result into a dslmodel.Statement.
 func (p *Parser) parseLine(line string, lineNo int) (*dslmodel.Statement, error) {
@@ -47,7 +51,18 @@ func (p *Parser) parseLine(line string, lineNo int) (*dslmodel.Statement, error)
 		return nil, umli.DSLError(line, lineNo, "Must have at least 2 words.")
 	}
 	keyWord := words[0]
-	lanesReferenced := strings.Split(words[1], "")
+	if !strings.Contains(strings.Join(umli.AllKeywords, " "), keyWord) {
+		return nil, umli.DSLError(line, lineNo, fmt.Sprintf("Unrecognized keyword: %s.", keyWord))
+	}
+	laneNamesOperand := words[1]
+	if keyWord == umli.Lane || keyWord == umli.Stop {
+		if !singleUCLetter.MatchString(laneNamesOperand) {
+			return nil, umli.DSLError(
+				line, lineNo, fmt.Sprintf(
+				"Lane name must be single, upper case letter: %s.", laneNamesOperand))
+		}
+	}
+	lanesReferenced := strings.Split(laneNamesOperand, "")
 	// Isolate label text by stripping what we have already consumed.
 	labelText := strings.Replace(line, keyWord, "", 1)
 	labelText = strings.Replace  (labelText, words[1], "", 1)
