@@ -1,3 +1,8 @@
+/*
+Package umlinteraction is the topmost package in the uml interaction system.
+It is concerned with global topics of the system, that cannot sensibly be
+hidden away in more specialized packages.
+*/
 package umlinteraction
 
 // These constants represent the keywords in the DSL language.

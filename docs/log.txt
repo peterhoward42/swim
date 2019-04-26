@@ -1,27 +1,70 @@
-*  Specify MVP
-*  OOD Design
-*  package and type naming
-*  change repo name away from swim to interaction
-*  change alias to match
-*  Start on tiny bit and optimize tooling
-    *  Parser
-    *  DSLModel
+
 *  Do the geometry model and test it is good for json or yaml serialisation
 *  Refactor parser and improve tests
-o  Line length go fmt?
+*  Psuedo code diagram builder
+*  Tease out CRC and cf original plans
+o  Code CRC modules and do package / module / type doc strings.
 
 ----------------------------------------------------------------------------
-Geom Model Scope
+Algo
 ----------------------------------------------------------------------------
-*  Refresh the contract available in draw2d
-o  Assumptions
-    o  DI the canvas size e.g. 297 x 210
-    o  No units implied despite approximation to mm
-    o  All the geom calcs will then be abstract multiple of pixels
-o  Primitives needed:
-    o  Line, (style, arrow)
-    o  Text with justification
+
+assume some global sizing ratio constants wrt char height: sizing.ratios
+
+init some sizing
+    horiz: sizing.Horiz
+        lane x
+        lane header box width
+        box widths
+        self loop width
+        char width
+    vert lane sizing.vert
+        lane header box depth
+        padding unit
+        char height
+        self loop height
+
+every statement has graphical mandate: diag.events.LaneHeader etc.
+
+define graphical obligations like this:
+    draw laneheader boxes
+    draw label segments
+    draw lane timeline
+    draw self loop
+    start a box
+    finish a box
+    draw a full or dash line
+
+iterate over all statements diag.Schema
+    capture graphical obligation
+    capture incremental v headroom consumed sizing.vert.Claims
+
+add similary - finishing up obligations
+    for example
+        terminating boxes
+        interrupting lane time lines to prevent clash with full/dash or
+                label
+
+// now we have the scan oriented info we need to build graphics model
+
+have a rendering phase in which the graphical model is built: diag.GraphicsFactory
+    iterate through graphical obligations model
+    advance vertical offset according to the claim associated with the
+        graphical obligation
+    delegate augmenting graphics model to type specific helpers - injecting
+        the vertical offset
+
+type specific helpers 
+    explode graphical implications into graphics model primitives
+    including sizing policy for that type
+
 ----------------------------------------------------------------------------
-Contract for output
+Diagram building CRC
 ----------------------------------------------------------------------------
-o  YAML - json - exact same shape as Geom Model
+diag.events.StartBox // and friends
+diag.Schema
+diag.VerticalClaims
+diag.GraphicsFactory
+sizing.ratios
+sizing.Horiz
+sizing.Vert
