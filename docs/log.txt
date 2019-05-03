@@ -5,7 +5,13 @@
 *  Challenge tests so far wrt recent test guidance
 o  Code CRC modules and do package / module / type doc strings.
     *  Define all types with doc strings
-    o  Bottom up tdd
+    o  Define fields for events
+    o  tdd statementscanner
+    o  tdd vertical claims
+    o  tdd horiz claims
+    o  tdd graphics factory 
+    o  define diag.Creator
+    o  tdd diag.Creator
 
 ----------------------------------------------------------------------------
 Algo
