@@ -19,8 +19,7 @@ func TestJSONOutputIsAsExpected(t *testing.T) {
 		HJust:       graphics.Left,
 		VJust:       graphics.Centre,
 	})
-	theJSON, err := SerializeToJSON(mdl)
-	assert.Nil(err)
+	theJSON, _ := SerializeToJSON(mdl)
 	assert.JSONEq(expectedJSON, string(theJSON))
 }
 

@@ -1,9 +1,11 @@
-
 *  Do the geometry model and test it is good for json or yaml serialisation
 *  Refactor parser and improve tests
 *  Psuedo code diagram builder
 *  Tease out CRC and cf original plans
+*  Challenge tests so far wrt recent test guidance
 o  Code CRC modules and do package / module / type doc strings.
+    *  Define all types with doc strings
+    o  Bottom up tdd
 
 ----------------------------------------------------------------------------
 Algo
@@ -26,7 +28,7 @@ init some sizing
 
 every statement has graphical mandate: diag.events.LaneHeader etc.
 
-define graphical obligations like this:
+define graphical events like this:
     draw laneheader boxes
     draw label segments
     draw lane timeline
@@ -48,7 +50,7 @@ add similary - finishing up obligations
 // now we have the scan oriented info we need to build graphics model
 
 have a rendering phase in which the graphical model is built: diag.GraphicsFactory
-    iterate through graphical obligations model
+    iterate through graphical events model
     advance vertical offset according to the claim associated with the
         graphical obligation
     delegate augmenting graphics model to type specific helpers - injecting
@@ -58,13 +60,3 @@ type specific helpers
     explode graphical implications into graphics model primitives
     including sizing policy for that type
 
-----------------------------------------------------------------------------
-Diagram building CRC
-----------------------------------------------------------------------------
-diag.events.StartBox // and friends
-diag.Schema
-diag.VerticalClaims
-diag.GraphicsFactory
-sizing.ratios
-sizing.Horiz
-sizing.Vert
