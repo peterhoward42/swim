@@ -5,8 +5,14 @@
 *  Challenge tests so far wrt recent test guidance
 o  Code CRC modules and do package / module / type doc strings.
     *  Define all types with doc strings
-    o  Define fields for events
+    *  Define fields for events
+    *  Replace event types with enum / iota
+    o  Redefine scanner as poss map[statement][]event
+
+
     o  tdd statementscanner
+        o  change events to be iota, no state needed
+        o  get fabric up expecting list of nil interfaces
     o  tdd vertical claims
     o  tdd horiz claims
     o  tdd graphics factory 

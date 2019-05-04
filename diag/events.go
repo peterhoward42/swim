@@ -1,66 +1,64 @@
+package diag
 /*
-events.go provides the types that represent the drawing steps to be used when
-building the interaction diagram.
-
-The diagram building process will iterate over DSL input statements in sequence
-and decide what new diagram drawing mandates are required arising from
-each statement.
-
-For example to start a box, or to drawn an arrow from one lane to another.
-
-Types are used to represent these drawing mandates so that:
-	- They can be parameterized and hold state
-	- They can become a lingua-franca for collaborating types
-	- They can provide a structured and de-coupled input to the downstream
-	  rendering process
+This module owns knowledge about what graphical drawing events should be
+triggered as each type of DSL statement is encountered,
 */
 
-package diag
-
 import (
+	umli "github.com/peterhoward42/umlinteraction"
 )
 
-// EndBox is an instruction to close-off or terminate the drawing one of the
-// thin vertical boxes that sits on a lane to emit and receive interactions.
-type EndBox struct {
-	whichBox *StartBox
-}
+// EventType is the enumerated-type for the constants such as EndBox or
+// LaneLine below. 
+type EventType int
 
-// Interaction is an instruction to draw a horizontal line from one lane
-// to another.
-type Interaction struct {
-	fromLane *LaneLine
-	toLane *LaneLine
-	dashed bool
-}
+// These constants comprise the set of values for EventType.
+const (
+    EndBox EventType = iota + 1
+    InteractionLine
+	InteractionLabel
+	LaneLine
+	LaneTitleBox
+	LaneTitleLabel
+	SelfInteractionLines
+	SelfInteractionLabel
+	PotentiallyStartFromBox
+	PotentiallyStartToBox
+)
 
-// InteractionLabel is an instruction to create a multi-line label that belongs
-// to an Interaction object. I.e. the horizontal line it must sit above.
-type InteractionLabel struct {
-	labelSegments []string
-	interaction Interaction
-}
+/*
+EventsRequired provides the list of EventType(s) that should be stimulated
+in response to each DSL keyword.
 
-// LaneLine is an instruction to draw the vertical dashed line that
-// represents one lane.
-type LaneLine struct {
-	laneTitleBox *LaneTitleBox
-}
+The sequence is significant, because each event *claims* a certain amount
+of vertical room for itself, which then *pushes* everything that follows
+further down the diagram.
 
-// LaneTitleBox is an instruction to draw one of the lane title boxes that
-// sit along the top of the diagram.
-type LaneTitleBox struct {
-	labelSegments []string
-}
-
-// SelfInteraction is an instruction to draw the series of lines required to
-// represent an internal interaction on a lane. I.e. 3 sides of a rectangle.
-type SelfInteraction struct {
-	lane *LaneLine
-}
-
-// StartBox is an instruction to start drawing one of the thin vertical boxes
-// that sits on a lane to emit and receive interactions.
-type StartBox struct {
-	lane *LaneLine
+In this context, the labels for interaction lines and for self interaction
+lines, will be drawn above the lines to which they refer, and therefore must
+precede the corresponding line events.
+*/
+var EventsRequired = map[string][]EventType {
+	umli.Lane: []EventType{
+		LaneTitleBox,
+		LaneTitleLabel,
+		LaneLine,
+	},
+	umli.Dash: []EventType{ // Boxes for *returning* interactions must exist already
+		InteractionLabel,
+		InteractionLine,
+	},
+	umli.Full: []EventType{ // Boxes for *outgoing* interactions may not exist already
+		PotentiallyStartFromBox,
+		InteractionLabel,
+		InteractionLine,
+		PotentiallyStartToBox,
+	},
+	umli.Self: []EventType{ // Boxes for *self* interactions must exist already
+		InteractionLabel,
+		SelfInteractionLines,
+	},
+	umli.Stop: []EventType{
+		EndBox,
+	},
 }

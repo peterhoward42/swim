@@ -10,8 +10,8 @@ package umlinteraction
 // in both the parser and the dslmodel respecably.
 const (
 	Lane = "lane"
-	Full = "full"
 	Dash = "dash"
+	Full = "full"
 	Self = "self"
 	Stop = "stop"
 )
