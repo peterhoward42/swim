@@ -1,15 +1,16 @@
 package export
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 
 	"github.com/peterhoward42/umlinteraction/graphics"
 )
 
 func TestJSONOutputIsAsExpected(t *testing.T) {
 	assert := assert.New(t)
-	mdl := graphics.NewModel(200, 100)
+	mdl := graphics.NewModel(200, 3)
 	mdl.Lines = append(mdl.Lines, &graphics.Line{
 		X1: 0, Y1: 0, X2: 100, Y2: 100, Dashed: false, Arrow: false})
 	mdl.Labels = append(mdl.Labels, &graphics.Label{
@@ -25,7 +26,7 @@ func TestJSONOutputIsAsExpected(t *testing.T) {
 
 const expectedJSON = `{
 	"Width": 200,
-	"Height": 100,
+	"FontHeight": 3,
 	"Lines": [
 	  {
 		"X1": 0,

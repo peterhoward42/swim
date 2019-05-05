@@ -1,4 +1,4 @@
-package diag
+package sizers
 
 // Ratios owns styling decisions about the relative sizing of graphical
 // elements. This allows the system to 

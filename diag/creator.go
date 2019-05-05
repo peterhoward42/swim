@@ -3,50 +3,81 @@ package diag
 import (
 	"github.com/peterhoward42/umlinteraction/dslmodel"
 	"github.com/peterhoward42/umlinteraction/graphics"
+	"github.com/peterhoward42/umlinteraction/sizers"
 )
 
-// Creator is the top level entry point orchestrator for the diag package.
-// It is capable of consuming a sequence of dslmodel.Statement(s), and 
+// Creator is the top level entry point for the diag package.
+// It is capable of consuming a sequence of dslmodel.Statement(s), and
 // producing the corresponding diagram definition in terms of its low-level
-// primitives - like lists of line segments and strings to render.
+// primitives - i.e. lists of line segments and strings to render.
 type Creator struct {
+	width      int
+	fontHeight float64
+	statements []*dslmodel.Statement
+	hSizer     *sizers.Horizontal
+	vSizer     *sizers.Vertical
+	tideMark   int
 }
 
 // NewCreator creates a Creator ready to use.
-func NewCreator() *Creator {
-	return &Creator{}
+func NewCreator(width int, fontHeight float64,
+	statements []*dslmodel.Statement) *Creator {
+	hSizer := sizers.NewHorizontal(width, fontHeight, statements)
+	vSizer := sizers.NewVertical(width, fontHeight, statements)
+	creator := &Creator{width, fontHeight, statements, hSizer, vSizer, 0}
+	return creator
 }
 
 // Create works out what the diagram should look like by analysing the
-// DSL Statement(s) provided. Provide the required width and height (in pixels). 
-func (c *Creator) Create(
-	statements []*dslmodel.Statement, width int, height int) *graphics.Model {
-	scanner := NewScanner()
-	// Capture the graphical events required for all statements
-	eventsPerStatement := scanner.Scan(statements)
-	// Iterate over them in statement-order
-	for _, statement := range statements {
-		statementEvents := eventsPerStatement[statement]
-		// Iterate over the set of graphical events for an individual statement
-		// processing them to produce the required line segments and strings to
-		// be rendered. Doing so in the context of a Y-coordinate tide-mark that
-		// progresses down the page, as each event *claims* the vertical
-		// room it needs.
-		var tideMark int // Lint doesn't like explicit init to zero.
-		graphicsModel := graphics.NewModel(width, height)
-		for _, drawingEvent := range(statementEvents) {
-			c.addGraphicsForDrawingEvent(
-				drawingEvent, &tideMark, graphicsModel)
+// DSL Statement(s) provided. All sizing and spacing decisions are
+// based on the diagram width and font height (in pixels) parameters.
+func (c *Creator) Create() *graphics.Model {
+	graphicalEvents := NewScanner().Scan(c.statements)
+	graphicsModel := graphics.NewModel(c.width, c.fontHeight)
+	for _, statement := range c.statements {
+		statementEvents := graphicalEvents[statement]
+		for _, evt := range statementEvents {
+			graphicPrimitives := c.graphicsForDrawingEvent(evt, statement)
+			graphicsModel.Append(graphicPrimitives)
 		}
-		return graphicsModel
+	}
+	return graphicsModel
+}
+
+// graphicsForDrawingEvent synthesizes the lines and label strings required
+// to render the given single diagram element drawing event. In so doing it
+// also advances the tide mark.
+func (c *Creator) graphicsForDrawingEvent(
+	evt EventType, statement *dslmodel.Statement) *graphics.Primitives {
+	switch evt {
+	case EndBox:
+	case InteractionLine:
+	case InteractionLabel:
+	case LaneLine:
+	case LaneTitleBox:
+		return c.laneTitleBox(statement)
+	case LaneTitleLabel:
+	case SelfInteractionLines:
+	case SelfInteractionLabel:
+	case PotentiallyStartFromBox:
+	case PotentiallyStartToBox:
 	}
 	return nil
 }
 
-// addGraphicsForDrawingEvent synthesizes the lines and label strings required
-// to render the given single diagram element drawing event, and adds them to
-// the graphics model provided. In so doing it advances the tide mark that
-// represents the diagram gradually spreading down the page.
-func (c *Creator) addGraphicsForDrawingEvent(event EventType, tideMark *int,
-	graphicsModel *graphics.Model) {
+// laneTitleBox generates the lines to represent the
+// rectangular box at the top of a lane, and sets the tide mark
+// to the bottom of the box.
+func (c *Creator) laneTitleBox(
+	statement *dslmodel.Statement) *graphics.Primitives {
+	left := c.hSizer.LaneTitleBoxes[statement].Left
+	right := c.hSizer.LaneTitleBoxes[statement].Right
+	topMargin := c.vSizer.TopMargin
+	height := c.vSizer.TitleBoxHeight
+	top := topMargin
+	bot := top + height
+	prims := graphics.NewPrimitives()
+	prims.AddLines(graphics.Rect(top, left, right, bottom))
+	c.tideMark = bot
+	return prims
 }

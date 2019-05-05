@@ -1,36 +1,23 @@
 /*
-Package graphics encapsulates the vector-graphics output of the umlinteraction package.
-It provides the Diagram type, comprising little more than a set of Line
-objects, and Text objects.
+Package graphics encapsulates the types that are needed to capture a diagram
+in terms of low level primites (like Lines and Labels).
 
-The aim is that these be easily renderable into diverse graphics formats, or serialized
-into JSON or YAML.
+The aim is that these be easily renderable into diverse graphics
+formats, or serialized into JSON or YAML.
 
-The size units used are abstract pixels.
+The size units used are pixels.
 */
 package graphics
 
-// Model is the topl-level model.
-type Model struct {
-	Width  int
-	Height int
-	Lines  []*Line
-	Labels []*Label
-}
-
-// NewModel instantiates a Model and initializes it ready to use.
-func NewModel(width, height int) *Model {
-	return &Model{width, height, []*Line{}, []*Label{}}
-}
-
-// Line represents a line, optionally with an arrow at the (X2, Y2) end.
+// Line represents a line, optionally dashed, and optionally with an arrow at
+// the (X2, Y2) end.
 type Line struct {
 	X1, X2, Y1, Y2 int
 	Arrow          bool
 	Dashed         bool // vs. Full
 }
 
-// Constants to define members of the Justification types.
+// The values that may be used in label justification.
 const (
 	Left   = "Left"
 	Right  = "Right"
@@ -47,4 +34,33 @@ type Label struct {
 	X, Y  int
 	HJust string
 	VJust string
+}
+
+// Primitives is a container for a set of Line(s) and a set of Label(s).
+type Primitives struct {
+	Lines  []*Line
+	Labels []*Label
+}
+
+// NewPrimitives constructs a Primitives ready to use.
+func NewPrimitives() *Primitives {
+	return &Primitives{[]*Line{}, []*Label{}}
+}
+
+// Model is the topl-level model.
+type Model struct {
+	Width      int
+	FontHeight float64
+	Primitives *Primitives
+}
+
+// NewModel instantiates a Model and initializes it ready to use.
+func NewModel(width int, fontHeight float64) *Model {
+	return &Model{width, fontHeight, NewPrimitives()}
+}
+
+// Append adds the Primitives given to those already held in the model.
+func (m *Model) Append(prims *Primitives) {
+	m.Primitives.Lines = append(m.Primitives.Lines, prims.Lines...)
+	m.Primitives.Labels = append(m.Primitives.Labels, prims.Labels...)
 }

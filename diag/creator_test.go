@@ -18,12 +18,12 @@ func TestToTeaseOutAPIDuringDevelopment(t *testing.T) {
 	statements, err := p.Parse(bufio.NewScanner(reader))
 	assert.Nil(err)
 
-	creator := NewCreator()
 	// These widths and heights are chosen to be similar to the size
 	// of A4 paper (in mm), to help think about the sizing abstractions.
 	width := 200
-	height := 297
-    created := creator.Create(statements, width, height)
+	fontHeight := 3.0
+	creator := NewCreator(width, fontHeight, statements)
+    created := creator.Create()
 
     assert.IsType(&graphics.Model{}, created)
 }

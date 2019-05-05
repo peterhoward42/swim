@@ -6,9 +6,15 @@
     *  Write a skeleton test for the Creator to drive out
        recursive tdd of what is left in the diag package
     o  tdd Creator
-        o  DI width and height
-        o  what test for creator as it stands?
-        o  what to recurse into?
+        *  DI width and height
+        *  Skeleton code in Create() to tease out APIs for collaborating
+           types.
+        *  DrawingEventContext
+        o  All tests possible making Draw lane header box work
+            *  Diver to build attribute in hsizer
+            *  Diver to build attribute in vsizer
+        o  Tests for what done so far
+        o  Now other event types
     o  How test the modules are mainly just data?
 
     o  tdd vertical claims
