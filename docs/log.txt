@@ -7,12 +7,11 @@ o  Code CRC modules and do package / module / type doc strings.
     *  Define all types with doc strings
     *  Define fields for events
     *  Replace event types with enum / iota
-    o  Redefine scanner as poss map[statement][]event
+    *  Redefine scanner as poss map[statement][]event
+    o  Write a skeleton test for the Creator to drive out
+       recursive tdd of what is left in the diag package
+    o  How test the modules are mainly just data?
 
-
-    o  tdd statementscanner
-        o  change events to be iota, no state needed
-        o  get fabric up expecting list of nil interfaces
     o  tdd vertical claims
     o  tdd horiz claims
     o  tdd graphics factory 

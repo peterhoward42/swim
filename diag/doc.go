@@ -1,6 +1,6 @@
 /*
 Package diag provides the capability to interpret a sequence of
-dslmodel.Statement(s), and to work out what diagram drawing steps are
-necessary - in the form of drawing event types like LaneLine or SelfLoop.
+DSL Statements, and synthesize the corresponding nteraction diagram in
+the form of a 
 */
 package diag
