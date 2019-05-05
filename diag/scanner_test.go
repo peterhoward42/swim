@@ -24,8 +24,8 @@ func TestScannerProperlyAggregatesGraphicsEvents(t *testing.T) {
 	// Get the scanner to scan them, and scrutinise the *Events* attribute
 	// it populates.
 	scanner := NewScanner()
-	scanner.Scan([]*dslmodel.Statement{lane, self})
+	eventsLookup := scanner.Scan([]*dslmodel.Statement{lane, self})
 
-	assert.Len(scanner.Events[lane], 3)
-	assert.Len(scanner.Events[self], 2)
+	assert.Len(eventsLookup[lane], 3)
+	assert.Len(eventsLookup[self], 2)
 }

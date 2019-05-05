@@ -3,13 +3,12 @@
 *  Psuedo code diagram builder
 *  Tease out CRC and cf original plans
 *  Challenge tests so far wrt recent test guidance
-o  Code CRC modules and do package / module / type doc strings.
-    *  Define all types with doc strings
-    *  Define fields for events
-    *  Replace event types with enum / iota
-    *  Redefine scanner as poss map[statement][]event
-    o  Write a skeleton test for the Creator to drive out
+    *  Write a skeleton test for the Creator to drive out
        recursive tdd of what is left in the diag package
+    o  tdd Creator
+        o  DI width and height
+        o  what test for creator as it stands?
+        o  what to recurse into?
     o  How test the modules are mainly just data?
 
     o  tdd vertical claims

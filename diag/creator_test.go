@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestToTeaseOutAPI(t *testing.T) {
+func TestToTeaseOutAPIDuringDevelopment(t *testing.T) {
 	assert := assert.New(t)
 
 	reader := strings.NewReader(parser.ReferenceInput)
@@ -18,8 +18,12 @@ func TestToTeaseOutAPI(t *testing.T) {
 	statements, err := p.Parse(bufio.NewScanner(reader))
 	assert.Nil(err)
 
-    creator := NewCreator(statements)
-    created := creator.Create()
+	creator := NewCreator()
+	// These widths and heights are chosen to be similar to the size
+	// of A4 paper (in mm), to help think about the sizing abstractions.
+	width := 200
+	height := 297
+    created := creator.Create(statements, width, height)
 
     assert.IsType(&graphics.Model{}, created)
 }
