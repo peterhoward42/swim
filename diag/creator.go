@@ -67,7 +67,7 @@ func (c *Creator) graphicsForDrawingEvent(
 
 // laneTitleBox generates the lines to represent the
 // rectangular box at the top of a lane, and sets the tide mark
-// to the bottom of the box.
+// to the bottom of these boxes.
 func (c *Creator) laneTitleBox(
 	statement *dslmodel.Statement) *graphics.Primitives {
 	left := c.hSizer.LaneTitleBoxes[statement].Left

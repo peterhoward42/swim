@@ -10,10 +10,9 @@
         *  Skeleton code in Create() to tease out APIs for collaborating
            types.
         *  DrawingEventContext
-        o  All tests possible making Draw lane header box work
-            *  Diver to build attribute in hsizer
-            *  Diver to build attribute in vsizer
-        o  Tests for what done so far
+        o  All code required  to make Draw lane header box work
+            o  LaneHorizInfo as first class separate class / module
+            o  Tests for what done so far
         o  Now other event types
     o  How test the modules are mainly just data?
 
@@ -24,55 +23,5 @@
     o  tdd diag.Creator
 
 ----------------------------------------------------------------------------
-Algo
+x
 ----------------------------------------------------------------------------
-
-assume some global sizing ratio constants wrt char height: sizing.ratios
-
-init some sizing
-    horiz: sizing.Horiz
-        lane x
-        lane header box width
-        box widths
-        self loop width
-        char width
-    vert lane sizing.vert
-        lane header box depth
-        padding unit
-        char height
-        self loop height
-
-every statement has graphical mandate: diag.events.LaneHeader etc.
-
-define graphical events like this:
-    draw laneheader boxes
-    draw label segments
-    draw lane timeline
-    draw self loop
-    start a box
-    finish a box
-    draw a full or dash line
-
-iterate over all statements diag.Schema
-    capture graphical obligation
-    capture incremental v headroom consumed sizing.vert.Claims
-
-add similary - finishing up obligations
-    for example
-        terminating boxes
-        interrupting lane time lines to prevent clash with full/dash or
-                label
-
-// now we have the scan oriented info we need to build graphics model
-
-have a rendering phase in which the graphical model is built: diag.GraphicsFactory
-    iterate through graphical events model
-    advance vertical offset according to the claim associated with the
-        graphical obligation
-    delegate augmenting graphics model to type specific helpers - injecting
-        the vertical offset
-
-type specific helpers 
-    explode graphical implications into graphics model primitives
-    including sizing policy for that type
-
