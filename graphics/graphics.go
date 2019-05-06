@@ -47,6 +47,22 @@ func NewPrimitives() *Primitives {
 	return &Primitives{[]*Line{}, []*Label{}}
 }
 
+// AddLine adds the given line to the Primitive's line store.
+func (p *Primitives) AddLine(x1 int, y1 int, x2 int, y2 int,
+		dashed bool, arrow bool) {
+	line := &Line{x1, y1, x2, y2, dashed, arrow}
+	p.Lines = append(p.Lines, line)
+}
+
+// AddRect adds 4 lines to the Primitive's line store to represent
+// the rectangle of the given opposite corners.
+func (p *Primitives) AddRect(left int, top int, right int, bot int) {
+	p.AddLine(left, top, right, top, false, false)
+	p.AddLine(right, top, right, bot, false, false)
+	p.AddLine(right, bot, left, bot, false, false)
+	p.AddLine(left, bot, left, top, false, false)
+}
+
 // Model is the topl-level model.
 type Model struct {
 	Width      int

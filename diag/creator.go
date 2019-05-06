@@ -14,17 +14,16 @@ type Creator struct {
 	width      int
 	fontHeight float64
 	statements []*dslmodel.Statement
-	hSizer     *sizers.Horizontal
-	vSizer     *sizers.Vertical
+	sizer     *sizers.Sizer
 	tideMark   int
 }
 
 // NewCreator creates a Creator ready to use.
 func NewCreator(width int, fontHeight float64,
 	statements []*dslmodel.Statement) *Creator {
-	hSizer := sizers.NewHorizontal(width, fontHeight, statements)
-	vSizer := sizers.NewVertical(width, fontHeight, statements)
-	creator := &Creator{width, fontHeight, statements, hSizer, vSizer, 0}
+	sizer := sizers.NewSizer(width, fontHeight, statements)
+	tideMark := 0
+	creator := &Creator{width, fontHeight, statements, sizer, tideMark}
 	return creator
 }
 
@@ -70,14 +69,13 @@ func (c *Creator) graphicsForDrawingEvent(
 // to the bottom of these boxes.
 func (c *Creator) laneTitleBox(
 	statement *dslmodel.Statement) *graphics.Primitives {
-	left := c.hSizer.LaneTitleBoxes[statement].Left
-	right := c.hSizer.LaneTitleBoxes[statement].Right
-	topMargin := c.vSizer.TopMargin
-	height := c.vSizer.TitleBoxHeight
-	top := topMargin
-	bot := top + height
 	prims := graphics.NewPrimitives()
-	prims.AddLines(graphics.Rect(top, left, right, bottom))
+	lanesInfo := c.sizer.Lanes
+	left := int(lanesInfo.Individual[statement].Left)
+	right := int(lanesInfo.Individual[statement].Right)
+	top := int(c.sizer.TopMargin)
+	bot := int(c.sizer.TopMargin + lanesInfo.TitleBoxHeight)
+	prims.AddRect(left, top, right, bot)
 	c.tideMark = bot
 	return prims
 }

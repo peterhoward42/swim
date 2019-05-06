@@ -12,8 +12,16 @@
         *  DrawingEventContext
         o  All code required  to make Draw lane header box work
             *  LaneHorizInfo as first class separate class / module
-            o  LaneHorizInfo test
-            o  Tests for what done so far
+            *  LaneHorizInfo test
+            o  Sizer type - containing a Lanes, and used by creator
+                o  sizer needs title box top margin
+                o  graphicsprim needs add line
+                o  graphicsprim needs add rect
+                o  and tests
+                o  serialize tests fix up
+            o  Back to creator
+
+            o  Tests for everything done so far
         o  Now other event types
     o  How test the modules are mainly just data?
 
