@@ -11,7 +11,8 @@
            types.
         *  DrawingEventContext
         o  All code required  to make Draw lane header box work
-            o  LaneHorizInfo as first class separate class / module
+            *  LaneHorizInfo as first class separate class / module
+            o  LaneHorizInfo test
             o  Tests for what done so far
         o  Now other event types
     o  How test the modules are mainly just data?

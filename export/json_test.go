@@ -11,7 +11,7 @@ import (
 func TestJSONOutputIsAsExpected(t *testing.T) {
 	assert := assert.New(t)
 	mdl := graphics.NewModel(200, 3)
-	mdl.Lines = append(mdl.Lines, &graphics.Line{
+	mdl = append(mdl.Lines, &graphics.Line{
 		X1: 0, Y1: 0, X2: 100, Y2: 100, Dashed: false, Arrow: false})
 	mdl.Labels = append(mdl.Labels, &graphics.Label{
 		LinesOfText: []string{"foo", "bar"},
