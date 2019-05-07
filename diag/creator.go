@@ -38,7 +38,7 @@ func (c *Creator) Create() *graphics.Model {
 		for _, evt := range statementEvents {
 			prims, newTideMark := c.graphicsForDrawingEvent(evt, statement)
 			c.tideMark = newTideMark
-			graphicsModel.Primitives.Append(prims)
+			graphicsModel.Primitives.Add(prims)
 		}
 	}
 	return graphicsModel
@@ -49,24 +49,26 @@ func (c *Creator) Create() *graphics.Model {
 // and tide mark value, suitably advanced to accomodate the space taken
 // up by the new primitives.
 func (c *Creator) graphicsForDrawingEvent(
-	evt EventType, statement *dslmodel.Statement) (
-	prims *graphics.Primitives, tideMark float64) {
+		evt EventType, statement *dslmodel.Statement) (
+		prims *graphics.Primitives, tideMark float64) {
+
+	prims = graphics.NewPrimitives()
+	tideMark = 0
+
 	switch evt {
 	case EndBox:
 	case InteractionLine:
 	case InteractionLabel:
 	case LaneLine:
 	case LaneTitleBox:
-		return c.laneTitleBox(statement)
+		prims, tideMark = c.laneTitleBox(statement)
 	case LaneTitleLabel:
 	case SelfInteractionLines:
 	case SelfInteractionLabel:
 	case PotentiallyStartFromBox:
 	case PotentiallyStartToBox:
 	}
-	// todo - this final return should be removed once all the cases
-	// above have code block.
-	return graphics.NewPrimitives(), 0
+	return prims, tideMark
 }
 
 // laneTitleBox generates the lines to represent the

@@ -11,38 +11,10 @@
            types.
         *  DrawingEventContext
         o  All code required  to make Draw lane header box work
-            *  LaneHorizInfo as first class separate class / module
-            *  LaneHorizInfo test
-            *  Sizer type - containing a Lanes, and used by creator
-                *  sizer needs title box top margin
-                *  graphicsprim needs add line
-                *  graphicsprim needs add rect
-                *  add tests for graphics behaviour
-                    *  separate model from prims
-                *  switch graphics coords to being float64 and explain
-                *  serialize tests fix up
-            o  Back to creator using the new features?
-                *  sizer needs test that composes itself right
-                *  is lanes sizer using sizer top margin
-                o  How isolate to make create tests more amenable?
-                    o  creator's laneTitleBox function 
-                        *  make new tidemark a returned value
-                        o  MustCompileParse
-                            *  tdd it
-                            *  use it some arbitrary test case
-                            *  change args to Parse to be a string
-                            *  change Parse to be a plain fn not a method, and
-                               ditch Parse type
-                            *  go back through other cases
-                                *  first direct calls to Parser
-                                I  now manual construction of statements in
-                                   tests
-                        o  test cases:
-                            o  assembles correct properties from a sizer to
-                               define a rect
-                            o  does make a rect
-                            o  advances margin the right amount
-            o  Tests for everything done so far
+            o  Focus on creator test makes 4 lines for title box
+                *  4 lines there
+                o  chose correct fields from sizer
+    o  Have two spelling for lable/label
     o  Ready for something end to end to begin visualiszation?
     o  Now other event types in creator
     o  How test the modules are mainly just data?
@@ -50,8 +22,3 @@
 ----------------------------------------------------------------------------
 x
 ----------------------------------------------------------------------------
-
-parser.MustCompile(`
-    foo
-    bar
-`)

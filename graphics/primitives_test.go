@@ -24,7 +24,7 @@ func TestAddRectDecomposesCorrectly(t *testing.T) {
 	assert.Equal(Line{0, 3, 0, 0, false, false}, *p.Lines[3])
 }
 
-func TestAppendAccumulatesProperly(t *testing.T) {
+func TestAddAccumulatesProperly(t *testing.T) {
 	assert := assert.New(t)
 
 	a := NewPrimitives()
@@ -35,7 +35,7 @@ func TestAppendAccumulatesProperly(t *testing.T) {
 	b.AddLine(0, 0, 3, 3, false, false)
 	b.AddLabel(nil, 0, 0, Left, Top)
 
-	a.Append(b)
+	a.Add(b)
 	assert.Len(a.Lines, 2)
 	assert.Len(a.Labels, 2)
 }

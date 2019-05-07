@@ -62,8 +62,8 @@ func (p *Primitives) AddRect(
 	p.AddLine(left, bot, left, top, false, false)
 }
 
-// Append adds the Primitives given to those already held in the model.
-func (p *Primitives) Append(newPrims *Primitives) {
-	p.Lines = append(newPrims.Lines, newPrims.Lines...)
-	p.Labels = append(newPrims.Labels, newPrims.Labels...)
+// Add adds the Primitives given to those already held in the model.
+func (p *Primitives) Add(newPrims *Primitives) {
+	p.Lines = append(p.Lines, newPrims.Lines...)
+	p.Labels = append(p.Labels, newPrims.Labels...)
 }

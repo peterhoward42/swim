@@ -3,7 +3,6 @@ package diag
 import (
 	"testing"
 
-	"github.com/peterhoward42/umlinteraction/graphics"
 	"github.com/peterhoward42/umlinteraction/parser"
 	"github.com/stretchr/testify/assert"
 )
@@ -23,15 +22,13 @@ func TestCreateRunsWithoutCrashing(t *testing.T) {
 	creator.Create()
 }
 
-func TestALaneGetsATitleBox(t *testing.T) {
+func TestOutputWhenOnlyThingPresentIsOneLane(t *testing.T) {
 	assert := assert.New(t)
-	statements := parser.MustCompileParse(parser.ReferenceInput)
-	// These widths and heights are chosen to be similar to the size
-	// of A4 paper (in mm), to help think about the sizing abstractions.
+	statements := parser.MustCompileParse("lane A foo")
 	width := 200
-	fontHeight := 3.0
+	fontHeight := 3.5
 	creator := NewCreator(width, fontHeight, statements)
-	created := creator.Create()
-
-	assert.IsType(&graphics.Model{}, created)
+	graphicsModel := creator.Create()
+	prims := graphicsModel.Primitives
+	assert.Len(prims.Lines, 4)
 }
