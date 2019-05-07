@@ -3,7 +3,7 @@ package graphics
 // Line represents a line, optionally dashed, and optionally with an arrow at
 // the (X2, Y2) end.
 type Line struct {
-	X1, X2, Y1, Y2 int
+	X1, X2, Y1, Y2 float64
 	Arrow          bool
 	Dashed         bool // vs. Full
 }
@@ -22,7 +22,7 @@ const (
 type Label struct {
 	LinesOfText []string
 	// Anchor point about which the justifications are applied
-	X, Y  int
+	X, Y  float64
 	HJust string
 	VJust string
 }
@@ -39,22 +39,23 @@ func NewPrimitives() *Primitives {
 }
 
 // AddLine adds the given line to the Primitive's line store.
-func (p *Primitives) AddLine(x1 int, y1 int, x2 int, y2 int,
-		dashed bool, arrow bool) {
+func (p *Primitives) AddLine(x1 float64, y1 float64, x2 float64, y2 float64,
+	dashed bool, arrow bool) {
 	line := &Line{x1, y1, x2, y2, dashed, arrow}
 	p.Lines = append(p.Lines, line)
 }
 
 // AddLabel adds a Lable to the Primitive's Lable store.
-func (p *Primitives) AddLabel(linesOfText []string, x int, y int,
-		hJust string, vJust string) {
+func (p *Primitives) AddLabel(linesOfText []string, x float64, y float64,
+	hJust string, vJust string) {
 	label := &Label{linesOfText, x, y, hJust, vJust}
 	p.Labels = append(p.Labels, label)
 }
 
 // AddRect adds 4 lines to the Primitive's line store to represent
 // the rectangle of the given opposite corners.
-	func (p *Primitives) AddRect(left int, top int, right int, bot int) {
+func (p *Primitives) AddRect(
+		left float64, top float64, right float64, bot float64) {
 	p.AddLine(left, top, right, top, false, false)
 	p.AddLine(right, top, right, bot, false, false)
 	p.AddLine(right, bot, left, bot, false, false)

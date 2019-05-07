@@ -18,13 +18,8 @@
                 *  graphicsprim needs add line
                 *  graphicsprim needs add rect
                 o  add tests for graphics behaviour
-                    o  separate model from prims
-                        o  copy modules into 2 new ones, ditching orig
-                        o  pare model down to just that
-                        o  pare prims down to just that
-                        o  same for tests
-                        o  regression up
-                    o  should prims have int or float64 coords?
+                    *  separate model from prims
+                o  switch graphics coords to being float64 and explain
                 o  serialize tests fix up
             o  Back to creator
             o  Tests for everything done so far
