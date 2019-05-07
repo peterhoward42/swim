@@ -13,15 +13,15 @@
         o  All code required  to make Draw lane header box work
             *  LaneHorizInfo as first class separate class / module
             *  LaneHorizInfo test
-            o  Sizer type - containing a Lanes, and used by creator
+            *  Sizer type - containing a Lanes, and used by creator
                 *  sizer needs title box top margin
                 *  graphicsprim needs add line
                 *  graphicsprim needs add rect
-                o  add tests for graphics behaviour
+                *  add tests for graphics behaviour
                     *  separate model from prims
-                o  switch graphics coords to being float64 and explain
-                o  serialize tests fix up
-            o  Back to creator
+                *  switch graphics coords to being float64 and explain
+                *  serialize tests fix up
+            o  Back to creator using the new features?
             o  Tests for everything done so far
     o  Ready for something end to end to begin visualiszation?
     o  Now other event types in creator

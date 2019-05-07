@@ -2,6 +2,8 @@ package export
 
 import (
 	"testing"
+	"fmt"
+	"strings"
 
 	"github.com/stretchr/testify/assert"
 
@@ -11,43 +13,41 @@ import (
 func TestJSONOutputIsAsExpected(t *testing.T) {
 	assert := assert.New(t)
 	mdl := graphics.NewModel(200, 3)
-	mdl = append(mdl.Lines, &graphics.Line{
-		X1: 0, Y1: 0, X2: 100, Y2: 100, Dashed: false, Arrow: false})
-	mdl.Labels = append(mdl.Labels, &graphics.Label{
-		LinesOfText: []string{"foo", "bar"},
-		X:           42,
-		Y:           43,
-		HJust:       graphics.Left,
-		VJust:       graphics.Centre,
-	})
+	p := mdl.Primitives
+	p.AddLine(0, 0, 100, 100, false, false)
+	p.AddLabel([]string{"foo"}, 3, 4, graphics.Right, graphics.Centre)
 	theJSON, _ := SerializeToJSON(mdl)
+	fmt.Print(string(theJSON))
+
 	assert.JSONEq(expectedJSON, string(theJSON))
 }
 
-const expectedJSON = `{
-	"Width": 200,
-	"FontHeight": 3,
-	"Lines": [
-	  {
-		"X1": 0,
-		"X2": 100,
-		"Y1": 0,
-		"Y2": 100,
-		"Arrow": false,
-		"Dashed": false
-	  }
-	],
-	"Labels": [
-	  {
-		"LinesOfText": [
-		  "foo",
-		  "bar"
-		],
-		"X": 42,
-		"Y": 43,
-		"HJust": "Left",
-		"VJust": "Centre"
-	  }
-	]
+var expectedJSON = strings.TrimSpace(`
+{
+  "Width": 200,
+  "FontHeight": 3,
+  "Primitives": {
+    "Lines": [
+      {
+        "X1": 0,
+        "X2": 0,
+        "Y1": 100,
+        "Y2": 100,
+        "Arrow": false,
+        "Dashed": false
+      }
+    ],
+    "Labels": [
+      {
+        "LinesOfText": [
+          "foo"
+        ],
+        "X": 3,
+        "Y": 4,
+        "HJust": "Right",
+        "VJust": "Centre"
+      }
+    ]
   }
-  `
+}
+`)
