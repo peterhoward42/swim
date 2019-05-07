@@ -14,22 +14,23 @@
             *  LaneHorizInfo as first class separate class / module
             *  LaneHorizInfo test
             o  Sizer type - containing a Lanes, and used by creator
-                o  sizer needs title box top margin
-                o  graphicsprim needs add line
-                o  graphicsprim needs add rect
-                o  and tests
+                *  sizer needs title box top margin
+                *  graphicsprim needs add line
+                *  graphicsprim needs add rect
+                o  add tests for graphics behaviour
+                    o  separate model from prims
+                        o  copy modules into 2 new ones, ditching orig
+                        o  pare model down to just that
+                        o  pare prims down to just that
+                        o  same for tests
+                        o  regression up
+                    o  should prims have int or float64 coords?
                 o  serialize tests fix up
             o  Back to creator
-
             o  Tests for everything done so far
-        o  Now other event types
+    o  Ready for something end to end to begin visualiszation?
+    o  Now other event types in creator
     o  How test the modules are mainly just data?
-
-    o  tdd vertical claims
-    o  tdd horiz claims
-    o  tdd graphics factory 
-    o  define diag.Creator
-    o  tdd diag.Creator
 
 ----------------------------------------------------------------------------
 x

@@ -1,12 +1,3 @@
-/*
-Package graphics encapsulates the types that are needed to capture a diagram
-in terms of low level primites (like Lines and Labels).
-
-The aim is that these be easily renderable into diverse graphics
-formats, or serialized into JSON or YAML.
-
-The size units used are pixels.
-*/
 package graphics
 
 // Line represents a line, optionally dashed, and optionally with an arrow at
@@ -54,29 +45,24 @@ func (p *Primitives) AddLine(x1 int, y1 int, x2 int, y2 int,
 	p.Lines = append(p.Lines, line)
 }
 
+// AddLabel adds a Lable to the Primitive's Lable store.
+func (p *Primitives) AddLabel(linesOfText []string, x int, y int,
+		hJust string, vJust string) {
+	label := &Label{linesOfText, x, y, hJust, vJust}
+	p.Labels = append(p.Labels, label)
+}
+
 // AddRect adds 4 lines to the Primitive's line store to represent
 // the rectangle of the given opposite corners.
-func (p *Primitives) AddRect(left int, top int, right int, bot int) {
+	func (p *Primitives) AddRect(left int, top int, right int, bot int) {
 	p.AddLine(left, top, right, top, false, false)
 	p.AddLine(right, top, right, bot, false, false)
 	p.AddLine(right, bot, left, bot, false, false)
 	p.AddLine(left, bot, left, top, false, false)
 }
 
-// Model is the topl-level model.
-type Model struct {
-	Width      int
-	FontHeight float64
-	Primitives *Primitives
-}
-
-// NewModel instantiates a Model and initializes it ready to use.
-func NewModel(width int, fontHeight float64) *Model {
-	return &Model{width, fontHeight, NewPrimitives()}
-}
-
 // Append adds the Primitives given to those already held in the model.
-func (m *Model) Append(prims *Primitives) {
-	m.Primitives.Lines = append(m.Primitives.Lines, prims.Lines...)
-	m.Primitives.Labels = append(m.Primitives.Labels, prims.Labels...)
+func (p *Primitives) Append(newPrims *Primitives) {
+	p.Lines = append(newPrims.Lines, newPrims.Lines...)
+	p.Labels = append(newPrims.Labels, newPrims.Labels...)
 }
