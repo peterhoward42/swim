@@ -55,7 +55,7 @@ func (p *Primitives) AddLabel(linesOfText []string, x float64, y float64,
 // AddRect adds 4 lines to the Primitive's line store to represent
 // the rectangle of the given opposite corners.
 func (p *Primitives) AddRect(
-		left float64, top float64, right float64, bot float64) {
+	left float64, top float64, right float64, bot float64) {
 	p.AddLine(left, top, right, top, false, false)
 	p.AddLine(right, top, right, bot, false, false)
 	p.AddLine(right, bot, left, bot, false, false)

@@ -14,7 +14,7 @@ type Scanner struct {
 }
 
 // NewScanner produces a Scanner ready to use.
-func NewScanner() *Scanner{
+func NewScanner() *Scanner {
 	return &Scanner{}
 }
 
@@ -22,7 +22,7 @@ func NewScanner() *Scanner{
 // drawing-element mandates.
 func (s *Scanner) Scan(statements []*dslmodel.Statement) EventsForStatements {
 	eventsLookup := EventsForStatements{}
-	for _, statement := range(statements) {
+	for _, statement := range statements {
 		eventsForStatement := EventsRequired[statement.Keyword]
 		eventsLookup[statement] = eventsForStatement
 	}

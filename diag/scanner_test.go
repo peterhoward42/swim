@@ -1,10 +1,10 @@
 package diag
 
 import (
-	"testing"
-	umli "github.com/peterhoward42/umlinteraction"
 	"github.com/peterhoward42/umlinteraction/dslmodel"
+	"github.com/peterhoward42/umlinteraction/parser"
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 // This test feeds the Scanner with two Statement(s), and
@@ -13,13 +13,12 @@ import (
 func TestScannerProperlyAggregatesGraphicsEvents(t *testing.T) {
 	assert := assert.New(t)
 
-	// Prepare two Statements
-	lane := dslmodel.NewStatement()
-	lane.Keyword = umli.Lane
-	lane.LaneName = "A"
-	self := dslmodel.NewStatement()
-	self.Keyword = umli.Self
-	self.ReferencedLanes = []*dslmodel.Statement{lane,}
+	statements := parser.MustCompileParse(`
+		lane A foo
+		self A msg
+	`)
+	lane := statements[0]
+	self := statements[1]
 
 	// Get the scanner to scan them, and scrutinise the *Events* attribute
 	// it populates.

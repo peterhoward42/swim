@@ -17,7 +17,6 @@ type Statement struct {
 
 // NewStatement instantiates a Statement, ready to use.
 func NewStatement() *Statement {
-
 	return &Statement{
 		ReferencedLanes: []*Statement{},
 		LabelSegments:   []string{},

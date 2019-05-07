@@ -1,4 +1,5 @@
 package diag
+
 /*
 This module owns knowledge about what graphical drawing events should be
 triggered as each type of DSL statement is encountered,
@@ -9,13 +10,13 @@ import (
 )
 
 // EventType is the enumerated-type for the constants such as EndBox or
-// LaneLine below. 
+// LaneLine below.
 type EventType int
 
 // These constants comprise the set of values for EventType.
 const (
-    EndBox EventType = iota + 1
-    InteractionLine
+	EndBox EventType = iota + 1
+	InteractionLine
 	InteractionLabel
 	LaneLine
 	LaneTitleBox
@@ -39,7 +40,7 @@ In this context, the labels for interaction lines and for self interaction
 lines, will be drawn above the lines to which they refer, and therefore must
 precede the corresponding line events.
 */
-var EventsRequired = map[string][]EventType {
+var EventsRequired = map[string][]EventType{
 	umli.Lane: []EventType{
 		LaneTitleBox,
 		LaneTitleLabel,

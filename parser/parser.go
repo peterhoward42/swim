@@ -1,4 +1,4 @@
-// Package parser provides the Parser type, which is capable of parsing lines
+// Package parser provides the Parse method, which is capable of parsing lines
 // of DSL text to provide a structured representation of it - in the form
 // of a slice of dslmodel.Statement(s).
 package parser
@@ -14,35 +14,29 @@ import (
 	"github.com/peterhoward42/umlinteraction/dslmodel"
 )
 
-// Parser is capable of parsing lines of DSL text to provide a more
-// convenient, model based representation of the text.
-type Parser struct {
-	knownLanes map[string]*dslmodel.Statement
-}
-
-// NewParser creates a new Parser, ready to use,
-func NewParser() *Parser {
-	return &Parser{map[string]*dslmodel.Statement{}}
-}
+type laneStatementsByName = map[string]*dslmodel.Statement
 
 // Parse is the parsing invocation method.
-func (p *Parser) Parse(input *bufio.Scanner) ([]*dslmodel.Statement, error) {
+func Parse(DSLScript string) ([]*dslmodel.Statement, error) {
+	reader := strings.NewReader(DSLScript)
+	scanner := bufio.NewScanner(reader)
 	statements := []*dslmodel.Statement{}
+	knownLanes := laneStatementsByName{}
 	lineNo := 0
-	for input.Scan() {
-		line := input.Text()
+	for scanner.Scan() {
+		line := scanner.Text()
 		lineNo++
 		trimmed := strings.TrimSpace(line)
 		if len(trimmed) == 0 {
 			continue
 		}
-		statement, err := p.parseLine(trimmed)
+		statement, err := parseLine(trimmed, knownLanes)
 		if err != nil {
 			return nil, umli.DSLError(trimmed, lineNo, err.Error())
 		}
 		statements = append(statements, statement)
 	}
-	if err := input.Err(); err != nil {
+	if err := scanner.Err(); err != nil {
 		return nil, err
 	}
 	return statements, nil
@@ -54,7 +48,8 @@ var twoUCLetters = re.MustCompile(`^[A-Z][A-Z]$`)
 // parseLine parses the text present in a single line of DSL, into
 // the fields expected, validates them, and packages the result into a
 // dslmodel.Statement.
-func (p *Parser) parseLine(line string) (*dslmodel.Statement, error) {
+func parseLine(line string, knownLanes laneStatementsByName) (
+	*dslmodel.Statement, error) {
 	// Fail fast when < 2 words.
 	words := strings.Split(line, " ")
 	if len(words) < 2 {
@@ -67,7 +62,8 @@ func (p *Parser) parseLine(line string) (*dslmodel.Statement, error) {
 	}
 	// Validate and reconcile the lanes referenced in the second word.
 	laneNamesOperand := words[1]
-	lanesReferenced, err := p.parseLanesOperand(laneNamesOperand, keyWord)
+	lanesReferenced, err := parseLanesOperand(
+		laneNamesOperand, keyWord, knownLanes)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +71,7 @@ func (p *Parser) parseLine(line string) (*dslmodel.Statement, error) {
 	// Isolate label text by stripping what we have already consumed.
 	labelText := strings.Replace(line, keyWord, "", 1)
 	labelText = strings.Replace(labelText, words[1], "", 1)
-	labelIndividualLines := p.isolateLabelConstituentLines(labelText)
+	labelIndividualLines := isolateLabelConstituentLines(labelText)
 
 	// Make sure labels are present on statement for which they are
 	// mandatory
@@ -92,7 +88,7 @@ func (p *Parser) parseLine(line string) (*dslmodel.Statement, error) {
 	// A few extra steps for *Lane* statements
 	if statement.Keyword == umli.Lane {
 		statement.LaneName = laneNamesOperand
-		p.knownLanes[statement.LaneName] = statement
+		knownLanes[statement.LaneName] = statement
 	}
 	return statement, nil
 }
@@ -103,7 +99,7 @@ func (p *Parser) parseLine(line string) (*dslmodel.Statement, error) {
 // either side of any "|" present.
 // E.g. From this: "edit_facilities( | payload, user_token)"
 // It produces: []string{"edit_facilities(", "payload, user_token)"}
-func (p *Parser) isolateLabelConstituentLines(labelText string) []string {
+func isolateLabelConstituentLines(labelText string) []string {
 	segments := strings.Split(labelText, "|")
 	constituentLines := []string{}
 	for _, seg := range segments {
@@ -119,8 +115,9 @@ func (p *Parser) isolateLabelConstituentLines(labelText string) []string {
 // word of a DSL line are properly formed. This depends on the keyword.
 // It also maintains a look up table of lane name to corresponding Lane
 // statement in the parser.
-func (p *Parser) parseLanesOperand(
-	laneNamesOperand, keyWord string) ([]*dslmodel.Statement, error) {
+func parseLanesOperand(
+	laneNamesOperand, keyWord string, knownLanes laneStatementsByName) (
+	[]*dslmodel.Statement, error) {
 
 	// Fail fast on statement types that require a single lane to be specified,
 	// when this is not so.
@@ -143,7 +140,7 @@ func (p *Parser) parseLanesOperand(
 	if keyWord != umli.Lane {
 		laneLetters := strings.Split(laneNamesOperand, "")
 		for _, laneLetter := range laneLetters {
-			laneStatement, ok := p.knownLanes[laneLetter]
+			laneStatement, ok := knownLanes[laneLetter]
 			if !ok {
 				return nil, fmt.Errorf("Unknown lane: %v", laneLetter)
 			}

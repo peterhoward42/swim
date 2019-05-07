@@ -36,18 +36,21 @@ func (c *Creator) Create() *graphics.Model {
 	for _, statement := range c.statements {
 		statementEvents := graphicalEvents[statement]
 		for _, evt := range statementEvents {
-			graphicPrimitives := c.graphicsForDrawingEvent(evt, statement)
-			graphicsModel.Primitives.Append(graphicPrimitives)
+			prims, newTideMark := c.graphicsForDrawingEvent(evt, statement)
+			c.tideMark = newTideMark
+			graphicsModel.Primitives.Append(prims)
 		}
 	}
 	return graphicsModel
 }
 
-// graphicsForDrawingEvent synthesizes the lines and label strings required
-// to render a single diagram element drawing event. In so doing it
-// also advances the creators tide mark.
+// graphicsForDrawingEvent synthesizes the lines and label strings primititives
+// required to render a single diagram element drawing event. It also returns
+// and tide mark value, suitably advanced to accomodate the space taken
+// up by the new primitives.
 func (c *Creator) graphicsForDrawingEvent(
-	evt EventType, statement *dslmodel.Statement) *graphics.Primitives {
+	evt EventType, statement *dslmodel.Statement) (
+	prims *graphics.Primitives, tideMark float64) {
 	switch evt {
 	case EndBox:
 	case InteractionLine:
@@ -61,21 +64,24 @@ func (c *Creator) graphicsForDrawingEvent(
 	case PotentiallyStartFromBox:
 	case PotentiallyStartToBox:
 	}
-	return graphics.NewPrimitives()
+	// todo - this final return should be removed once all the cases
+	// above have code block.
+	return graphics.NewPrimitives(), 0
 }
 
 // laneTitleBox generates the lines to represent the
 // rectangular box at the top of a lane, and sets the tide mark
 // to the bottom of these boxes.
 func (c *Creator) laneTitleBox(
-	statement *dslmodel.Statement) *graphics.Primitives {
-	prims := graphics.NewPrimitives()
+	statement *dslmodel.Statement) (
+	prims *graphics.Primitives, tideMark float64) {
+	prims = graphics.NewPrimitives()
 	thisLane := c.sizer.Lanes.Individual[statement]
 	left := thisLane.TitleBoxLeft
 	right := thisLane.TitleBoxRight
 	top := c.sizer.TopMargin
 	bot := c.sizer.TopMargin + c.sizer.Lanes.TitleBoxHeight
 	prims.AddRect(left, top, right, bot)
-	c.tideMark = bot
-	return prims
+	tideMark = bot
+	return prims, tideMark
 }

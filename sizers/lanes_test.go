@@ -1,8 +1,7 @@
 package sizers
 
 import (
-	umli "github.com/peterhoward42/umlinteraction"
-	"github.com/peterhoward42/umlinteraction/dslmodel"
+	"github.com/peterhoward42/umlinteraction/parser"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -10,17 +9,10 @@ import (
 
 func TestNewLanesSetsScalarAttributesCorrectly(t *testing.T) {
 	assert := assert.New(t)
-
-	a := dslmodel.NewStatement()
-	a.Keyword = umli.Lane
-	a.LaneName = "A"
-
-	b := dslmodel.NewStatement()
-	b.Keyword = umli.Lane
-	b.LaneName = "B"
-
-	statements := []*dslmodel.Statement{a, b}
-
+	statements := parser.MustCompileParse(`
+		lane A foo
+		lane B bar
+	`)
 	diagWidth := 200
 	fontHeight := 3.5
 	lanes := NewLanes(diagWidth, fontHeight, statements)
@@ -34,16 +26,11 @@ func TestNewLanesSetsScalarAttributesCorrectly(t *testing.T) {
 
 func TestNewLanesSetsIndividualLaneAttributesCorrectly(t *testing.T) {
 	assert := assert.New(t)
-
-	a := dslmodel.NewStatement()
-	a.Keyword = umli.Lane
-	a.LaneName = "A"
-
-	b := dslmodel.NewStatement()
-	b.Keyword = umli.Lane
-	b.LaneName = "B"
-
-	statements := []*dslmodel.Statement{a, b}
+	statements := parser.MustCompileParse(`
+		lane A foo
+		lane B bar
+	`)
+	b := statements[1]
 
 	diagWidth := 200
 	fontHeight := 3.5

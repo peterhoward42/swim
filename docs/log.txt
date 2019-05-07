@@ -26,10 +26,18 @@
                 *  is lanes sizer using sizer top margin
                 o  How isolate to make create tests more amenable?
                     o  creator's laneTitleBox function 
-                        o  make new margin a returned value
-                            o  do it
-                            o  regression
-                        o  use mock for these?
+                        *  make new tidemark a returned value
+                        o  MustCompileParse
+                            *  tdd it
+                            *  use it some arbitrary test case
+                            *  change args to Parse to be a string
+                            *  change Parse to be a plain fn not a method, and
+                               ditch Parse type
+                            *  go back through other cases
+                                *  first direct calls to Parser
+                                I  now manual construction of statements in
+                                   tests
+                        o  test cases:
                             o  assembles correct properties from a sizer to
                                define a rect
                             o  does make a rect
@@ -42,3 +50,8 @@
 ----------------------------------------------------------------------------
 x
 ----------------------------------------------------------------------------
+
+parser.MustCompile(`
+    foo
+    bar
+`)
