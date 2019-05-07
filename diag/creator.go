@@ -14,15 +14,15 @@ type Creator struct {
 	width      int
 	fontHeight float64
 	statements []*dslmodel.Statement
-	sizer     *sizers.Sizer
-	tideMark   int
+	sizer      *sizers.Sizer
+	tideMark   float64
 }
 
 // NewCreator creates a Creator ready to use.
 func NewCreator(width int, fontHeight float64,
 	statements []*dslmodel.Statement) *Creator {
 	sizer := sizers.NewSizer(width, fontHeight, statements)
-	tideMark := 0
+	tideMark := 0.0
 	creator := &Creator{width, fontHeight, statements, sizer, tideMark}
 	return creator
 }
@@ -37,15 +37,15 @@ func (c *Creator) Create() *graphics.Model {
 		statementEvents := graphicalEvents[statement]
 		for _, evt := range statementEvents {
 			graphicPrimitives := c.graphicsForDrawingEvent(evt, statement)
-			graphicsModel.Append(graphicPrimitives)
+			graphicsModel.Primitives.Append(graphicPrimitives)
 		}
 	}
 	return graphicsModel
 }
 
 // graphicsForDrawingEvent synthesizes the lines and label strings required
-// to render the given single diagram element drawing event. In so doing it
-// also advances the tide mark.
+// to render a single diagram element drawing event. In so doing it
+// also advances the creators tide mark.
 func (c *Creator) graphicsForDrawingEvent(
 	evt EventType, statement *dslmodel.Statement) *graphics.Primitives {
 	switch evt {
@@ -71,10 +71,10 @@ func (c *Creator) laneTitleBox(
 	statement *dslmodel.Statement) *graphics.Primitives {
 	prims := graphics.NewPrimitives()
 	lanesInfo := c.sizer.Lanes
-	left := int(lanesInfo.Individual[statement].Left)
-	right := int(lanesInfo.Individual[statement].Right)
-	top := int(c.sizer.TopMargin)
-	bot := int(c.sizer.TopMargin + lanesInfo.TitleBoxHeight)
+	left := lanesInfo.Individual[statement].TitleBoxLeft
+	right := lanesInfo.Individual[statement].TitleBoxRight
+	top := c.sizer.TopMargin
+	bot := c.sizer.TopMargin + lanesInfo.TitleBoxHeight
 	prims.AddRect(left, top, right, bot)
 	c.tideMark = bot
 	return prims

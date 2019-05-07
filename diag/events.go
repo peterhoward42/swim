@@ -30,7 +30,8 @@ const (
 EventsRequired provides the list of EventType(s) that should be stimulated
 in response to each DSL keyword.
 
-The sequence is significant, because each event *claims* a certain amount
+The sequence within these lists is significant, because each event
+*claims* a certain amount
 of vertical room for itself, which then *pushes* everything that follows
 further down the diagram.
 

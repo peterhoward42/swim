@@ -1,21 +1,21 @@
 package sizers
 
 import (
-	"github.com/peterhoward42/umlinteraction/dslmodel"
 	umli "github.com/peterhoward42/umlinteraction"
+	"github.com/peterhoward42/umlinteraction/dslmodel"
 )
 
 // Lanes holds sizing information for the lanes.
 type Lanes struct {
-	DiagramWidth float64
-	LaneStatements []*dslmodel.Statement
-	NumLanes int
-	TitleBoxWidth float64
-	TitleBoxPitch float64
-	TitleBoxHeight float64
-	TitleBoxHorizGap float64
+	DiagramWidth       float64
+	LaneStatements     []*dslmodel.Statement
+	NumLanes           int
+	TitleBoxWidth      float64
+	TitleBoxPitch      float64
+	TitleBoxHeight     float64
+	TitleBoxHorizGap   float64
 	TitleBoxLeftMargin float64
-	Individual InfoPerLane
+	Individual         InfoPerLane
 }
 
 // InfoPerLane provides information about individual lanes, keyed on
@@ -24,15 +24,15 @@ type InfoPerLane map[*dslmodel.Statement]*LaneInfo
 
 // LaneInfo carries information about one Lane.
 type LaneInfo struct {
-	Left float64
-	Centre float64
-	Right float64
+	TitleBoxLeft  float64
+	Centre        float64
+	TitleBoxRight float64
 }
 
 // NewLanes provides a Lanes structure that has been initialised
 // as is ready for use.
 func NewLanes(diagramWidth int, fontHeight float64,
-		statements []*dslmodel.Statement) *Lanes {
+	statements []*dslmodel.Statement) *Lanes {
 	lanes := &Lanes{}
 	lanes.DiagramWidth = float64(diagramWidth)
 	lanes.populateLaneStatements(statements)
@@ -50,7 +50,7 @@ func (l *Lanes) populateTitleBoxAttribs() {
 	// The margins from the edge of the diagram is the same as this gap.
 	const gapProportion float64 = 0.25
 	N := float64(l.NumLanes)
-	l.TitleBoxWidth = l.DiagramWidth / (N + gapProportion * (N + 1))
+	l.TitleBoxWidth = l.DiagramWidth / (N + gapProportion*(N+1))
 	l.TitleBoxHorizGap = gapProportion * l.TitleBoxWidth
 	l.TitleBoxPitch = l.TitleBoxWidth + l.TitleBoxHorizGap
 	l.TitleBoxLeftMargin = l.TitleBoxHorizGap
@@ -59,9 +59,9 @@ func (l *Lanes) populateTitleBoxAttribs() {
 func (l *Lanes) populateIndividualLaneInfo() {
 	l.Individual = InfoPerLane{}
 	for i, statement := range l.LaneStatements {
-		centre := l.TitleBoxLeftMargin + float64(i) * l.TitleBoxPitch
-		left := centre - 0.5 * l.TitleBoxWidth
-		right := centre + 0.5 * l.TitleBoxWidth
+		centre := l.TitleBoxLeftMargin + float64(i)*l.TitleBoxPitch
+		left := centre - 0.5*l.TitleBoxWidth
+		right := centre + 0.5*l.TitleBoxWidth
 		laneInfo := &LaneInfo{left, centre, right}
 		l.Individual[statement] = laneInfo
 	}

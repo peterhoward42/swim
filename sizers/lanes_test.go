@@ -50,7 +50,7 @@ func TestNewLanesSetsIndividualLaneAttributesCorrectly(t *testing.T) {
 	lanes := NewLanes(diagWidth, fontHeight, statements)
 	individual := lanes.Individual[b]
 
-	assert.InDelta(72.7, individual.Left, 0.1)
+	assert.InDelta(72.7, individual.TitleBoxLeft, 0.1)
 	assert.InDelta(109.1, individual.Centre, 0.1)
-	assert.InDelta(145.5, individual.Right, 0.1)
+	assert.InDelta(145.5, individual.TitleBoxRight, 0.1)
 }
