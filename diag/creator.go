@@ -61,7 +61,7 @@ func (c *Creator) graphicsForDrawingEvent(
 	case PotentiallyStartFromBox:
 	case PotentiallyStartToBox:
 	}
-	return nil
+	return graphics.NewPrimitives()
 }
 
 // laneTitleBox generates the lines to represent the
@@ -70,11 +70,11 @@ func (c *Creator) graphicsForDrawingEvent(
 func (c *Creator) laneTitleBox(
 	statement *dslmodel.Statement) *graphics.Primitives {
 	prims := graphics.NewPrimitives()
-	lanesInfo := c.sizer.Lanes
-	left := lanesInfo.Individual[statement].TitleBoxLeft
-	right := lanesInfo.Individual[statement].TitleBoxRight
+	thisLane := c.sizer.Lanes.Individual[statement]
+	left := thisLane.TitleBoxLeft
+	right := thisLane.TitleBoxRight
 	top := c.sizer.TopMargin
-	bot := c.sizer.TopMargin + lanesInfo.TitleBoxHeight
+	bot := c.sizer.TopMargin + c.sizer.Lanes.TitleBoxHeight
 	prims.AddRect(left, top, right, bot)
 	c.tideMark = bot
 	return prims

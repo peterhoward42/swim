@@ -22,7 +22,18 @@
                 *  switch graphics coords to being float64 and explain
                 *  serialize tests fix up
             o  Back to creator using the new features?
-                *  LaneInfo attribute *left* should be TitleBoxLeft (typ)
+                *  sizer needs test that composes itself right
+                *  is lanes sizer using sizer top margin
+                o  How isolate to make create tests more amenable?
+                    o  creator's laneTitleBox function 
+                        o  make new margin a returned value
+                            o  do it
+                            o  regression
+                        o  use mock for these?
+                            o  assembles correct properties from a sizer to
+                               define a rect
+                            o  does make a rect
+                            o  advances margin the right amount
             o  Tests for everything done so far
     o  Ready for something end to end to begin visualiszation?
     o  Now other event types in creator
