@@ -3,18 +3,25 @@
 *  Psuedo code diagram builder
 *  Tease out CRC and cf original plans
 *  Challenge tests so far wrt recent test guidance
-    *  Write a skeleton test for the Creator to drive out
-       recursive tdd of what is left in the diag package
-    o  tdd Creator
-        *  DI width and height
-        *  Skeleton code in Create() to tease out APIs for collaborating
-           types.
-        *  DrawingEventContext
-        o  All code required  to make Draw lane header box work
-            o  Focus on creator test makes 4 lines for title box
-                *  4 lines there
-                o  chose correct fields from sizer
+    o  Find visualisation pathway
+        *  Think about repo split and document
+        *  Design mvp CLI
+        o  .png exporter
+            *  choose lib = fogleman/gg
+            o  tdd
+                *  test that file creation err msg
+                *  test that file produced
+                o  test file indentical with established reference, with
+                   one of each thing in
+                    *  graphicsModel needs height attrib
+                    o  tdd to cf an established reference file with real
+                       cf commented out
+                    o  use this to check the image visually
+                    o  now stash this file as the reference
+    o  Go back to diag.Create() tdd
+        o  Need title box size and position check
     o  Have two spelling for lable/label
+    o  Move all sizing constants into a module
     o  Ready for something end to end to begin visualiszation?
     o  Now other event types in creator
     o  How test the modules are mainly just data?

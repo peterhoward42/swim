@@ -22,7 +22,7 @@ func TestCreateRunsWithoutCrashing(t *testing.T) {
 	creator.Create()
 }
 
-func TestOutputWhenOnlyThingPresentIsOneLane(t *testing.T) {
+func TestForLaneTitleBoxWhenOnlyThingPresentIsOneLane(t *testing.T) {
 	assert := assert.New(t)
 	statements := parser.MustCompileParse("lane A foo")
 	width := 200

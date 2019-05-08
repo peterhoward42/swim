@@ -1,7 +1,6 @@
 package export
 
 import (
-	"fmt"
 	"strings"
 	"testing"
 
@@ -17,7 +16,7 @@ func TestJSONOutputIsAsExpected(t *testing.T) {
 	p.AddLine(0, 0, 100, 100, false, false)
 	p.AddLabel([]string{"foo"}, 3, 4, graphics.Right, graphics.Centre)
 	theJSON, _ := SerializeToJSON(mdl)
-	fmt.Print(string(theJSON))
+	//fmt.Print(string(theJSON))
 
 	assert.JSONEq(expectedJSON, string(theJSON))
 }
@@ -25,6 +24,7 @@ func TestJSONOutputIsAsExpected(t *testing.T) {
 var expectedJSON = strings.TrimSpace(`
 {
   "Width": 200,
+  "Height": 2000,
   "FontHeight": 3,
   "Primitives": {
     "Lines": [

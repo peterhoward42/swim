@@ -31,58 +31,19 @@ dash CA  status_not_authorized
 
 
 ----------------------------------------------------------------------------
-Separation of concerns
+Rendering and Product Scopes
 ----------------------------------------------------------------------------
-o  Lexer
-o  Parser
-o  Vertical Topology
-o  Relative Sizing
-o  Geometry builder
-o  Rendering
 
-----------------------------------------------------------------------------
-Lexer Role
-----------------------------------------------------------------------------
-o  Split input into lines
-o  Split lines into kw, operand, message word/line components
-o  Split message into separate line components
-o  Split operand into parts, e.g. A,B
-o  All the above with reference to full input line and line numer
-o  Validation and error handling
-o  Queryable or navigable- e.g. lane has self
+o  Want diverse rendering capabilities
+o  Do want go CLI for rendering
+o  Must not be part of web assy component
+o  So define canonical output as diagram description json (or yaml)
+o  Ok have renderers in same repo
 
-----------------------------------------------------------------------------
-VerticalTopology
-----------------------------------------------------------------------------
-o  Receives the lexed lines in sequence, at a kw specific handler.
-o  Calculates the height requirement for this event
-    o  Based on label line count
-    o  And event type (*self* arrows are tall)
-o  Stores the requirements for each vertical position
-o  Ie arrows, strings, box tops / bottoms
 
-----------------------------------------------------------------------------
-Relative Sizing
-----------------------------------------------------------------------------
-o  The style / layout expertize holder
-
-----------------------------------------------------------------------------
-Geometry Builder
-----------------------------------------------------------------------------
-o  Consumes VerticalTopology, RelativeSizing, and Lexer
-o  Produces generalised / portable geometry output specification
-
-----------------------------------------------------------------------------
-Consider parser packages
-----------------------------------------------------------------------------
-o  e.g. https://github.com/alecthomas/participle/blob/master/TUTORIAL.md
-
-----------------------------------------------------------------------------
-Rendering
-----------------------------------------------------------------------------
 Consider using https://github.com/llgcode/draw2d
 This library provides an object you can render to programmatially, which
 can then output to multiple formats
 
 Even better:
-https://godoc.org/github.com/fogleman/gg
+https://github.com/fogleman/gg

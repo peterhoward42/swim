@@ -1,0 +1,2 @@
+umli infile outfile.suffix
+vs code can display and will auto refresh on file change
