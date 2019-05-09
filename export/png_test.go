@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	// "github.com/udhos/equalfile"
+	"github.com/udhos/equalfile"
 
 	"github.com/peterhoward42/umlinteraction/graphics"
 )
@@ -41,18 +41,16 @@ func TestRegressionWithEveryGraphicsType(t *testing.T) {
 	prims := graphicsModel.Primitives
 	prims.AddLine(50, 50, 250, 50, false, false)
 	prims.AddLine(50, 150, 250, 150, true, false)
-	prims.AddLine(50, 250, 250, 50, false, true)
+	prims.AddLine(50, 250, 250, 250, false, true)
 
   basePath := "umli_test_regress.png"
   newFilePath := filepath.Join(os.TempDir(), basePath)
-  //referencePath := filepath.Join(".", "test_data", basePath)
+  referencePath := filepath.Join(".", "test_data", basePath)
 	err := CreatePNG(newFilePath, graphicsModel)
 	assert.NoError(err)
   // Compare to reference file.
-  /*
 	cmp := equalfile.New(nil, equalfile.Options{})
 	equal, err := cmp.CompareFile(newFilePath, referencePath)
 	assert.NoError(err)
   assert.True(equal, "File produced is not identical to reference file")
-  */
 }

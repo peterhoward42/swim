@@ -3,7 +3,7 @@ package graphics
 // Line represents a line, optionally dashed, and optionally with an arrow at
 // the (X2, Y2) end.
 type Line struct {
-	X1, X2, Y1, Y2 float64
+	X1, Y1, X2, Y2 float64
 	Arrow          bool
 	Dashed         bool // vs. Full
 }
