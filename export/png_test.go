@@ -3,12 +3,13 @@ package export
 import (
 	"os"
 	"path/filepath"
+	_ "fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/udhos/equalfile"
 
 	"github.com/peterhoward42/umlinteraction/graphics"
+	"github.com/peterhoward42/imgeq"
 )
 
 func TestErrorMsgIsCorrectWhenCantOpenFile(t *testing.T) {
@@ -32,6 +33,10 @@ func TestDotPNGOutputProducesAFile(t *testing.T) {
 	assert.NoError(err)
 	assert.FileExists(filePath)
 }
+
+// Make a .png file for a graphics model containing one of each
+// primitive and makes sure it is idential to a stored golden reference
+// image file.
 func TestRegressionWithEveryGraphicsType(t *testing.T) {
 	assert := assert.New(t)
 	width := 1000
@@ -44,13 +49,13 @@ func TestRegressionWithEveryGraphicsType(t *testing.T) {
 	prims.AddLine(50, 250, 250, 250, false, true)
 
   basePath := "umli_test_regress.png"
-  newFilePath := filepath.Join(os.TempDir(), basePath)
-  referencePath := filepath.Join(".", "test_data", basePath)
-	err := CreatePNG(newFilePath, graphicsModel)
+	generated := filepath.Join(os.TempDir(), basePath)
+	//fmt.Printf("Generated file: %s", generated)
+  goldenRef := filepath.Join(".", "test_data", basePath)
+	err := CreatePNG(generated, graphicsModel)
+  assert.NoError(err)
+  
+  areEqual, err := imgeq.AreEqual(goldenRef, generated)
 	assert.NoError(err)
-  // Compare to reference file.
-	cmp := equalfile.New(nil, equalfile.Options{})
-	equal, err := cmp.CompareFile(newFilePath, referencePath)
-	assert.NoError(err)
-  assert.True(equal, "File produced is not identical to reference file")
+  assert.True(areEqual, "File produced is not identical to reference file")
 }

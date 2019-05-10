@@ -14,10 +14,18 @@
                 o  test file indentical with established reference, with
                    one of each thing in
                     *  graphicsModel needs height attrib
-                    o  tdd to cf an established reference file with real
+                    *  tdd to cf an established reference file with real
                        cf commented out
-                    o  use this to check the image visually
-                    o  now stash this file as the reference
+                    *  use this to check the image visually
+                    *  now stash this file as the reference
+                    o  put in an image equality test using imgeq, that
+                       also makes it easy to view the generated file
+                    o  hack capture the golden reference, inspet and
+                       store it
+                    o  revert to proper test - should say ok
+
+    o  rename package umli?
+
     o  Go back to diag.Create() tdd
         o  Need title box size and position check
     o  Have two spelling for lable/label
@@ -27,5 +35,5 @@
     o  How test the modules are mainly just data?
 
 ----------------------------------------------------------------------------
-x
+Design own images equal lib
 ----------------------------------------------------------------------------

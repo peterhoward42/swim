@@ -2,7 +2,8 @@ package export
 
 import (
 	"strings"
-	"testing"
+  "testing"
+  _  "fmt"
 
 	"github.com/stretchr/testify/assert"
 
@@ -15,8 +16,9 @@ func TestJSONOutputIsAsExpected(t *testing.T) {
 	p := mdl.Primitives
 	p.AddLine(0, 0, 100, 100, false, false)
 	p.AddLabel([]string{"foo"}, 3, 4, graphics.Right, graphics.Centre)
-	theJSON, _ := SerializeToJSON(mdl)
-	//fmt.Print(string(theJSON))
+  theJSON, _ := SerializeToJSON(mdl)
+  
+  // fmt.Printf(string(theJSON)_
 
 	assert.JSONEq(expectedJSON, string(theJSON))
 }
@@ -30,8 +32,8 @@ var expectedJSON = strings.TrimSpace(`
     "Lines": [
       {
         "X1": 0,
-        "X2": 0,
-        "Y1": 100,
+        "Y1": 0,
+        "X2": 100,
         "Y2": 100,
         "Arrow": false,
         "Dashed": false
