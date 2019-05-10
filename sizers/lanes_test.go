@@ -1,7 +1,7 @@
 package sizers
 
 import (
-	"github.com/peterhoward42/umlinteraction/parser"
+	"github.com/peterhoward42/umli/parser"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

@@ -7,7 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/peterhoward42/umlinteraction/graphics"
+	"github.com/peterhoward42/umli/graphics"
 )
 
 func TestJSONOutputIsAsExpected(t *testing.T) {

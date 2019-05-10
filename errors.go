@@ -1,4 +1,4 @@
-package umlinteraction
+package umli
 
 import "fmt"
 

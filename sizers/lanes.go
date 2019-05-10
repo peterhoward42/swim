@@ -1,8 +1,8 @@
 package sizers
 
 import (
-	umli "github.com/peterhoward42/umlinteraction"
-	"github.com/peterhoward42/umlinteraction/dslmodel"
+	"github.com/peterhoward42/umli"
+	"github.com/peterhoward42/umli/dslmodel"
 )
 
 // Lanes holds sizing information for the lanes.

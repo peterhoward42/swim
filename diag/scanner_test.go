@@ -1,8 +1,8 @@
 package diag
 
 import (
-	"github.com/peterhoward42/umlinteraction/dslmodel"
-	"github.com/peterhoward42/umlinteraction/parser"
+	"github.com/peterhoward42/umli/dslmodel"
+	"github.com/peterhoward42/umli/parser"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

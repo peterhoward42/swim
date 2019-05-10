@@ -1,7 +1,7 @@
 package sizers
 
 import (
-	"github.com/peterhoward42/umlinteraction/dslmodel"
+	"github.com/peterhoward42/umli/dslmodel"
 )
 
 // Sizer is the top level sizing component.

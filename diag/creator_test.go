@@ -3,7 +3,7 @@ package diag
 import (
 	"testing"
 
-	"github.com/peterhoward42/umlinteraction/parser"
+	"github.com/peterhoward42/umli/parser"
 	"github.com/stretchr/testify/assert"
 )
 

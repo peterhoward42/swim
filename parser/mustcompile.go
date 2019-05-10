@@ -3,7 +3,7 @@ package parser
 import (
 	"fmt"
 
-	"github.com/peterhoward42/umlinteraction/dslmodel"
+	"github.com/peterhoward42/umli/dslmodel"
 )
 
 // MustCompileParse is a short-form wrapper for the parser, that panics

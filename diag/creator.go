@@ -1,9 +1,9 @@
 package diag
 
 import (
-	"github.com/peterhoward42/umlinteraction/dslmodel"
-	"github.com/peterhoward42/umlinteraction/graphics"
-	"github.com/peterhoward42/umlinteraction/sizers"
+	"github.com/peterhoward42/umli/dslmodel"
+	"github.com/peterhoward42/umli/graphics"
+	"github.com/peterhoward42/umli/sizers"
 )
 
 // Creator is the top level entry point for the diag package.

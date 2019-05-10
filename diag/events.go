@@ -6,7 +6,7 @@ triggered as each type of DSL statement is encountered,
 */
 
 import (
-	umli "github.com/peterhoward42/umlinteraction"
+	"github.com/peterhoward42/umli"
 )
 
 // EventType is the enumerated-type for the constants such as EndBox or

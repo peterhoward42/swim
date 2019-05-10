@@ -3,7 +3,7 @@ package export
 import (
 	"fmt"
 	"github.com/fogleman/gg"
-	"github.com/peterhoward42/umlinteraction/graphics"
+	"github.com/peterhoward42/umli/graphics"
 	"golang.org/x/image/colornames"
 )
 

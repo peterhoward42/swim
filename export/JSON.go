@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/peterhoward42/umlinteraction/graphics"
+	"github.com/peterhoward42/umli/graphics"
 )
 
 // SerializeToJSON renders a graphics.Model into a

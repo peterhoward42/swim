@@ -1,9 +1,9 @@
 /*
-Package umlinteraction is the topmost package in the uml interaction system.
+Package umli is the topmost package in the uml interaction system.
 It is concerned with global topics of the system, that cannot sensibly be
 hidden away in more specialized packages.
 */
-package umlinteraction
+package umli
 
 // These constants represent the keywords in the DSL language.
 // They are in the top level package so that they can be used

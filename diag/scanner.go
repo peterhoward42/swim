@@ -1,7 +1,7 @@
 package diag
 
 import (
-	"github.com/peterhoward42/umlinteraction/dslmodel"
+	"github.com/peterhoward42/umli/dslmodel"
 )
 
 // EventsForStatements provides a lookup table for the graphical element

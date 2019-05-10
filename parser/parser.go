@@ -10,8 +10,8 @@ import (
 	re "regexp"
 	"strings"
 
-	umli "github.com/peterhoward42/umlinteraction"
-	"github.com/peterhoward42/umlinteraction/dslmodel"
+	 "github.com/peterhoward42/umli"
+	"github.com/peterhoward42/umli/dslmodel"
 )
 
 type laneStatementsByName = map[string]*dslmodel.Statement
