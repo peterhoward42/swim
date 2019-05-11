@@ -3,31 +3,16 @@
 *  Psuedo code diagram builder
 *  Tease out CRC and cf original plans
 *  Challenge tests so far wrt recent test guidance
-    o  Find visualisation pathway
-        *  Think about repo split and document
-        *  Design mvp CLI
-        o  .png exporter
-            *  choose lib = fogleman/gg
-            o  tdd
-                *  test that file creation err msg
-                *  test that file produced
-                o  test file indentical with established reference, with
-                   one of each thing in
-                    *  graphicsModel needs height attrib
-                    *  tdd to cf an established reference file with real
-                       cf commented out
-                    *  use this to check the image visually
-                    *  now stash this file as the reference
-                    o  put in an image equality test using imgeq, that
-                       also makes it easy to view the generated file
-                    o  hack capture the golden reference, inspet and
-                       store it
-                    o  revert to proper test - should say ok
-
-    o  rename package umli?
+    *  Find visualisation pathway
+    *  rename package umli?
 
     o  Go back to diag.Create() tdd
-        o  Need title box size and position check
+        o  Find way to hook in a visualise step that can easily be
+           turned on with an env or similar, and not fail the test
+            *  make creator tests produce .png when env set
+            o  commit
+        o  Validate title box visually
+        o  Validate title box programmatically
     o  Have two spelling for lable/label
     o  Move all sizing constants into a module
     o  Ready for something end to end to begin visualiszation?
