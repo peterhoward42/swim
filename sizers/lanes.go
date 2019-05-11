@@ -8,6 +8,7 @@ import (
 // Lanes holds sizing information for the lanes.
 type Lanes struct {
 	DiagramWidth       float64
+	FontHeight         float64
 	LaneStatements     []*dslmodel.Statement
 	NumLanes           int
 	TitleBoxWidth      float64
@@ -35,7 +36,8 @@ func NewLanes(diagramWidth int, fontHeight float64,
 	statements []*dslmodel.Statement) *Lanes {
 	lanes := &Lanes{}
 	lanes.DiagramWidth = float64(diagramWidth)
-	lanes.populateLaneStatements(statements)
+	lanes.FontHeight = fontHeight
+	lanes.isolateLaneStatements(statements)
 	lanes.NumLanes = len(lanes.LaneStatements)
 	lanes.populateTitleBoxAttribs()
 	lanes.populateIndividualLaneInfo()
@@ -45,21 +47,44 @@ func NewLanes(diagramWidth int, fontHeight float64,
 
 // populateTitleBoxAttribs works out the values for the TitleBoxXXX attributes.
 func (l *Lanes) populateTitleBoxAttribs() {
-	// The title boxes are all the same width.
+	// The title boxes are all the same width and height.
+	l.TitleBoxHeight = l.titleBoxHeight()
 	// The gaps between them are a fixed proportion of their width.
 	// The margins from the edge of the diagram is the same as this gap.
-	const gapProportion float64 = 0.25
-	N := float64(l.NumLanes)
-	l.TitleBoxWidth = l.DiagramWidth / (N + gapProportion*(N+1))
-	l.TitleBoxHorizGap = gapProportion * l.TitleBoxWidth
-	l.TitleBoxPitch = l.TitleBoxWidth + l.TitleBoxHorizGap
-	l.TitleBoxLeftMargin = l.TitleBoxHorizGap
+	n := float64(l.NumLanes)
+	nMargins := 2.0
+	nGaps := n - 1
+	k := titleBoxSeparationK
+	w := l.DiagramWidth / (k*(nMargins+nGaps) + n)
+	l.TitleBoxWidth = w
+	l.TitleBoxHorizGap = k * w
+	l.TitleBoxPitch = w * (1 + k)
+	l.TitleBoxLeftMargin = k * w
+}
+
+// titleBoxHeight calculates the height based on sufficient room for the
+// title box with the most label lines.
+func (l *Lanes) titleBoxHeight() float64 {
+	labelLines := 0
+	for _, s := range l.LaneStatements {
+		n := len(s.LabelSegments)
+		if n > labelLines {
+			labelLines = n
+		}
+	}
+	n := float64(labelLines)
+	topBotMargins := 2.0 * titleBoxTextTopBotMarginK*l.FontHeight
+	leading := (n-1) * titleBoxTextRowLeadingK * l.FontHeight
+	lines := n * l.FontHeight
+	ht := topBotMargins + leading + lines 
+	return ht
 }
 
 func (l *Lanes) populateIndividualLaneInfo() {
 	l.Individual = InfoPerLane{}
 	for i, statement := range l.LaneStatements {
-		centre := l.TitleBoxLeftMargin + float64(i)*l.TitleBoxPitch
+		centre := l.TitleBoxLeftMargin + 0.5*l.TitleBoxWidth +
+			float64((i))*l.TitleBoxPitch
 		left := centre - 0.5*l.TitleBoxWidth
 		right := centre + 0.5*l.TitleBoxWidth
 		laneInfo := &LaneInfo{left, centre, right}
@@ -67,8 +92,8 @@ func (l *Lanes) populateIndividualLaneInfo() {
 	}
 }
 
-// populateLaneStatements isolates lane statements from a list.
-func (l *Lanes) populateLaneStatements(statements []*dslmodel.Statement) {
+// isolateLaneStatements isolates lane statements from a list.
+func (l *Lanes) isolateLaneStatements(statements []*dslmodel.Statement) {
 	for _, s := range statements {
 		if s.Keyword == umli.Lane {
 			l.LaneStatements = append(l.LaneStatements, s)

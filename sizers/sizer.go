@@ -15,7 +15,7 @@ type Sizer struct {
 func NewSizer(diagramWidth int, fontHeight float64,
 	statements []*dslmodel.Statement) *Sizer {
 	sizer := &Sizer{}
-	sizer.TopMargin = 2.0 * fontHeight
+	sizer.TopMargin = diagramTopMarginK * fontHeight
 	sizer.Lanes = NewLanes(diagramWidth, fontHeight, statements)
 	return sizer
 }

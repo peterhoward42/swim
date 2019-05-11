@@ -7,24 +7,73 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewLanesSetsScalarAttributesCorrectly(t *testing.T) {
+
+func TestNewLanesSetsTitleBoxHeightWhenLabelHasOneLineOfText(t *testing.T) {
+	assert := assert.New(t)
+	statements := parser.MustCompileParse(`
+		lane A foo
+	`)
+	diagWidth := 2000
+	fontHeight := 20.0
+	lanes := NewLanes(diagWidth, fontHeight, statements)
+	assert.InDelta(40.0, lanes.TitleBoxHeight, 0.1)
+}
+func TestNewLanesSetsTitleBoxHeightWhenLabelHasThreeLinesOfText(t *testing.T) {
+	assert := assert.New(t)
+	statements := parser.MustCompileParse(`
+		lane A foo | bar | baz
+	`)
+	diagWidth := 2000
+	fontHeight := 20.0
+	lanes := NewLanes(diagWidth, fontHeight, statements)
+	assert.InDelta(90.0, lanes.TitleBoxHeight, 0.1)
+}
+func TestNewLanesSetsTitleBoxHeightWhenLabelsHaveDifferingHeight(t *testing.T) {
+	assert := assert.New(t)
+	statements := parser.MustCompileParse(`
+		lane A fibble
+		lane B foo | bar | baz
+	`)
+	diagWidth := 2000
+	fontHeight := 20.0
+	lanes := NewLanes(diagWidth, fontHeight, statements)
+	assert.InDelta(90.0, lanes.TitleBoxHeight, 0.1)
+}
+
+func TestNewLanesSetsScalarAttributesCorrectlyForOneLane(t *testing.T) {
+	assert := assert.New(t)
+	statements := parser.MustCompileParse(`
+		lane A foo
+	`)
+	diagWidth := 2000
+	fontHeight := 20.0
+	lanes := NewLanes(diagWidth, fontHeight, statements)
+
+	assert.Equal(1, lanes.NumLanes)
+	assert.InDelta(1333.3, lanes.TitleBoxWidth, 0.1)
+	assert.InDelta(1666.7, lanes.TitleBoxPitch, 0.1)
+	assert.InDelta(333.3, lanes.TitleBoxHorizGap, 0.1)
+	assert.InDelta(333.3, lanes.TitleBoxLeftMargin, 0.1)
+}
+
+func TestNewLanesSetsScalarAttributesCorrectlyForTwoLanes(t *testing.T) {
 	assert := assert.New(t)
 	statements := parser.MustCompileParse(`
 		lane A foo
 		lane B bar
 	`)
-	diagWidth := 200
-	fontHeight := 3.5
+	diagWidth := 2000
+	fontHeight := 20.0
 	lanes := NewLanes(diagWidth, fontHeight, statements)
 
 	assert.Equal(2, lanes.NumLanes)
-	assert.InDelta(72.7, lanes.TitleBoxWidth, 0.1)
-	assert.InDelta(90.9, lanes.TitleBoxPitch, 0.1)
-	assert.InDelta(18.2, lanes.TitleBoxHorizGap, 0.1)
-	assert.InDelta(18.2, lanes.TitleBoxLeftMargin, 0.1)
+	assert.InDelta(727.2, lanes.TitleBoxWidth, 0.1)
+	assert.InDelta(909.1, lanes.TitleBoxPitch, 0.1)
+	assert.InDelta(181.8, lanes.TitleBoxHorizGap, 0.1)
+	assert.InDelta(181.8, lanes.TitleBoxLeftMargin, 0.1)
 }
 
-func TestNewLanesSetsIndividualLaneAttributesCorrectly(t *testing.T) {
+func TestNewLanesSetsIndividualLaneAttributesCorrectlyForTwoLanes(t *testing.T) {
 	assert := assert.New(t)
 	statements := parser.MustCompileParse(`
 		lane A foo
@@ -32,12 +81,12 @@ func TestNewLanesSetsIndividualLaneAttributesCorrectly(t *testing.T) {
 	`)
 	b := statements[1]
 
-	diagWidth := 200
-	fontHeight := 3.5
+	diagWidth := 2000
+	fontHeight := 20.0
 	lanes := NewLanes(diagWidth, fontHeight, statements)
 	individual := lanes.Individual[b]
 
-	assert.InDelta(72.7, individual.TitleBoxLeft, 0.1)
-	assert.InDelta(109.1, individual.Centre, 0.1)
-	assert.InDelta(145.5, individual.TitleBoxRight, 0.1)
+	assert.InDelta(1090.9, individual.TitleBoxLeft, 0.1)
+	assert.InDelta(1454.5, individual.Centre, 0.1)
+	assert.InDelta(1818.18, individual.TitleBoxRight, 0.1)
 }
