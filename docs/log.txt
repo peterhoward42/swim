@@ -6,12 +6,40 @@
     *  Find visualisation pathway
     *  rename package umli?
 
+    o  export be separate repo
+        o  make to image file repo and sort it out
+            *  name: umli/export/image
+            *  make from scratch
+            *  copy in png stuff
+            o  tdd up and first readme decent
+                *  hide regression tests
+                *  get existing tests working
+                *  add multi format behaviour
+                *  add multi format tests
+                *  put in switchable visual tests
+                *  consider names for tests
+                *  decide what programmatic regression tests
+                *  refactor regression tests to use env for visual
+                o  usage incl env for tests
+                    o  module comments including for package
+                    o  readme
+                o  the two tests with full content must use same graphics
+                   model
+                o  go fmt / lint
+        o  port umli to consume other and proper doc/readme incl x ref
+        o  resume
+
     o  Go back to diag.Create() tdd
         *  Title Boxes
-        o  NewLanes has 2.0 const in !
+        o  Title Box Text
+            o  Consider what utils need confidence in first
+                o  export.PNG() should be generic .png, jpg, and .gif
+                   or error otherwise
+                o  are visual tests conventient?
+                o  upgrade export.PNG and its tests to include justified
+                   text labels
+            o  Expand out Create() case for title box labels, and tests
     o  Have two spelling for lable/label
-    o  Move all sizing constants into a module
-    o  Ready for something end to end to begin visualiszation?
     o  Now other event types in creator
     o  How test the modules are mainly just data?
 
