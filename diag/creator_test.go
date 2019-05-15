@@ -4,8 +4,9 @@ import (
 	"os"
 	"testing"
 
+	"github.com/peterhoward42/umli-export/imagefile"
+
 	"github.com/peterhoward42/umli/parser"
-	"github.com/peterhoward42/umli/export"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -14,6 +15,7 @@ Tests to have
 	o  create doesn't crash
 	o  when dsl has only one lane and nothing else
 	o  a lane gets a title box
+	o  to be continued...
 */
 
 // When the environment variable UMLI_VISUAL_TESTS is set to "true",
@@ -23,26 +25,26 @@ func visualTestMode() bool {
 	return os.Getenv("UMLI_VISUAL_TESTS") == "true"
 }
 
-func TestCreateRunsWithoutCrashing(t *testing.T) {
-	statements := parser.MustCompileParse(parser.ReferenceInput)
-	width := 200
-	fontHeight := 3.0
-	creator := NewCreator(width, fontHeight, statements)
-	creator.Create()
-}
-
-func TestWhenTheOnlyThingPresentIsOneLaneYouGetALaneTitleBox(t *testing.T) {
+func TestOneLaneOnlyVisuals(t *testing.T) {
+	if visualTestMode() != true {
+		t.Skipf("Fibble")
+	}
 	assert := assert.New(t)
 	statements := parser.MustCompileParse("lane A foo")
 	width := 2000
 	fontHeight := 20.0
 	creator := NewCreator(width, fontHeight, statements)
 	graphicsModel := creator.Create()
-	if visualTestMode() {
-		err := export.CreatePNG("/tmp/one-lane.png", graphicsModel)
-		assert.NoError(err)
-	} else {
-		prims := graphicsModel.Primitives
-		assert.Len(prims.Lines, 4)
-	}
+	err := imagefile.Create("/tmp/one-lane.png", imagefile.PNG, graphicsModel)
+	assert.NoError(err)
+}
+
+func TestOneLaneOnlyRegression(t *testing.T) {
+	assert := assert.New(t)
+	statements := parser.MustCompileParse("lane A foo")
+	width := 2000
+	fontHeight := 20.0
+	creator := NewCreator(width, fontHeight, statements)
+	graphicsModel := creator.Create()
+	assert.Len(graphicsModel.Primitives.Lines, 4)
 }
