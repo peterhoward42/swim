@@ -9,7 +9,7 @@
     o  export be separate repo
         *  do it
         *  port umli to consume other 
-        o  add proper doc/readme incl x ref
+        *  add proper doc/readme incl x ref
         o  fatten out export for arrows and text
 
     o  Go back to diag.Create() tdd
