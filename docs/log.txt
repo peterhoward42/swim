@@ -10,7 +10,23 @@
         *  do it
         *  port umli to consume other 
         *  add proper doc/readme incl x ref
-        o  fatten out export for arrows and text
+        o  fatten out export for dashed lines
+            *  make image export test include arrows and dashes,
+               with visual tests
+            o  bring up exporter to satisfy visual
+                o  first make Create stateful and checkin
+                    *  code it thus
+                    *  fix up export build and test 
+                    *  fix up umli build and tests 
+                    o  commit both and checkin
+                o  now give Create a sizer init with model w/h
+                *  does fogleman/gg support dashed types? = yes
+                o  have a rendersizing object initialized with model width and font size
+                o  derive mark space from measure of smallness inside rendersizing model
+
+            o  is there a programmatic test possible?
+        o  fatten out export for arrows
+        o  fatten out export for multiline labels with justifications
 
     o  Go back to diag.Create() tdd
         *  Title Boxes

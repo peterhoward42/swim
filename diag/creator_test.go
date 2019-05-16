@@ -35,7 +35,8 @@ func TestOneLaneOnlyVisuals(t *testing.T) {
 	fontHeight := 20.0
 	creator := NewCreator(width, fontHeight, statements)
 	graphicsModel := creator.Create()
-	err := imagefile.Create("/tmp/one-lane.png", imagefile.PNG, graphicsModel)
+	err := imagefile.NewCreator(graphicsModel).Create(
+		"/tmp/one-lane.png", imagefile.PNG)
 	assert.NoError(err)
 }
 
