@@ -1,22 +1,21 @@
 package graphics
 
-import (
-	"math"
-)
+// Point represents one point (X,Y)
+type Point struct {
+	X float64
+	Y float64
+}
 
 // Line represents a line, optionally dashed.
 type Line struct {
-	X1, Y1, X2, Y2 float64
-	Dashed         bool // vs. Full
+	P1     *Point
+	P2     *Point
+	Dashed bool // vs. Full
 }
 
-// ArrowHead represents a filled arrow head.
-type ArrowHead struct {
-	X, Y           float64 // Tip of arrow.
-
-	// Radians. Sense is CW. Zero is East.
-	// Therefore due East is zero, and North is PI / 2
-	DirectionAngle float64
+// FilledPoly represents a filled arrow head.
+type FilledPoly struct {
+	Vertices []*Point // Do not repeat first point as last point.
 }
 
 // The values that may be used in label justification.
@@ -32,38 +31,40 @@ const (
 // justification and its consituent lines of text.
 type Label struct {
 	LinesOfText []string
-	// Anchor point about which the justifications are applied
-	X, Y  float64
-	HJust string
-	VJust string
+	Anchor      *Point
+	HJust       string
+	VJust       string
 }
 
 // Primitives is a container for a set of Line(s) and a set of Label(s).
 type Primitives struct {
-	Lines      []*Line
-	ArrowHeads []*ArrowHead
-	Labels     []*Label
+	Lines       []*Line
+	FilledPolys []*FilledPoly
+	Labels      []*Label
 }
 
 // NewPrimitives constructs a Primitives ready to use.
 func NewPrimitives() *Primitives {
-	return &Primitives{[]*Line{}, []*ArrowHead{}, []*Label{}}
+	return &Primitives{[]*Line{}, []*FilledPoly{}, []*Label{}}
 }
 
 // AddLine adds the given line to the Primitive's line store.
-func (p *Primitives) AddLine(x1 float64, y1 float64, x2 float64, y2 float64,
-	dashed bool, arrow bool) {
-	line := &Line{x1, y1, x2, y2, dashed}
+func (p *Primitives) AddLine(
+	x1 float64, y1 float64, x2 float64, y2 float64, dashed bool) {
+	line := &Line{&Point{x1, y1}, &Point{x2, y2}, dashed}
 	p.Lines = append(p.Lines, line)
-	if arrow {
-		p.ArrowHeads = append(p.ArrowHeads, p.makeArrowHead(x1, y1, x2, y2))
-	}
+}
+
+// AddFilledPoly adds the given filled polygon to the Primitive's store.
+func (p *Primitives) AddFilledPoly(vertices []*Point) {
+	poly := &FilledPoly{vertices}
+	p.FilledPolys = append(p.FilledPolys, poly)
 }
 
 // AddLabel adds a Label to the Primitive's Lable store.
 func (p *Primitives) AddLabel(linesOfText []string, x float64, y float64,
 	hJust string, vJust string) {
-	label := &Label{linesOfText, x, y, hJust, vJust}
+	label := &Label{linesOfText, &Point{x, y}, hJust, vJust}
 	p.Labels = append(p.Labels, label)
 }
 
@@ -71,22 +72,15 @@ func (p *Primitives) AddLabel(linesOfText []string, x float64, y float64,
 // the rectangle of the given opposite corners.
 func (p *Primitives) AddRect(
 	left float64, top float64, right float64, bot float64) {
-	p.AddLine(left, top, right, top, false, false)
-	p.AddLine(right, top, right, bot, false, false)
-	p.AddLine(right, bot, left, bot, false, false)
-	p.AddLine(left, bot, left, top, false, false)
+	p.AddLine(left, top, right, top, false)
+	p.AddLine(right, top, right, bot, false)
+	p.AddLine(right, bot, left, bot, false)
+	p.AddLine(left, bot, left, top, false)
 }
 
 // Add adds the Primitives given to those already held in the model.
 func (p *Primitives) Add(newPrims *Primitives) {
 	p.Lines = append(p.Lines, newPrims.Lines...)
-	p.ArrowHeads = append(p.ArrowHeads, newPrims.ArrowHeads...)
+	p.FilledPolys = append(p.FilledPolys, newPrims.FilledPolys...)
 	p.Labels = append(p.Labels, newPrims.Labels...)
-}
-
-func (p *Primitives) makeArrowHead(x1, y1, x2, y2 float64) *ArrowHead {
-	dx := x2 - x1
-	dy := y2 - y1
-	angle := math.Atan2(dy, dx)
-	return &ArrowHead{x2, y2, angle}
 }

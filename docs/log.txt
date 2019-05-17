@@ -10,26 +10,22 @@
         *  do it
         *  port umli to consume other 
         *  add proper doc/readme incl x ref
-        o  change graphics model contract to having want arrow param when
+        *  change graphics model contract to having want arrow param when
            adding line, but no field in line struct, and *anticipate* list of
            arrowheads in prims
-            *  fix up regression both repos and checkin
-            *  now populate arrow heads when add lines
-            *  programmatic test for that and commit
-                *  arrow head make test to correct angles
-                *  add line with arrow generates arrow
-        o  fatten out export for dashed lines
-            *  make image export test include arrows and dashes,
-               with visual tests
-            o  bring up exporter to satisfy visual
-                *  first make Create stateful and checkin
-                *  now give Create a sizer init with model w/h
-                *  does fogleman/gg support dashed types? = yes
-                *  have a rendersizing object initialized with model width and font size
-                *  derive mark space from measure of smallness inside rendersizing model
         o  fatten out export for arrows
+            *  upgrade model to have arrow heads in
+            *  upgrade image create to do something with arrows
+            o  implement rendering of arrows in image creator
+                o  code
+                    *  make gg context a create object state
+                    *  split create into bg, lines, arrows fn etc
+                    *  redo graphics model to have polygons not arrowheads
+                       or has arrow on lines!
+                    o  render and test arrows
+                o  visual test
         o  fatten out export for multiline labels with justifications
-        o  repair regression test
+        o  repair regression test for image create and maybe diag create?
 
     o  Go back to diag.Create() tdd
         *  Title Boxes
