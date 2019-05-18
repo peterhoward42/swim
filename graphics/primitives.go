@@ -34,8 +34,8 @@ const (
 // Label is just a (single line) string, the expected font height,
 // and its position.
 type Label struct {
-	theString  string
-	fontHeight float64
+	TheString  string
+	FontHeight float64
 	Anchor     *Point
 	HJust      Justification
 	VJust      Justification

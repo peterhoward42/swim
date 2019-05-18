@@ -32,7 +32,9 @@ func NewCreator(width int, fontHeight float64,
 // based on the diagram width and font height (in pixels) parameters.
 func (c *Creator) Create() *graphics.Model {
 	graphicalEvents := NewScanner().Scan(c.statements)
-	graphicsModel := graphics.NewModel(c.width, c.fontHeight)
+	initialHeightAssumption := c.width // Overriden later.
+	graphicsModel := graphics.NewModel(
+		c.width, initialHeightAssumption, c.fontHeight)
 	for _, statement := range c.statements {
 		statementEvents := graphicalEvents[statement]
 		for _, evt := range statementEvents {
@@ -49,8 +51,8 @@ func (c *Creator) Create() *graphics.Model {
 // and tide mark value, suitably advanced to accomodate the space taken
 // up by the new primitives.
 func (c *Creator) graphicsForDrawingEvent(
-		evt EventType, statement *dslmodel.Statement) (
-		prims *graphics.Primitives, tideMark float64) {
+	evt EventType, statement *dslmodel.Statement) (
+	prims *graphics.Primitives, tideMark float64) {
 
 	prims = graphics.NewPrimitives()
 	tideMark = 0

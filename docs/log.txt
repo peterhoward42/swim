@@ -18,6 +18,19 @@
             *  change label to be single string with anchor and just,
                so that renderer doesn't have to think about leading
                and fix uk
+            *  put in a visual test for each just
+                *  first make square a good size
+                *  now make diag depth sensible wrt
+                *  add dashed lines to example model
+                *  add strings to to example model
+            o  satisfy visual test
+                o  give creator model, font and sizer attribs, passing in
+                   and initialising only font
+                o  add graphics model to what passed to create and set
+                   creator's attrib there
+                   
+
+                o  di font to creator or pass mdl in create method?
         o  repair regression test for image create and maybe diag create?
 
     o  Go back to diag.Create() tdd

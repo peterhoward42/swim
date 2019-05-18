@@ -4,6 +4,9 @@ import (
 	"os"
 	"testing"
 
+	"github.com/golang/freetype/truetype"
+	"golang.org/x/image/font/gofont/goregular"
+
 	"github.com/peterhoward42/umli-export/imagefile"
 
 	"github.com/peterhoward42/umli/parser"
@@ -30,13 +33,15 @@ func TestOneLaneOnlyVisuals(t *testing.T) {
 		t.Skipf("Fibble")
 	}
 	assert := assert.New(t)
+	font, err := truetype.Parse(goregular.TTF)
+	assert.NoError(err)
 	statements := parser.MustCompileParse("lane A foo")
 	width := 2000
 	fontHeight := 20.0
 	creator := NewCreator(width, fontHeight, statements)
 	graphicsModel := creator.Create()
-	err := imagefile.NewCreator(graphicsModel).Create(
-		"/tmp/one-lane.png", imagefile.PNG)
+	err = imagefile.NewCreator(font).Create(
+		"/tmp/one-lane.png", imagefile.PNG, graphicsModel)
 	assert.NoError(err)
 }
 
