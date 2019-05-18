@@ -15,6 +15,9 @@
            arrowheads in prims
         *  fatten out export for arrows
         o  fatten out export for multiline labels with justifications
+            *  change label to be single string with anchor and just,
+               so that renderer doesn't have to think about leading
+               and fix uk
         o  repair regression test for image create and maybe diag create?
 
     o  Go back to diag.Create() tdd

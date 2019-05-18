@@ -1,7 +1,10 @@
 # umli - UML Interaction (diagram)
 
-This repository will contain code that can produce a UMLI interaction diagram
-from a simple script in a domain specific language.
+This repository contains code that auto-generates a UML interaction
+diagram from a simple text script.
+
+It is intended to create a fast and iterative thinking and creation process
+for for the people creating them.
 
 For example making this diagram:
 
@@ -24,9 +27,9 @@ From this script:
 
 > todo: change the diagram example to be one that matches the script.
 
-The output is a very simple graphics model **umli/graphics/model.Model** which
-is little more than a list of lines and strings, along with the coordinates
-at which they should be rendered to produce the diagram.
+The output is a very simple graphics model (**umli/graphics/model.Model**) which
+is little more than a list of lines, strings and arrow heads, along with the
+coordinates at which they should be rendered to produce the diagram.
 
 A separate repository provides renderers for the graphics model into
 a variety of image and serialization formats. See:

@@ -13,27 +13,32 @@ type Line struct {
 	Dashed bool // vs. Full
 }
 
-// FilledPoly represents a filled arrow head.
+// FilledPoly represents a filled polygon.
+// Can be used for an arrow head.
 type FilledPoly struct {
 	Vertices []*Point // Do not repeat first point as last point.
 }
 
-// The values that may be used in label justification.
+// Justification is a typesafe string for text justifications
+type Justification string
+
+// The corresponding values for label justification.
 const (
-	Left   = "Left"
-	Right  = "Right"
-	Top    = "Top"
-	Bottom = "Bottom"
-	Centre = "Centre"
+	Left   Justification = "Left"
+	Right  Justification = "Right"
+	Top    Justification = "Top"
+	Bottom Justification = "Bottom"
+	Centre Justification = "Centre"
 )
 
-// Label encapsulates a (potentially) multi-line label in terms of a position,
-// justification and its consituent lines of text.
+// Label is just a (single line) string, the expected font height,
+// and its position.
 type Label struct {
-	LinesOfText []string
-	Anchor      *Point
-	HJust       string
-	VJust       string
+	theString  string
+	fontHeight float64
+	Anchor     *Point
+	HJust      Justification
+	VJust      Justification
 }
 
 // Primitives is a container for a set of Line(s) and a set of Label(s).
@@ -62,9 +67,9 @@ func (p *Primitives) AddFilledPoly(vertices []*Point) {
 }
 
 // AddLabel adds a Label to the Primitive's Lable store.
-func (p *Primitives) AddLabel(linesOfText []string, x float64, y float64,
-	hJust string, vJust string) {
-	label := &Label{linesOfText, &Point{x, y}, hJust, vJust}
+func (p *Primitives) AddLabel(theString string, fontHeight float64,
+	x float64, y float64, hJust Justification, vJust Justification) {
+	label := &Label{theString, fontHeight, &Point{x, y}, hJust, vJust}
 	p.Labels = append(p.Labels, label)
 }
 

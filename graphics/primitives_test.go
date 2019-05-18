@@ -29,12 +29,12 @@ func TestAddAccumulatesProperly(t *testing.T) {
 	a := NewPrimitives()
 	a.AddLine(0, 0, 3, 3, false)
 	a.AddFilledPoly([]*Point{})
-	a.AddLabel(nil, 0, 0, Left, Top)
+	a.AddLabel("", 0, 0, 0, Left, Top)
 
 	b := NewPrimitives()
 	b.AddLine(0, 0, 3, 3, false)
 	b.AddFilledPoly([]*Point{})
-	b.AddLabel(nil, 0, 0, Left, Top)
+	b.AddLabel("", 0, 0, 0, Left, Top)
 
 	a.Add(b)
 	assert.Len(a.Lines, 2)
