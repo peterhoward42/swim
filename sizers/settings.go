@@ -10,7 +10,7 @@ const diagramTopMarginK = 1.0
 // They are all the same (implied) width, equi-spaced according to
 // these settings.
 const (
-	titleBoxSeparationK       = 0.25 // w.r.t title box width
-	titleBoxTextRowLeadingK   = 0.25 // Leading as in typography
-	titleBoxTextTopBotMarginK = 0.5  // Between title box and first line txt
+	titleBoxSeparationK    = 0.25 // w.r.t title box width
+	titleBoxTextTopMarginK = 0.5  // Between top of title box and first line txt
+	titleBoxTextBotMarginK = 0.75 // Between bot title box and last line txt
 )

@@ -25,7 +25,8 @@ Tests to have
 // some of the tests in this module, output .png images in /tmp for visual
 // inspection instead of programmatic inspection of what Creator has produced.
 func visualTestMode() bool {
-	return os.Getenv("UMLI_VISUAL_TESTS") == "true"
+	res := os.Getenv("UMLI_VISUAL_TESTS")
+	return res == "true"
 }
 
 func TestOneLaneOnlyVisuals(t *testing.T) {
@@ -42,6 +43,27 @@ func TestOneLaneOnlyVisuals(t *testing.T) {
 	graphicsModel := creator.Create()
 	err = imagefile.NewCreator(font).Create(
 		"/tmp/one-lane.png", imagefile.PNG, graphicsModel)
+	assert.NoError(err)
+}
+
+func TestThreeLanesOnlyVisuals(t *testing.T) {
+	if visualTestMode() != true {
+		t.Skipf("Fibble")
+	}
+	assert := assert.New(t)
+	font, err := truetype.Parse(goregular.TTF)
+	assert.NoError(err)
+	statements := parser.MustCompileParse(`
+		lane A foo
+		lane B bar
+		lane C The | quick | brown | fox | jumps over
+	`)
+	width := 2000
+	fontHeight := 20.0
+	creator := NewCreator(width, fontHeight, statements)
+	graphicsModel := creator.Create()
+	err = imagefile.NewCreator(font).Create(
+		"/tmp/three-lane.png", imagefile.PNG, graphicsModel)
 	assert.NoError(err)
 }
 

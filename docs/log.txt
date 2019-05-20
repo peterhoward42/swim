@@ -5,24 +5,14 @@
 *  Challenge tests so far wrt recent test guidance
     *  Find visualisation pathway
     *  rename package umli?
-    o  export be separate repo
-
+    *  export be separate repo
     o  Go back to diag.Create() tdd
         *  Title Boxes
-        o  Title Box Text
-            o  Consider what utils need confidence in first
-                o  export.PNG() should be generic .png, jpg, and .gif
-                   or error otherwise
-                o  are visual tests conventient?
-                o  upgrade export.PNG and its tests to include justified
-                   text labels
-            o  Expand out Create() case for title box labels, and tests
-    o  Have two spelling for lable/label
+        *  Title Box Text
     o  Now other event types in creator
     o  How test the modules are mainly just data?
 
 ----------------------------------------------------------------------------
 Design own images equal lib
 ----------------------------------------------------------------------------
-		face := truetype.NewFace(cr.font, &truetype.Options{Size: 48})
 

@@ -29,10 +29,10 @@ func NewCreator(width int, fontHeight float64,
 
 // Create works out what the diagram should look like by analysing the
 // DSL Statement(s) provided. All sizing and spacing decisions are
-// based on the diagram width and font height (in pixels) parameters.
+// based on the diagram width, and font height (in pixels) parameters.
 func (c *Creator) Create() *graphics.Model {
 	graphicalEvents := NewScanner().Scan(c.statements)
-	initialHeightAssumption := c.width // Overriden later.
+	initialHeightAssumption := int(0.33 * float64(c.width)) // Overriden later.
 	graphicsModel := graphics.NewModel(
 		c.width, initialHeightAssumption, c.fontHeight)
 	for _, statement := range c.statements {
@@ -64,7 +64,6 @@ func (c *Creator) graphicsForDrawingEvent(
 	case LaneLine:
 	case LaneTitleBox:
 		prims, tideMark = c.laneTitleBox(statement)
-	case LaneTitleLabel:
 	case SelfInteractionLines:
 	case SelfInteractionLabel:
 	case PotentiallyStartFromBox:
@@ -81,11 +80,18 @@ func (c *Creator) laneTitleBox(
 	prims *graphics.Primitives, tideMark float64) {
 	prims = graphics.NewPrimitives()
 	thisLane := c.sizer.Lanes.Individual[statement]
+	// First the rectangular box
 	left := thisLane.TitleBoxLeft
 	right := thisLane.TitleBoxRight
 	top := c.sizer.TopMargin
 	bot := c.sizer.TopMargin + c.sizer.Lanes.TitleBoxHeight
 	prims.AddRect(left, top, right, bot)
 	tideMark = bot
+	// Now the strings
+	for i, str := range statement.LabelSegments {
+		prims.AddLabel(str, c.fontHeight, thisLane.Centre,
+			top+thisLane.TitleBoxFirstRowOfText+float64(i+1)*c.fontHeight,
+			graphics.Centre, graphics.Bottom)
+	}
 	return prims, tideMark
 }
