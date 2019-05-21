@@ -2,6 +2,7 @@ package diag
 
 import (
 	"testing"
+	"path/filepath"
 
 	"github.com/golang/freetype/truetype"
 	"golang.org/x/image/font/gofont/goregular"
@@ -20,6 +21,9 @@ Tests to have
 	o  to be continued...
 */
 
+var testResultsDir = filepath.Join(".", "testresults", "new")
+
+
 func TestOneLaneOnlyVisuals(t *testing.T) {
 	assert := assert.New(t)
 	font, err := truetype.Parse(goregular.TTF)
@@ -29,8 +33,9 @@ func TestOneLaneOnlyVisuals(t *testing.T) {
 	fontHeight := 20.0
 	creator := NewCreator(width, fontHeight, statements)
 	graphicsModel := creator.Create()
+	fPath := filepath.Join(testResultsDir, "one-lane.png")
 	err = imagefile.NewCreator(font).Create(
-		"/tmp/one-lane.png", imagefile.PNG, graphicsModel)
+		fPath, imagefile.PNG, graphicsModel)
 	assert.NoError(err)
 }
 
@@ -47,17 +52,8 @@ func TestThreeLanesOnlyVisuals(t *testing.T) {
 	fontHeight := 20.0
 	creator := NewCreator(width, fontHeight, statements)
 	graphicsModel := creator.Create()
+	fPath := filepath.Join(testResultsDir, "three-lanes.png")
 	err = imagefile.NewCreator(font).Create(
-		"/tmp/three-lane.png", imagefile.PNG, graphicsModel)
+		fPath, imagefile.PNG, graphicsModel)
 	assert.NoError(err)
-}
-
-func TestOneLaneOnlyRegression(t *testing.T) {
-	assert := assert.New(t)
-	statements := parser.MustCompileParse("lane A foo")
-	width := 2000
-	fontHeight := 20.0
-	creator := NewCreator(width, fontHeight, statements)
-	graphicsModel := creator.Create()
-	assert.Len(graphicsModel.Primitives.Lines, 4)
 }
