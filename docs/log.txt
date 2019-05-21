@@ -9,6 +9,15 @@
     o  Go back to diag.Create() tdd
         *  Title Boxes
         *  Title Box Text
+        *  fix up lanes test
+        o  augment lanes test for new attributes
+            o  not sure got centralize arithmetic right
+                o  double check image export results and tests
+                    o  make tests not require env var
+                    o  make tests output files to last run tests dir and new
+                       and change comparison to compare those two
+                    o  change existing to make the image bigger
+                o  put in arithmetic test for creator
     o  Now other event types in creator
     o  How test the modules are mainly just data?
 

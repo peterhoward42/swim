@@ -15,7 +15,7 @@ type Creator struct {
 	fontHeight float64
 	statements []*dslmodel.Statement
 	sizer      *sizers.Sizer
-	tideMark   float64
+	tideMark   float64 // Gradually moves down the page during creation.
 }
 
 // NewCreator creates a Creator ready to use.
@@ -35,9 +35,11 @@ func (c *Creator) Create() *graphics.Model {
 	initialHeightAssumption := int(0.33 * float64(c.width)) // Overriden later.
 	graphicsModel := graphics.NewModel(
 		c.width, initialHeightAssumption, c.fontHeight)
+	// First pass is per-statement.
 	for _, statement := range c.statements {
 		statementEvents := graphicalEvents[statement]
 		for _, evt := range statementEvents {
+			// Inner loop is for each graphics event called for by the statement.
 			prims, newTideMark := c.graphicsForDrawingEvent(evt, statement)
 			c.tideMark = newTideMark
 			graphicsModel.Primitives.Add(prims)

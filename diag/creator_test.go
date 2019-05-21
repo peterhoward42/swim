@@ -1,7 +1,6 @@
 package diag
 
 import (
-	"os"
 	"testing"
 
 	"github.com/golang/freetype/truetype"
@@ -21,18 +20,7 @@ Tests to have
 	o  to be continued...
 */
 
-// When the environment variable UMLI_VISUAL_TESTS is set to "true",
-// some of the tests in this module, output .png images in /tmp for visual
-// inspection instead of programmatic inspection of what Creator has produced.
-func visualTestMode() bool {
-	res := os.Getenv("UMLI_VISUAL_TESTS")
-	return res == "true"
-}
-
 func TestOneLaneOnlyVisuals(t *testing.T) {
-	if visualTestMode() != true {
-		t.Skipf("Fibble")
-	}
 	assert := assert.New(t)
 	font, err := truetype.Parse(goregular.TTF)
 	assert.NoError(err)
@@ -47,9 +35,6 @@ func TestOneLaneOnlyVisuals(t *testing.T) {
 }
 
 func TestThreeLanesOnlyVisuals(t *testing.T) {
-	if visualTestMode() != true {
-		t.Skipf("Fibble")
-	}
 	assert := assert.New(t)
 	font, err := truetype.Parse(goregular.TTF)
 	assert.NoError(err)

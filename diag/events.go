@@ -20,7 +20,6 @@ const (
 	InteractionLabel
 	LaneLine
 	LaneTitleBox
-	LaneTitleLabel
 	SelfInteractionLines
 	SelfInteractionLabel
 	PotentiallyStartFromBox
@@ -43,7 +42,6 @@ precede the corresponding line events.
 var EventsRequired = map[string][]EventType{
 	umli.Lane: []EventType{
 		LaneTitleBox,
-		LaneTitleLabel,
 		LaneLine,
 	},
 	umli.Dash: []EventType{ // Boxes for *returning* interactions must exist already

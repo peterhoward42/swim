@@ -1,10 +1,11 @@
 package diag
 
 import (
+	"testing"
+
 	"github.com/peterhoward42/umli/dslmodel"
 	"github.com/peterhoward42/umli/parser"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 // This test feeds the Scanner with two Statement(s), and
@@ -25,6 +26,6 @@ func TestScannerProperlyAggregatesGraphicsEvents(t *testing.T) {
 	scanner := NewScanner()
 	eventsLookup := scanner.Scan([]*dslmodel.Statement{lane, self})
 
-	assert.Len(eventsLookup[lane], 3)
+	assert.Len(eventsLookup[lane], 2)
 	assert.Len(eventsLookup[self], 2)
 }
