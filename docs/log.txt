@@ -14,16 +14,11 @@
             o  not sure got centralize arithmetic right
                 o  double check image export results and tests
                     *  make tests not require env var
-                    o  make tests output files to testresults/new
+                    *  make tests output files to testresults/new
                        and ditch regression comparison for now
-                        *  design
-                            *  at each run output to 
-                            *  testdir/testresults/new // overwriting
-                            *  temporarily ditch regression tests
-                        *  do for export
-                        *  do for main
-                        o  checkin
                     o  change existing to make the image bigger
+                       to get finer pixel resolution, and min necessary
+                       to show features
                 o  put in arithmetic test for creator
     o  Now other event types in creator
     o  How test the modules are mainly just data?
