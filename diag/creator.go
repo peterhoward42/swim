@@ -90,9 +90,11 @@ func (c *Creator) laneTitleBox(
 	prims.AddRect(left, top, right, bot)
 	tideMark = bot
 	// Now the strings
+	nRows := len(statement.LabelSegments)
 	for i, str := range statement.LabelSegments {
-		prims.AddLabel(str, c.fontHeight, thisLane.Centre,
-			top+thisLane.TitleBoxFirstRowOfText+float64(i+1)*c.fontHeight,
+		rowOffset := float64(nRows-1-i) * c.fontHeight
+		y := top + c.sizer.Lanes.TitleBoxBottomRowOfText - rowOffset
+		prims.AddLabel(str, c.fontHeight, thisLane.Centre, y,
 			graphics.Centre, graphics.Bottom)
 	}
 	return prims, tideMark

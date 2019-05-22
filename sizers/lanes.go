@@ -7,16 +7,17 @@ import (
 
 // Lanes holds sizing information for the lanes.
 type Lanes struct {
-	DiagramWidth       float64
-	FontHeight         float64
-	LaneStatements     []*dslmodel.Statement
-	NumLanes           int
-	TitleBoxWidth      float64
-	TitleBoxPitch      float64
-	TitleBoxHeight     float64
-	TitleBoxHorizGap   float64
-	TitleBoxLeftMargin float64
-	Individual         InfoPerLane
+	DiagramWidth            float64
+	FontHeight              float64
+	LaneStatements          []*dslmodel.Statement
+	NumLanes                int
+	TitleBoxWidth           float64
+	TitleBoxPitch           float64
+	TitleBoxHeight          float64
+	TitleBoxBottomRowOfText float64 // Below top of title box.
+	TitleBoxHorizGap        float64
+	TitleBoxLeftMargin      float64
+	Individual              InfoPerLane
 }
 
 // InfoPerLane provides information about individual lanes, keyed on
@@ -28,7 +29,6 @@ type LaneInfo struct {
 	TitleBoxLeft  float64
 	Centre        float64
 	TitleBoxRight float64
-	TitleBoxFirstRowOfText float64 // below top of title box
 }
 
 // NewLanes provides a Lanes structure that has been initialised
@@ -50,6 +50,8 @@ func NewLanes(diagramWidth int, fontHeight float64,
 func (lanes *Lanes) populateTitleBoxAttribs() {
 	// The title boxes are all the same width and height.
 	lanes.TitleBoxHeight = lanes.titleBoxHeight()
+	lanes.TitleBoxBottomRowOfText = lanes.TitleBoxHeight -
+		titleBoxTextBotMarginK*lanes.FontHeight
 	// The horizontal gaps between them are a fixed proportion of their width.
 	// The margins from the edge of the diagram is the same as this gap.
 	n := float64(lanes.NumLanes)
@@ -88,14 +90,7 @@ func (lanes *Lanes) populateIndividualLaneInfo() {
 			float64((laneNumber))*lanes.TitleBoxPitch
 		left := centre - 0.5*lanes.TitleBoxWidth
 		right := centre + 0.5*lanes.TitleBoxWidth
-		// How far down to start first row of label text?
-		// Centre them vertically between their margins.
-		avail := lanes.TitleBoxHeight - 
-			lanes.FontHeight * (titleBoxTextBotMarginK + titleBoxTextBotMarginK)
-		occupy := float64(len(statement.LabelSegments)) * lanes.FontHeight
-		spare := 0.5 * (avail - occupy)
-		firstRowOfText := lanes.FontHeight * titleBoxTextBotMarginK + spare
-		laneInfo := &LaneInfo{left, centre, right, firstRowOfText}
+		laneInfo := &LaneInfo{left, centre, right}
 		lanes.Individual[statement] = laneInfo
 	}
 }

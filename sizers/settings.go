@@ -11,6 +11,7 @@ const diagramTopMarginK = 1.0
 // these settings.
 const (
 	titleBoxSeparationK    = 0.25 // w.r.t title box width
-	titleBoxTextTopMarginK = 0.5  // Between top of title box and first line txt
+	titleBoxTextTopMarginK = 0.25 // Between top of title box and first line txt
 	titleBoxTextBotMarginK = 0.75 // Between bot title box and last line txt
+
 )
