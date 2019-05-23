@@ -5,6 +5,10 @@ import (
 	"github.com/peterhoward42/umli/dslmodel"
 )
 
+// Naming conventions:
+// - begins with the graphics entity if applies to
+// - the fragment <PadT> should be read as paddingTop (where T is from {LRTB})
+
 // Lanes holds sizing information for the lanes.
 type Lanes struct {
 	DiagramWidth            float64
@@ -14,9 +18,10 @@ type Lanes struct {
 	TitleBoxWidth           float64
 	TitleBoxPitch           float64
 	TitleBoxHeight          float64
-	TitleBoxBottomRowOfText float64 // Below top of title box.
-	TitleBoxHorizGap        float64
-	TitleBoxLeftMargin      float64
+	TitleBoxBottomRowOfText float64 // Offset below top of title box.
+	TitleBoxPadR            float64 // Holds title boxes apart
+	FirstTitleBoxPadL       float64 // Positions leftmost title box
+	TitleBoxPadB            float64 // Below title box as a whole
 	Individual              InfoPerLane
 }
 
@@ -51,18 +56,19 @@ func (lanes *Lanes) populateTitleBoxAttribs() {
 	// The title boxes are all the same width and height.
 	lanes.TitleBoxHeight = lanes.titleBoxHeight()
 	lanes.TitleBoxBottomRowOfText = lanes.TitleBoxHeight -
-		titleBoxTextBotMarginK*lanes.FontHeight
+		titleBoxTextPadBK*lanes.FontHeight
 	// The horizontal gaps between them are a fixed proportion of their width.
 	// The margins from the edge of the diagram is the same as this gap.
 	n := float64(lanes.NumLanes)
 	nMargins := 2.0
 	nGaps := n - 1
-	k := titleBoxSeparationK
+	k := titleBoxPadRK
 	w := lanes.DiagramWidth / (k*(nMargins+nGaps) + n)
 	lanes.TitleBoxWidth = w
-	lanes.TitleBoxHorizGap = k * w
+	lanes.TitleBoxPadR = k * w
 	lanes.TitleBoxPitch = w * (1 + k)
-	lanes.TitleBoxLeftMargin = k * w
+	lanes.FirstTitleBoxPadL = k * w
+	lanes.TitleBoxPadB = titleBoxPadBK * lanes.FontHeight
 }
 
 // titleBoxHeight calculates the height based on sufficient room for the
@@ -75,8 +81,8 @@ func (lanes *Lanes) titleBoxHeight() float64 {
 			maxNLabelLines = n
 		}
 	}
-	topMargin := titleBoxTextTopMarginK * lanes.FontHeight
-	botMargin := titleBoxTextBotMarginK * lanes.FontHeight
+	topMargin := titleBoxTextPadTK * lanes.FontHeight
+	botMargin := titleBoxTextPadBK * lanes.FontHeight
 	ht := topMargin + botMargin + float64(maxNLabelLines)*lanes.FontHeight
 	return ht
 }
@@ -86,7 +92,7 @@ func (lanes *Lanes) titleBoxHeight() float64 {
 func (lanes *Lanes) populateIndividualLaneInfo() {
 	lanes.Individual = InfoPerLane{}
 	for laneNumber, statement := range lanes.LaneStatements {
-		centre := lanes.TitleBoxLeftMargin + 0.5*lanes.TitleBoxWidth +
+		centre := lanes.FirstTitleBoxPadL + 0.5*lanes.TitleBoxWidth +
 			float64((laneNumber))*lanes.TitleBoxPitch
 		left := centre - 0.5*lanes.TitleBoxWidth
 		right := centre + 0.5*lanes.TitleBoxWidth

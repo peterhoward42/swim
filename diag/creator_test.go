@@ -57,3 +57,23 @@ func TestThreeLanesOnlyVisuals(t *testing.T) {
 		fPath, imagefile.PNG, graphicsModel)
 	assert.NoError(err)
 }
+
+func TestInteractionLineVisuals(t *testing.T) {
+	assert := assert.New(t)
+	font, err := truetype.Parse(goregular.TTF)
+	assert.NoError(err)
+	statements := parser.MustCompileParse(`
+		lane A foo
+		lane B bar
+		full AB [a guard] then | a multiline | label
+		dash BA to show tidemark advancement
+	`)
+	width := 2000
+	fontHeight := 20.0
+	creator := NewCreator(width, fontHeight, statements)
+	graphicsModel := creator.Create()
+	fPath := filepath.Join(testResultsDir, "interaction-lines.png")
+	err = imagefile.NewCreator(font).Create(
+		fPath, imagefile.PNG, graphicsModel)
+	assert.NoError(err)
+}

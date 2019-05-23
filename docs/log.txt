@@ -9,14 +9,29 @@
     o  Go back to diag.Create() tdd
         *  Title Boxes
         *  Title Box Text
-        *  fix up lanes test
-        o  augment lanes test for new attributes
-            *  not sure got centralize arithmetic right
+        o  Full / Dash labels
+            *  geom design
+            *  skel handler
+            *  dedicated margin K
+            *  implement
+            *  debug
+            *  visual tune
+            o  commit
+        o  Full / Dash lines
+        o  Activity boxes
+        o  Self
+        o  Lane lines
+
     o  Now other event types in creator
     o  How test the modules are mainly just data?
     o  todo resurrect regressions tests for images
 
 ----------------------------------------------------------------------------
-Design own images equal lib
+Full lines labels
 ----------------------------------------------------------------------------
+o  hjust centre on inter-lane mid
+o  each line vjust top
+o  first line Y is tide mark
+o  second and subsequent one text height further down
+o  at end tide mark advance to bottom of text plus dedicated padding setting
 

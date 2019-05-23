@@ -7,7 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-
 func TestNewLanesSetsTitleBoxHeightWhenLabelHasOneLineOfText(t *testing.T) {
 	assert := assert.New(t)
 	statements := parser.MustCompileParse(`
@@ -52,8 +51,8 @@ func TestNewLanesSetsScalarAttributesCorrectlyForOneLane(t *testing.T) {
 	assert.Equal(1, lanes.NumLanes)
 	assert.InDelta(1333.3, lanes.TitleBoxWidth, 0.1)
 	assert.InDelta(1666.7, lanes.TitleBoxPitch, 0.1)
-	assert.InDelta(333.3, lanes.TitleBoxHorizGap, 0.1)
-	assert.InDelta(333.3, lanes.TitleBoxLeftMargin, 0.1)
+	assert.InDelta(333.3, lanes.TitleBoxPadR, 0.1)
+	assert.InDelta(333.3, lanes.FirstTitleBoxPadL, 0.1)
 }
 
 func TestNewLanesSetsScalarAttributesCorrectlyForTwoLanes(t *testing.T) {
@@ -69,8 +68,8 @@ func TestNewLanesSetsScalarAttributesCorrectlyForTwoLanes(t *testing.T) {
 	assert.Equal(2, lanes.NumLanes)
 	assert.InDelta(727.2, lanes.TitleBoxWidth, 0.1)
 	assert.InDelta(909.1, lanes.TitleBoxPitch, 0.1)
-	assert.InDelta(181.8, lanes.TitleBoxHorizGap, 0.1)
-	assert.InDelta(181.8, lanes.TitleBoxLeftMargin, 0.1)
+	assert.InDelta(181.8, lanes.TitleBoxPadR, 0.1)
+	assert.InDelta(181.8, lanes.FirstTitleBoxPadL, 0.1)
 }
 
 func TestNewLanesSetsIndividualLaneAttributesCorrectlyForTwoLanes(t *testing.T) {
