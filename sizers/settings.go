@@ -21,5 +21,10 @@ const (
 	titleBoxPadBK     = 0.5  // Below entire title box
 
 	// Full and Dashed interaction lines
+
+	// Below the line itself - including allowance for the arrow height.
+	interactionLinePadBK     = 0.5
 	interactionLineTextPadBK = 0.5 // Below the text on an interaction line
+	arrowLenK                = 1.5
+	arrowAspectRatio         = 0.4 // Width of arrow head w.r.t. length
 )

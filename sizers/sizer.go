@@ -10,9 +10,12 @@ import (
 
 // Sizer is the top level sizing component.
 type Sizer struct {
-	DiagPadT                float64
+	DiagramPadT                float64
 	Lanes                   *Lanes
+	InteractionLinePadB     float64
 	InteractionLineTextPadB float64
+	ArrowLen	float64
+	ArrowHeight float64
 }
 
 // NewSizer provides a Sizer structure that has been initialised
@@ -20,9 +23,11 @@ type Sizer struct {
 func NewSizer(diagramWidth int, fontHeight float64,
 	statements []*dslmodel.Statement) *Sizer {
 	sizer := &Sizer{}
-	sizer.DiagPadT = diagramPadTK * fontHeight
+	sizer.DiagramPadT = diagramPadTK * fontHeight
 	sizer.Lanes = NewLanes(diagramWidth, fontHeight, statements)
-	sizer.InteractionLineTextPadB =
-		interactionLineTextPadBK * fontHeight
+	sizer.InteractionLinePadB = interactionLinePadBK * fontHeight
+	sizer.InteractionLineTextPadB = interactionLineTextPadBK * fontHeight
+	sizer.ArrowLen = arrowLenK * fontHeight
+	sizer.ArrowHeight = arrowAspectRatio * sizer.ArrowLen
 	return sizer
 }

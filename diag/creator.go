@@ -1,6 +1,7 @@
 package diag
 
 import (
+	"github.com/peterhoward42/umli"
 	"github.com/peterhoward42/umli/dslmodel"
 	"github.com/peterhoward42/umli/graphics"
 	"github.com/peterhoward42/umli/sizers"
@@ -64,6 +65,7 @@ func (c *Creator) graphicsForDrawingEvent(
 	switch evt {
 	case EndBox:
 	case InteractionLine:
+		prims = c.interactionLine(statement)
 	case InteractionLabel:
 		prims = c.interactionLabel(statement)
 	case LaneLine:
@@ -87,8 +89,8 @@ func (c *Creator) laneTitleBox(
 	// First the rectangular box
 	left := thisLane.TitleBoxLeft
 	right := thisLane.TitleBoxRight
-	top := c.sizer.DiagPadT
-	bot := c.sizer.DiagPadT + c.sizer.Lanes.TitleBoxHeight
+	top := c.sizer.DiagramPadT
+	bot := c.sizer.DiagramPadT + c.sizer.Lanes.TitleBoxHeight
 	prims.AddRect(left, top, right, bot)
 	// Now the strings
 	nRows := len(statement.LabelSegments)
@@ -121,5 +123,23 @@ func (c *Creator) interactionLabel(
 	}
 	c.tideMark += float64(len(statement.LabelSegments))*
 		c.fontHeight + c.sizer.InteractionLineTextPadB
+	return prims
+}
+
+// interactionLine generates the horizontal line and arrow head.
+// It then claims the vertical space
+// it claims for itself by advancing the tide mark.
+func (c *Creator) interactionLine(
+	statement *dslmodel.Statement) (prims *graphics.Primitives) {
+	prims = graphics.NewPrimitives()
+	leftLane := statement.ReferencedLanes[0]
+	rightLane := statement.ReferencedLanes[1]
+	x1 := c.sizer.Lanes.Individual[leftLane].Centre
+	x2 := c.sizer.Lanes.Individual[rightLane].Centre
+	y := c.tideMark + 0.5 * c.sizer.ArrowHeight
+	prims.AddLine(x1, y, x2, y, statement.Keyword == umli.Dash)
+	arrowVertices := makeArrow(x1, x2, y, c.sizer)
+	prims.AddFilledPoly(arrowVertices)
+	c.tideMark += c.sizer.ArrowHeight + c.sizer.InteractionLinePadB
 	return prims
 }

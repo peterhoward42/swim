@@ -9,15 +9,10 @@
     o  Go back to diag.Create() tdd
         *  Title Boxes
         *  Title Box Text
-        o  Full / Dash labels
-            *  geom design
-            *  skel handler
-            *  dedicated margin K
-            *  implement
-            *  debug
-            *  visual tune
-            o  commit
-        o  Full / Dash lines
+        *  Full / Dash labels
+        *  Full / Dash lines
+        o  Replace literal graphics.Point with NewPoint
+        o  tune dash line settings
         o  Activity boxes
         o  Self
         o  Lane lines
