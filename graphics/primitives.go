@@ -61,7 +61,7 @@ func NewPrimitives() *Primitives {
 // AddLine adds the given line to the Primitive's line store.
 func (p *Primitives) AddLine(
 	x1 float64, y1 float64, x2 float64, y2 float64, dashed bool) {
-	line := &Line{&Point{x1, y1}, &Point{x2, y2}, dashed}
+	line := NewLine(Point(x1, y1), NewLine(x2, y2), dashed}
 	p.Lines = append(p.Lines, line)
 }
 
