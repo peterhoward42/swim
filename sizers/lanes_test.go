@@ -15,7 +15,7 @@ func TestNewLanesSetsTitleBoxHeightWhenLabelHasOneLineOfText(t *testing.T) {
 	diagWidth := 2000
 	fontHeight := 20.0
 	lanes := NewLanes(diagWidth, fontHeight, statements)
-	assert.InDelta(45.0, lanes.TitleBoxHeight, 0.1)
+	assert.InDelta(40.0, lanes.TitleBoxHeight, 0.1)
 }
 func TestNewLanesSetsTitleBoxHeightWhenLabelHasThreeLinesOfText(t *testing.T) {
 	assert := assert.New(t)
@@ -25,7 +25,7 @@ func TestNewLanesSetsTitleBoxHeightWhenLabelHasThreeLinesOfText(t *testing.T) {
 	diagWidth := 2000
 	fontHeight := 20.0
 	lanes := NewLanes(diagWidth, fontHeight, statements)
-	assert.InDelta(85.0, lanes.TitleBoxHeight, 0.1)
+	assert.InDelta(80.0, lanes.TitleBoxHeight, 0.1)
 }
 func TestNewLanesSetsTitleBoxHeightWhenLabelsHaveDifferingHeight(t *testing.T) {
 	assert := assert.New(t)
@@ -36,7 +36,7 @@ func TestNewLanesSetsTitleBoxHeightWhenLabelsHaveDifferingHeight(t *testing.T) {
 	diagWidth := 2000
 	fontHeight := 20.0
 	lanes := NewLanes(diagWidth, fontHeight, statements)
-	assert.InDelta(85.0, lanes.TitleBoxHeight, 0.1)
+	assert.InDelta(80.0, lanes.TitleBoxHeight, 0.1)
 }
 
 func TestNewLanesSetsScalarAttributesCorrectlyForOneLane(t *testing.T) {

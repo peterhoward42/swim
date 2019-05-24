@@ -19,12 +19,12 @@ type Line struct {
 }
 
 // FilledPoly represents a filled polygon.
-// Can be used for an arrow head.
+// Intended to be used for an arrow head.
 type FilledPoly struct {
 	Vertices []*Point // Do not repeat first point as last point.
 }
 
-// Justification is a typesafe string for text justifications
+// Justification is a type safe string for text justifications
 type Justification string
 
 // The corresponding values for label justification.
@@ -36,8 +36,8 @@ const (
 	Centre Justification = "Centre"
 )
 
-// Label is just a (single line) string, the expected font height,
-// and its position.
+// Label is a (single line) string, parameterised with position, size, and
+// justification.
 type Label struct {
 	TheString  string
 	FontHeight float64
@@ -46,7 +46,7 @@ type Label struct {
 	VJust      Justification
 }
 
-// Primitives is a container for a set of Line(s) and a set of Label(s).
+// Primitives is a container for a set of: Line, FilledPoly and Label(s).
 type Primitives struct {
 	Lines       []*Line
 	FilledPolys []*FilledPoly
@@ -61,7 +61,7 @@ func NewPrimitives() *Primitives {
 // AddLine adds the given line to the Primitive's line store.
 func (p *Primitives) AddLine(
 	x1 float64, y1 float64, x2 float64, y2 float64, dashed bool) {
-	line := NewLine(Point(x1, y1), NewLine(x2, y2), dashed}
+	line := &Line{NewPoint(x1, y1), NewPoint(x2, y2), dashed}
 	p.Lines = append(p.Lines, line)
 }
 
@@ -88,7 +88,7 @@ func (p *Primitives) AddRect(
 	p.AddLine(left, bot, left, top, false)
 }
 
-// Add adds the Primitives given to those already held in the model.
+// Add adds the Primitives given, to those already held in the model.
 func (p *Primitives) Add(newPrims *Primitives) {
 	p.Lines = append(p.Lines, newPrims.Lines...)
 	p.FilledPolys = append(p.FilledPolys, newPrims.FilledPolys...)

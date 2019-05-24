@@ -41,7 +41,8 @@ func (c *Creator) Create() *graphics.Model {
 	graphicalEvents := NewScanner().Scan(c.statements)
 	initialHeightAssumption := int(0.33 * float64(c.width)) // Overriden later.
 	graphicsModel := graphics.NewModel(
-		c.width, initialHeightAssumption, c.fontHeight)
+		c.width, initialHeightAssumption, c.fontHeight,
+		c.sizer.DashLineDashLen, c.sizer.DashLineDashGap)
 	// First pass is per-statement.
 	for _, statement := range c.statements {
 		statementEvents := graphicalEvents[statement]
@@ -136,7 +137,7 @@ func (c *Creator) interactionLine(
 	rightLane := statement.ReferencedLanes[1]
 	x1 := c.sizer.Lanes.Individual[leftLane].Centre
 	x2 := c.sizer.Lanes.Individual[rightLane].Centre
-	y := c.tideMark + 0.5 * c.sizer.ArrowHeight
+	y := c.tideMark + 0.5*c.sizer.ArrowHeight
 	prims.AddLine(x1, y, x2, y, statement.Keyword == umli.Dash)
 	arrowVertices := makeArrow(x1, x2, y, c.sizer)
 	prims.AddFilledPoly(arrowVertices)

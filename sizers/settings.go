@@ -23,6 +23,8 @@ const (
 	// Full and Dashed interaction lines
 
 	// Below the line itself - including allowance for the arrow height.
+	dashLineDashLenK         = 0.5
+	dashLineDashGapK         = 0.25
 	interactionLinePadBK     = 0.5
 	interactionLineTextPadBK = 0.5 // Below the text on an interaction line
 	arrowLenK                = 1.5

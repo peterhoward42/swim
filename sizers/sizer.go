@@ -16,6 +16,8 @@ type Sizer struct {
 	InteractionLineTextPadB float64
 	ArrowLen	float64
 	ArrowHeight float64
+	DashLineDashLen         float64
+	DashLineDashGap float64
 }
 
 // NewSizer provides a Sizer structure that has been initialised
@@ -29,5 +31,7 @@ func NewSizer(diagramWidth int, fontHeight float64,
 	sizer.InteractionLineTextPadB = interactionLineTextPadBK * fontHeight
 	sizer.ArrowLen = arrowLenK * fontHeight
 	sizer.ArrowHeight = arrowAspectRatio * sizer.ArrowLen
+	sizer.DashLineDashLen = dashLineDashLenK * fontHeight
+	sizer.DashLineDashGap = dashLineDashGapK * fontHeight
 	return sizer
 }

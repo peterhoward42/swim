@@ -11,11 +11,30 @@
         *  Title Box Text
         *  Full / Dash labels
         *  Full / Dash lines
-        o  Replace literal graphics.Point with NewPoint
+        *  Replace literal graphics.Point with NewPoint
         o  tune dash line settings
+            *  remove renderer knowledge of dash sizing and put alt
+               functionality into the graphics model and fix up umli and umlie.
+                *  decide what to offer in graphics model
+                    *  dash and gap lengths
+                *  make settings
+                *  make attributes
+                *  init in graphics model based on diagram and font size
+                *  test for settings in sizer
+                *  test for correct passing in to creator
+            *  remove knowledge from renderer
+            *  patch up
+            *  tune setting
+            *  if sizer in export now redundant - get rid of it
+            o  commit
+        o  ditch duplication in settings and sizer
+            o  what is actually worth putting in sizer?
+        o  patch up sizer tests
+        o  augment creator tests?
+        o  Self interactions
         o  Activity boxes
-        o  Self
         o  Lane lines
+        o  Diagram height setting
 
     o  Now other event types in creator
     o  How test the modules are mainly just data?
