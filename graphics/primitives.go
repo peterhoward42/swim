@@ -1,5 +1,9 @@
 package graphics
 
+import (
+	"math"
+)
+
 // Point represents one point (X,Y)
 type Point struct {
 	X float64
@@ -22,6 +26,19 @@ type Line struct {
 // Intended to be used for an arrow head.
 type FilledPoly struct {
 	Vertices []*Point // Do not repeat first point as last point.
+}
+
+// HasExactlyOneVertexWithX asserts that this polygon has one, and only one
+// vertex that has the given X coordinate. (within delta)
+func (p *FilledPoly) HasExactlyOneVertexWithX(x, delta float64) bool {
+	count := 0
+	for _, v := range p.Vertices {
+		dx := math.Abs(v.X - x)
+		if dx < delta {
+			count++
+		}
+	}
+	return count > 0
 }
 
 // Justification is a type safe string for text justifications

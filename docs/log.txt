@@ -15,8 +15,11 @@
         *  tune dash line settings
         *  ditch duplication in settings and sizer
         *  patch up sizer tests
-        o  rename sizers package as sizer
-        o  augment creator tests? necessary yet
+        *  rename sizers package as sizer
+        *  augment creator tests? necessary yet
+            *  quantitative equiv of interaction line visuals
+            *  another (before) for arrow head at correct end
+        o  separate polygon in graphics, and then put in test for hasExactly blah
         o  Self interactions
         o  Activity boxes
         o  Lane lines

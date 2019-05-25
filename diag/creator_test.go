@@ -1,14 +1,15 @@
 package diag
 
 import (
-	"testing"
 	"path/filepath"
+	"testing"
 
 	"github.com/golang/freetype/truetype"
 	"golang.org/x/image/font/gofont/goregular"
 
 	"github.com/peterhoward42/umli-export/imagefile"
 
+	"github.com/peterhoward42/umli/graphics"
 	"github.com/peterhoward42/umli/parser"
 	"github.com/stretchr/testify/assert"
 )
@@ -22,7 +23,6 @@ Tests to have
 */
 
 var testResultsDir = filepath.Join(".", "testresults", "new")
-
 
 func TestOneLaneOnlyVisuals(t *testing.T) {
 	assert := assert.New(t)
@@ -76,4 +76,60 @@ func TestInteractionLineVisuals(t *testing.T) {
 	err = imagefile.NewCreator(font).Create(
 		fPath, imagefile.PNG, graphicsModel)
 	assert.NoError(err)
+}
+
+func TestInteractionLineQuantitatively(t *testing.T) {
+	assert := assert.New(t)
+	statements := parser.MustCompileParse(`
+		lane A foo
+		lane B bar
+		full AB two line | label
+	`)
+	width := 2000
+	fontHeight := 20.0
+	creator := NewCreator(width, fontHeight, statements)
+	graphicsModel := creator.Create()
+	// Inspect the position and content of the interaction line
+	// label strings (which will be the last two added)
+	n := len(graphicsModel.Primitives.Labels)
+	labels := graphicsModel.Primitives.Labels[n-2 : n]
+
+	firstL := labels[0]
+	assert.Equal(graphics.NewPoint(1000, 70), firstL.Anchor)
+	assert.Equal("two line", firstL.TheString)
+	assert.Equal(graphics.Centre, firstL.HJust)
+	assert.Equal(graphics.Top, firstL.VJust)
+
+	secondL := labels[1]
+	assert.Equal(graphics.NewPoint(1000, 90), secondL.Anchor)
+
+	// Inspect the end points for the interaction line (which will be
+	// the last one added.
+}
+
+func TestInteractionLineGetsArrowAtRightEndFacingRightWay(t *testing.T) {
+	// Make sure the arrows created for interaction lines are
+	// at the right end, and point the right way.
+	assert := assert.New(t)
+	statements := parser.MustCompileParse(`
+		lane A foo
+		lane B bar
+		full AB first label
+		full BA second label
+	`)
+	width := 2000
+	fontHeight := 20.0
+	creator := NewCreator(width, fontHeight, statements)
+	graphicsModel := creator.Create()
+	n := len(graphicsModel.Primitives.Lines)
+	rightToLeftLine := graphicsModel.Primitives.Lines[n-1]
+	xLeft := rightToLeftLine.P2.X
+	xRight := rightToLeftLine.P1.X
+	leftRightArrow := graphicsModel.Primitives.FilledPolys[0]
+	rightLeftArrow := graphicsModel.Primitives.FilledPolys[1]
+	delta := 0.1
+	assert.True(leftRightArrow.HasExactlyOneVertexWithX(xRight, delta),
+		"Wrong position or direction")
+	assert.True(rightLeftArrow.HasExactlyOneVertexWithX(xLeft, delta),
+			"Wrong position or direction")
 }

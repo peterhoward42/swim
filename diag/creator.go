@@ -139,7 +139,7 @@ func (c *Creator) interactionLine(
 	x2 := c.sizer.Lanes.Individual[rightLane].Centre
 	y := c.tideMark + 0.5*c.sizer.ArrowHeight
 	prims.AddLine(x1, y, x2, y, statement.Keyword == umli.Dash)
-	arrowVertices := makeArrow(x1, x2, y, c.sizer)
+	arrowVertices := makeArrow(x1, x2, y, c.sizer.ArrowLen, c.sizer.ArrowHeight)
 	prims.AddFilledPoly(arrowVertices)
 	c.tideMark += c.sizer.ArrowHeight + c.sizer.InteractionLinePadB
 	return prims
