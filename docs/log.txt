@@ -13,13 +13,9 @@
         *  Full / Dash lines
         *  Replace literal graphics.Point with NewPoint
         *  tune dash line settings
-        o  ditch duplication in settings and sizer
-            *  write down srp for sizer and settings
-            *  does this mean some parts of sizing should be internal?
-                *  settings already is - but doc so
-            *  does it merit the redundancy? - yes
-            *  doc properly
+        *  ditch duplication in settings and sizer
         o  patch up sizer tests
+        o  rename sizers package as sizer
         o  augment creator tests?
         o  Self interactions
         o  Activity boxes
