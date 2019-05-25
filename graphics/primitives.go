@@ -1,9 +1,5 @@
 package graphics
 
-import (
-	"math"
-)
-
 // Point represents one point (X,Y)
 type Point struct {
 	X float64
@@ -20,25 +16,6 @@ type Line struct {
 	P1     *Point
 	P2     *Point
 	Dashed bool // vs. Full
-}
-
-// FilledPoly represents a filled polygon.
-// Intended to be used for an arrow head.
-type FilledPoly struct {
-	Vertices []*Point // Do not repeat first point as last point.
-}
-
-// HasExactlyOneVertexWithX asserts that this polygon has one, and only one
-// vertex that has the given X coordinate. (within delta)
-func (p *FilledPoly) HasExactlyOneVertexWithX(x, delta float64) bool {
-	count := 0
-	for _, v := range p.Vertices {
-		dx := math.Abs(v.X - x)
-		if dx < delta {
-			count++
-		}
-	}
-	return count > 0
 }
 
 // Justification is a type safe string for text justifications
@@ -84,7 +61,7 @@ func (p *Primitives) AddLine(
 
 // AddFilledPoly adds the given filled polygon to the Primitive's store.
 func (p *Primitives) AddFilledPoly(vertices []*Point) {
-	poly := &FilledPoly{vertices}
+	poly := NewFilledPoly(vertices)
 	p.FilledPolys = append(p.FilledPolys, poly)
 }
 

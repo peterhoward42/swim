@@ -20,6 +20,8 @@
             *  quantitative equiv of interaction line visuals
             *  another (before) for arrow head at correct end
         o  separate polygon in graphics, and then put in test for hasExactly blah
+            *  make tests
+            *  also migrate all places to use NewFilledPoly
         o  Self interactions
         o  Activity boxes
         o  Lane lines
