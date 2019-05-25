@@ -4,7 +4,7 @@ import (
 	"github.com/peterhoward42/umli"
 	"github.com/peterhoward42/umli/dslmodel"
 	"github.com/peterhoward42/umli/graphics"
-	"github.com/peterhoward42/umli/sizers"
+	"github.com/peterhoward42/umli/sizer"
 )
 
 // Creator is the top level entry point for the diag package.

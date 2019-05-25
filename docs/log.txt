@@ -14,16 +14,15 @@
         *  Replace literal graphics.Point with NewPoint
         *  tune dash line settings
         *  ditch duplication in settings and sizer
-        o  patch up sizer tests
+        *  patch up sizer tests
         o  rename sizers package as sizer
-        o  augment creator tests?
+        o  augment creator tests? necessary yet
         o  Self interactions
         o  Activity boxes
         o  Lane lines
         o  Diagram height setting
+        o  augment creator tests? necessary yet
 
-    o  Now other event types in creator
-    o  How test the modules are mainly just data?
     o  todo resurrect regressions tests for images
 
 ----------------------------------------------------------------------------

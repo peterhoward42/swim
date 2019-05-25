@@ -2,7 +2,7 @@ package diag
 
 import (
 	"github.com/peterhoward42/umli/graphics"
-	"github.com/peterhoward42/umli/sizers"
+	"github.com/peterhoward42/umli/sizer"
 )
 
 // makeArrow assembles the vertices required to make a horizontal! 
