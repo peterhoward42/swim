@@ -1,5 +1,8 @@
 package sizers
 
+// This module provides the *Lanes* and *LaneInfo* types, which encapsulate
+// sizing data for lanes.
+
 import (
 	"github.com/peterhoward42/umli"
 	"github.com/peterhoward42/umli/dslmodel"
@@ -9,7 +12,8 @@ import (
 // - begins with the graphics entity if applies to
 // - the fragment <PadT> should be read as paddingTop (where T is from {LRTB})
 
-// Lanes holds sizing information for the lanes.
+// Lanes holds sizing information for the lanes collectively.
+// It delegates to LaneInfo instances for lane-specific data.
 type Lanes struct {
 	DiagramWidth            float64
 	FontHeight              float64

@@ -1,7 +1,7 @@
 package sizers
 
-// This module defines constants that govern sizing decisions.
-// They are all ratios (mostly) w.r.t. font height.
+// This module defines (package private) constants that govern
+// sizing decisions. They are all ratios (mostly) w.r.t. font height.
 
 // Naming conventions:
 // - ends with <K> means coeffient / ratio
@@ -22,11 +22,11 @@ const (
 
 	// Full and Dashed interaction lines
 
-	// Below the line itself - including allowance for the arrow height.
-	dashLineDashLenK         = 0.5
-	dashLineDashGapK         = 0.25
-	interactionLinePadBK     = 0.5
-	interactionLineTextPadBK = 0.5 // Below the text on an interaction line
+	dashLineDashLenK = 0.5
+	dashLineDashGapK = 0.25
+
+	interactionLinePadBK     = 0.5 // Allows for half arrow height!
+	interactionLineTextPadBK = 0.5 // Between the text and its line
 	arrowLenK                = 1.5
 	arrowAspectRatio         = 0.4 // Width of arrow head w.r.t. length
 )

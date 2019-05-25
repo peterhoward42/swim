@@ -1,3 +1,16 @@
+/*
+Package sizers is the single source of truth for sizing all the elements
+that make up the diagram. E.g. the coordinates for each lane title box,
+the mark-space settings for dashed lines, arrow sizing, the margins or
+padding required for each thing etc.
+
+It is encapsulated in this dedicated package, to remove this responsibility
+from the umli.diag package, so that umli.diag can deal only with the
+algorithmic part of diagram creation.
+
+It provides the top level *Sizer* type, along with some subordinate types
+it delegates to. For example: sizing.Lanes.
+*/
 package sizers
 
 import (
@@ -10,14 +23,14 @@ import (
 
 // Sizer is the top level sizing component.
 type Sizer struct {
-	DiagramPadT                float64
+	DiagramPadT             float64
 	Lanes                   *Lanes
 	InteractionLinePadB     float64
 	InteractionLineTextPadB float64
-	ArrowLen	float64
-	ArrowHeight float64
+	ArrowLen                float64
+	ArrowHeight             float64
 	DashLineDashLen         float64
-	DashLineDashGap float64
+	DashLineDashGap         float64
 }
 
 // NewSizer provides a Sizer structure that has been initialised

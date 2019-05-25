@@ -12,23 +12,13 @@
         *  Full / Dash labels
         *  Full / Dash lines
         *  Replace literal graphics.Point with NewPoint
-        o  tune dash line settings
-            *  remove renderer knowledge of dash sizing and put alt
-               functionality into the graphics model and fix up umli and umlie.
-                *  decide what to offer in graphics model
-                    *  dash and gap lengths
-                *  make settings
-                *  make attributes
-                *  init in graphics model based on diagram and font size
-                *  test for settings in sizer
-                *  test for correct passing in to creator
-            *  remove knowledge from renderer
-            *  patch up
-            *  tune setting
-            *  if sizer in export now redundant - get rid of it
-            o  commit
+        *  tune dash line settings
         o  ditch duplication in settings and sizer
-            o  what is actually worth putting in sizer?
+            *  write down srp for sizer and settings
+            *  does this mean some parts of sizing should be internal?
+                *  settings already is - but doc so
+            *  does it merit the redundancy? - yes
+            *  doc properly
         o  patch up sizer tests
         o  augment creator tests?
         o  Self interactions
@@ -41,11 +31,12 @@
     o  todo resurrect regressions tests for images
 
 ----------------------------------------------------------------------------
-Full lines labels
+            o  write down srp for sizer and settings
 ----------------------------------------------------------------------------
-o  hjust centre on inter-lane mid
-o  each line vjust top
-o  first line Y is tide mark
-o  second and subsequent one text height further down
-o  at end tide mark advance to bottom of text plus dedicated padding setting
+o  sizer package single source of truth to diag creator for
+   sizes, dimensions, spacing, margins etc.
+   implements policy for sizing decisions
+o  the idea being to completely separate the respon for alg interp of 
+   diag generation (diag) and sizing decisions
+o  inverse for diag
 
