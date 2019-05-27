@@ -55,7 +55,7 @@ var EventsRequired = map[string][]EventType{
 		PotentiallyStartToBox,
 	},
 	umli.Self: []EventType{ // Boxes for *self* interactions must exist already
-		InteractionLabel,
+		SelfInteractionLabel,
 		SelfInteractionLines,
 	},
 	umli.Stop: []EventType{

@@ -26,6 +26,7 @@ type Lanes struct {
 	TitleBoxPadR            float64 // Holds title boxes apart
 	FirstTitleBoxPadL       float64 // Positions leftmost title box
 	TitleBoxPadB            float64 // Below title box as a whole
+	SelfLoopWidth           float64
 	Individual              InfoPerLane
 }
 
@@ -35,9 +36,11 @@ type InfoPerLane map[*dslmodel.Statement]*LaneInfo
 
 // LaneInfo carries information about one Lane.
 type LaneInfo struct {
-	TitleBoxLeft  float64
-	Centre        float64
-	TitleBoxRight float64
+	TitleBoxLeft   float64
+	Centre         float64
+	TitleBoxRight  float64
+	SelfLoopRight  float64
+	SelfLoopCentre float64
 }
 
 // NewLanes provides a Lanes structure that has been initialised
@@ -50,6 +53,7 @@ func NewLanes(diagramWidth int, fontHeight float64,
 	lanes.isolateLaneStatements(statements)
 	lanes.NumLanes = len(lanes.LaneStatements)
 	lanes.populateTitleBoxAttribs()
+	lanes.SelfLoopWidth = 0.5 * lanes.TitleBoxWidth // see how this works out
 	lanes.populateIndividualLaneInfo()
 
 	return lanes
@@ -100,7 +104,10 @@ func (lanes *Lanes) populateIndividualLaneInfo() {
 			float64((laneNumber))*lanes.TitleBoxPitch
 		left := centre - 0.5*lanes.TitleBoxWidth
 		right := centre + 0.5*lanes.TitleBoxWidth
-		laneInfo := &LaneInfo{left, centre, right}
+		selfLoopRight := centre + lanes.SelfLoopWidth
+		selfLoopCentre := 0.5 * (centre + selfLoopRight)
+		laneInfo := &LaneInfo{left, centre, right, selfLoopRight,
+			selfLoopCentre}
 		lanes.Individual[statement] = laneInfo
 	}
 }

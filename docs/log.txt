@@ -19,19 +19,49 @@
         *  augment creator tests? necessary yet
             *  quantitative equiv of interaction line visuals
             *  another (before) for arrow head at correct end
-        o  separate polygon in graphics, and then put in test for hasExactly blah
-            *  make tests
-            *  also migrate all places to use NewFilledPoly
+        *  separate polygon in graphics, and then put in test for hasExactly blah
         o  Self interactions
+            *  Make sure are self label and interaction events
+            o  Set up sizing for width and height of self lines
+                *  setting for self width/ht as ratios
+                *  paddingB claim for label (reuse the one for interaction line
+                *  paddingB claim for entire box  (reuse the one for interaction line)
+                *  consts in sizer for above (no don't need width and height
+                   stored - only indi right coords below
+                *  indi lanes right X for the lines
+                    *  new attrib
+                    *  calc and store
+                *  indi lanes centre X for the text
+                    *  new attrib
+                    *  calc and store
+                *  Do need self line height
+                    *  setting
+                    *  sizer attrib
+                    *  init thereof
+                *  Builds?
+            *  Add quant tests for this stuff
+                *  sizer top level
+                *  lanes top level
+                *  indi lanes selfloop
+            *  Implement lines with visual test
+            o  Implement label with visual test
+            o  Timeout to set diagram height based on tidemark and diagPadB
+            o  Add self interactions to quant tests
         o  Activity boxes
+            o  Style
+            o  Lifecycle? and start / stop events
+            o  Modify interaction and self lines to suit
         o  Lane lines
         o  Diagram height setting
-        o  augment creator tests? necessary yet
+    o  make sure everything works with one lane only
+    o  make sure have tested at extremes of num-lanes
+    o  make sure have tested at extremes of diagram aspect ratio
+    o  make sure have tested at extremes of plausible scales
 
     o  todo resurrect regressions tests for images
 
 ----------------------------------------------------------------------------
-            o  write down srp for sizer and settings
+write down srp for sizer and settings
 ----------------------------------------------------------------------------
 o  sizer package single source of truth to diag creator for
    sizes, dimensions, spacing, margins etc.

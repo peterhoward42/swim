@@ -77,6 +77,24 @@ func TestInteractionLineVisuals(t *testing.T) {
 		fPath, imagefile.PNG, graphicsModel)
 	assert.NoError(err)
 }
+func TestSelfLoopVisuals(t *testing.T) {
+	assert := assert.New(t)
+	font, err := truetype.Parse(goregular.TTF)
+	assert.NoError(err)
+	statements := parser.MustCompileParse(`
+		lane A foo
+		lane B bar
+		self B go fetch some | info
+	`)
+	width := 2000
+	fontHeight := 20.0
+	creator := NewCreator(width, fontHeight, statements)
+	graphicsModel := creator.Create()
+	fPath := filepath.Join(testResultsDir, "self-lines.png")
+	err = imagefile.NewCreator(font).Create(
+		fPath, imagefile.PNG, graphicsModel)
+	assert.NoError(err)
+}
 
 func TestInteractionLineQuantitatively(t *testing.T) {
 	assert := assert.New(t)
@@ -131,5 +149,5 @@ func TestInteractionLineGetsArrowAtRightEndFacingRightWay(t *testing.T) {
 	assert.True(leftRightArrow.HasExactlyOneVertexWithX(xRight, delta),
 		"Wrong position or direction")
 	assert.True(rightLeftArrow.HasExactlyOneVertexWithX(xLeft, delta),
-			"Wrong position or direction")
+		"Wrong position or direction")
 }

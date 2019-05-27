@@ -73,6 +73,7 @@ func (c *Creator) graphicsForDrawingEvent(
 	case LaneTitleBox:
 		prims = c.laneTitleBox(statement)
 	case SelfInteractionLines:
+		prims = c.selfInteractionLines(statement)
 	case SelfInteractionLabel:
 	case PotentiallyStartFromBox:
 	case PotentiallyStartToBox:
@@ -142,5 +143,27 @@ func (c *Creator) interactionLine(
 	arrowVertices := makeArrow(x1, x2, y, c.sizer.ArrowLen, c.sizer.ArrowHeight)
 	prims.AddFilledPoly(arrowVertices)
 	c.tideMark += c.sizer.ArrowHeight + c.sizer.InteractionLinePadB
+	return prims
+}
+
+// interactionLine generates the horizontal line and arrow head.
+// It then claims the vertical space
+// it claims for itself by advancing the tide mark.
+func (c *Creator) selfInteractionLines(
+	statement *dslmodel.Statement) (prims *graphics.Primitives) {
+	prims = graphics.NewPrimitives()
+	theLane := statement.ReferencedLanes[0]
+	left := c.sizer.Lanes.Individual[theLane].Centre
+	right := c.sizer.Lanes.Individual[theLane].SelfLoopRight
+	top := c.tideMark
+	bot := c.tideMark + c.sizer.SelfLoopHeight
+	
+	prims.AddLine(left, top, right, top, false)
+	prims.AddLine(right, top, right, bot, false)
+	prims.AddLine(right, bot, left, bot, true)
+	arrowVertices := makeArrow(right, left, bot,
+		c.sizer.ArrowLen, c.sizer.ArrowHeight)
+	prims.AddFilledPoly(arrowVertices)
+	c.tideMark += c.sizer.InteractionLinePadB
 	return prims
 }

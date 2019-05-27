@@ -31,6 +31,7 @@ type Sizer struct {
 	ArrowHeight             float64
 	DashLineDashLen         float64
 	DashLineDashGap         float64
+	SelfLoopHeight           float64
 }
 
 // NewSizer provides a Sizer structure that has been initialised
@@ -46,5 +47,7 @@ func NewSizer(diagramWidth int, fontHeight float64,
 	sizer.ArrowHeight = arrowAspectRatio * sizer.ArrowLen
 	sizer.DashLineDashLen = dashLineDashLenK * fontHeight
 	sizer.DashLineDashGap = dashLineDashGapK * fontHeight
+	sizer.SelfLoopHeight = sizer.Lanes.SelfLoopWidth * selfLoopAspectRatio
+
 	return sizer
 }
