@@ -44,12 +44,20 @@
                 *  lanes top level
                 *  indi lanes selfloop
             *  Implement lines with visual test
-                o  Wrongly putting in dashed lines on final leg
-            o  Implement label with visual test
-            o  Add reference model to visual test so don't waste time
+                *  Wrongly putting in dashed lines on final leg
+            *  Implement label with visual test
+            *  Add reference model to visual test so don't waste time
                on quant tests when layout is not good enough
+                *  self not properly updating tidemark
+            o  Split tests into visuals and quant
             o  Make in common creator.selfInteractionLabels and interactions
+            o  Rationalise
+                o  Plan
+                o  Add many lane example
+                o  Add single lane example
             o  Timeout to set diagram height based on tidemark and diagPadB
+            o  Move self interaction labels inside the self box
+            o  Change reference model to make label not too long
             o  Add self interactions to quant tests
         o  Activity boxes
             o  Style

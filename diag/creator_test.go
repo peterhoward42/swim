@@ -151,3 +151,18 @@ func TestInteractionLineGetsArrowAtRightEndFacingRightWay(t *testing.T) {
 	assert.True(rightLeftArrow.HasExactlyOneVertexWithX(xLeft, delta),
 		"Wrong position or direction")
 }
+
+func TestReferenceModelVisuals(t *testing.T) {
+	assert := assert.New(t)
+	font, err := truetype.Parse(goregular.TTF)
+	assert.NoError(err)
+	statements := parser.MustCompileParse(parser.ReferenceInput)
+	width := 2000
+	fontHeight := 20.0
+	creator := NewCreator(width, fontHeight, statements)
+	graphicsModel := creator.Create()
+	fPath := filepath.Join(testResultsDir, "reference-model.png")
+	err = imagefile.NewCreator(font).Create(
+		fPath, imagefile.PNG, graphicsModel)
+	assert.NoError(err)
+}

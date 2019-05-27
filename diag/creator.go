@@ -183,6 +183,6 @@ func (c *Creator) selfInteractionLines(
 	arrowVertices := makeArrow(right, left, bot,
 		c.sizer.ArrowLen, c.sizer.ArrowHeight)
 	prims.AddFilledPoly(arrowVertices)
-	c.tideMark += c.sizer.InteractionLinePadB
+	c.tideMark = bot + c.sizer.InteractionLinePadB
 	return prims
 }
