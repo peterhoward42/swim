@@ -49,8 +49,8 @@
             *  Add reference model to visual test so don't waste time
                on quant tests when layout is not good enough
                 *  self not properly updating tidemark
-            o  Split tests into visuals and quant
-            o  Make in common creator.selfInteractionLabels and interactions
+            *  Split tests into visuals and quant
+            *  Make in common creator.selfInteractionLabels and interactions
             o  Rationalise
                 o  Plan
                 o  Add many lane example

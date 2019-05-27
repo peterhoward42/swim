@@ -119,11 +119,8 @@ func (c *Creator) interactionLabel(
 	rightLane := statement.ReferencedLanes[1]
 	centreX := 0.5 * (c.sizer.Lanes.Individual[leftLane].Centre +
 		c.sizer.Lanes.Individual[rightLane].Centre)
-	for i, labelSeg := range statement.LabelSegments {
-		y := c.tideMark + float64(i)*c.fontHeight
-		prims.AddLabel(labelSeg, c.fontHeight, centreX, y,
-			graphics.Centre, graphics.Top)
-	}
+	firstRowY := c.tideMark
+	prims = c.rowOfLabels(centreX, firstRowY, statement.LabelSegments)
 	c.tideMark += float64(len(statement.LabelSegments))*
 		c.fontHeight + c.sizer.InteractionLineTextPadB
 	return prims
@@ -134,17 +131,27 @@ func (c *Creator) interactionLabel(
 // it has consumed for itself by advancing the tide mark.
 func (c *Creator) selfInteractionLabels(
 	statement *dslmodel.Statement) (prims *graphics.Primitives) {
-	prims = graphics.NewPrimitives()
 	theLane := statement.ReferencedLanes[0]
 	labelCentreX := c.sizer.Lanes.Individual[theLane].SelfLoopCentre
-	for i, labelSeg := range statement.LabelSegments {
-		y := c.tideMark + float64(i)*c.fontHeight
-		prims.AddLabel(labelSeg, c.fontHeight, labelCentreX, y,
-			graphics.Centre, graphics.Top)
-	}
+    firstRowY := c.tideMark
+    prims = c.rowOfLabels(labelCentreX, firstRowY, statement.LabelSegments)
 	c.tideMark += float64(len(statement.LabelSegments))*
 		c.fontHeight + c.sizer.InteractionLineTextPadB
 	return prims
+}
+
+// rowOfLabels is a (DRY) helper function to make a graphics.Primitives
+// object for the set of strings in a label. It hard-codes centred horizontal
+// justification and top vertical justification.
+func (c *Creator) rowOfLabels(centreX float64, firstRowY float64,
+        labelSegments []string) (prims *graphics.Primitives) {
+	prims = graphics.NewPrimitives()
+	for i, labelSeg := range labelSegments {
+		y := firstRowY + float64(i)*c.fontHeight
+		prims.AddLabel(labelSeg, c.fontHeight, centreX, y,
+			graphics.Centre, graphics.Top)
+	}
+    return prims
 }
 
 // interactionLine generates the horizontal line and arrow head.
