@@ -4,7 +4,7 @@ import (
 	"github.com/peterhoward42/umli"
 	"github.com/peterhoward42/umli/dslmodel"
 	"github.com/peterhoward42/umli/graphics"
-	"github.com/peterhoward42/umli/sizer"
+	sizers "github.com/peterhoward42/umli/sizer"
 )
 
 // Creator is the top level entry point for the diag package.
@@ -75,6 +75,7 @@ func (c *Creator) graphicsForDrawingEvent(
 	case SelfInteractionLines:
 		prims = c.selfInteractionLines(statement)
 	case SelfInteractionLabel:
+		prims = c.selfInteractionLabels(statement)
 	case PotentiallyStartFromBox:
 	case PotentiallyStartToBox:
 	}
@@ -128,6 +129,24 @@ func (c *Creator) interactionLabel(
 	return prims
 }
 
+// selfInteractionLabels generates the labels that sit above one of the
+// self interaction loops. It then claims the vertical space
+// it has consumed for itself by advancing the tide mark.
+func (c *Creator) selfInteractionLabels(
+	statement *dslmodel.Statement) (prims *graphics.Primitives) {
+	prims = graphics.NewPrimitives()
+	theLane := statement.ReferencedLanes[0]
+	labelCentreX := c.sizer.Lanes.Individual[theLane].SelfLoopCentre
+	for i, labelSeg := range statement.LabelSegments {
+		y := c.tideMark + float64(i)*c.fontHeight
+		prims.AddLabel(labelSeg, c.fontHeight, labelCentreX, y,
+			graphics.Centre, graphics.Top)
+	}
+	c.tideMark += float64(len(statement.LabelSegments))*
+		c.fontHeight + c.sizer.InteractionLineTextPadB
+	return prims
+}
+
 // interactionLine generates the horizontal line and arrow head.
 // It then claims the vertical space
 // it claims for itself by advancing the tide mark.
@@ -157,10 +176,10 @@ func (c *Creator) selfInteractionLines(
 	right := c.sizer.Lanes.Individual[theLane].SelfLoopRight
 	top := c.tideMark
 	bot := c.tideMark + c.sizer.SelfLoopHeight
-	
+
 	prims.AddLine(left, top, right, top, false)
 	prims.AddLine(right, top, right, bot, false)
-	prims.AddLine(right, bot, left, bot, true)
+	prims.AddLine(right, bot, left, bot, false)
 	arrowVertices := makeArrow(right, left, bot,
 		c.sizer.ArrowLen, c.sizer.ArrowHeight)
 	prims.AddFilledPoly(arrowVertices)
