@@ -93,6 +93,6 @@ func TestNewLanesSetsIndividualLaneAttributesCorrectlyForTwoLanes(t *testing.T) 
 	assert.InDelta(1454.5, individual.Centre, 0.1)
 	assert.InDelta(1818.18, individual.TitleBoxRight, 0.1)
 
-	assert.InDelta(2000, individual.SelfLoopRight, 0.1)
-	assert.InDelta(1727.2, individual.SelfLoopCentre, 0.1)
+	assert.InDelta(1818.2, individual.SelfLoopRight, 0.1)
+	assert.InDelta(1636.4, individual.SelfLoopCentre, 0.1)
 }

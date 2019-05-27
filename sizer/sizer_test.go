@@ -31,7 +31,7 @@ func TestNewSizerSetsItsScalarAttributesCorrectlyForMultipleLanes(t *testing.T) 
 		lane B bar
 	`)
 	sizer := NewSizer(2000, 20.0, statements)
-	assert.InDelta(909.1, sizer.SelfLoopHeight, 0.1)
+	assert.InDelta(218.2, sizer.SelfLoopHeight, 0.1)
 }
 
 func TestNewSizerComposesItsDelegatesProperly(t *testing.T) {
