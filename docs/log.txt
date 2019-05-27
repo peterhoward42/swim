@@ -51,7 +51,7 @@
                 *  self not properly updating tidemark
             *  Split tests into visuals and quant
             *  Make in common creator.selfInteractionLabels and interactions
-            o  Rationalise
+            o  Rationalise Visual Tests
                 o  Plan
                 o  Add many lane example
                 o  Add single lane example
@@ -73,12 +73,14 @@
     o  todo resurrect regressions tests for images
 
 ----------------------------------------------------------------------------
-write down srp for sizer and settings
+Rationalise Visual Tests
 ----------------------------------------------------------------------------
-o  sizer package single source of truth to diag creator for
-   sizes, dimensions, spacing, margins etc.
-   implements policy for sizing decisions
-o  the idea being to completely separate the respon for alg interp of 
-   diag generation (diag) and sizing decisions
-o  inverse for diag
+o  Reference model
+o  Many lanes
+o  1 lane
+o  Many interactions
+o  Large font wrt diag
+o  Small font wrt diag
+o  V small diag
+o  V large diag
 

@@ -26,88 +26,42 @@ import (
 
 var testResultsDir = filepath.Join(".", "testresults", "new")
 
-func TestOneLane(t *testing.T) {
-	assert := assert.New(t)
-	font, err := truetype.Parse(goregular.TTF)
-	assert.NoError(err)
-	statements := parser.MustCompileParse("lane A foo")
-	width := 2000
-	fontHeight := 20.0
-	creator := NewCreator(width, fontHeight, statements)
-	graphicsModel := creator.Create()
-	fPath := filepath.Join(testResultsDir, "one-lane.png")
-	err = imagefile.NewCreator(font).Create(
-		fPath, imagefile.PNG, graphicsModel)
-	assert.NoError(err)
-}
-
-func TestThreeLanes(t *testing.T) {
-	assert := assert.New(t)
-	font, err := truetype.Parse(goregular.TTF)
-	assert.NoError(err)
-	statements := parser.MustCompileParse(`
-		lane A foo
-		lane B bar
-		lane C The | quick | brown | fox | jumps over
-	`)
-	width := 2000
-	fontHeight := 20.0
-	creator := NewCreator(width, fontHeight, statements)
-	graphicsModel := creator.Create()
-	fPath := filepath.Join(testResultsDir, "three-lanes.png")
-	err = imagefile.NewCreator(font).Create(
-		fPath, imagefile.PNG, graphicsModel)
-	assert.NoError(err)
-}
-
-func TestInteractionLines(t *testing.T) {
-	assert := assert.New(t)
-	font, err := truetype.Parse(goregular.TTF)
-	assert.NoError(err)
-	statements := parser.MustCompileParse(`
-		lane A foo
-		lane B bar
-		full AB [a guard] then | a multiline | label
-		dash BA to show tidemark advancement
-	`)
-	width := 2000
-	fontHeight := 20.0
-	creator := NewCreator(width, fontHeight, statements)
-	graphicsModel := creator.Create()
-	fPath := filepath.Join(testResultsDir, "interaction-lines.png")
-	err = imagefile.NewCreator(font).Create(
-		fPath, imagefile.PNG, graphicsModel)
-	assert.NoError(err)
-}
-func TestSelfLoop(t *testing.T) {
-	assert := assert.New(t)
-	font, err := truetype.Parse(goregular.TTF)
-	assert.NoError(err)
-	statements := parser.MustCompileParse(`
-		lane A foo
-		lane B bar
-		self B go fetch some | info
-	`)
-	width := 2000
-	fontHeight := 20.0
-	creator := NewCreator(width, fontHeight, statements)
-	graphicsModel := creator.Create()
-	fPath := filepath.Join(testResultsDir, "self-lines.png")
-	err = imagefile.NewCreator(font).Create(
-		fPath, imagefile.PNG, graphicsModel)
-	assert.NoError(err)
-}
-
+// TestReferenceModel uses the reference DSL script and a typical
+// diagram size and font size.
 func TestReferenceModel(t *testing.T) {
+	width := 2000
+	fontHeight := 20.0
+	script := parser.ReferenceInput
+	genericCreateHelper(t, script, width, fontHeight, "canonical.png")
+}
+
+// TestOneLane illustrates the sizing and composition logic in the context
+// of a diagram with just one lane in.
+func TestOneLane(t *testing.T) {
+	width := 2000
+	fontHeight := 20.0
+	script := `
+		lane A Foo
+		self A Bar
+		self A Baz
+		self A A long | label over | multiple lines
+	`
+	genericCreateHelper(t, script, width, fontHeight, "onelane.png")
+}
+
+// Helper functions (DRY)
+
+// genericCreateHelper makes a diagram from the given DSL script and
+// saves it in the ./testresults/new directory.
+func genericCreateHelper(t *testing.T, script string, width int,
+	fontHeight float64, imageBaseName string) {
 	assert := assert.New(t)
 	font, err := truetype.Parse(goregular.TTF)
 	assert.NoError(err)
-	statements := parser.MustCompileParse(parser.ReferenceInput)
-	width := 2000
-	fontHeight := 20.0
+	statements := parser.MustCompileParse(script)
 	creator := NewCreator(width, fontHeight, statements)
 	graphicsModel := creator.Create()
-	fPath := filepath.Join(testResultsDir, "reference-model.png")
+	fPath := filepath.Join(testResultsDir, imageBaseName)
 	err = imagefile.NewCreator(font).Create(
 		fPath, imagefile.PNG, graphicsModel)
 	assert.NoError(err)
