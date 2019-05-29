@@ -8,9 +8,11 @@ package sizers
 // - begins with the graphics entity if applies to
 // - the fragment <PadT> should be read as paddingTop (where T is from {LRTB})
 
-const diagramPadTK = 1.0
-
 const (
+
+	// Diagram as a whole.
+	diagramPadTK = 1.0
+	diagramPadBK = 1.0
 
 	// Lane title boxes.
 	titleBoxPadRK     = 0.25 // w.r.t title box width
@@ -29,4 +31,7 @@ const (
 
 	// Self interactions
 	selfLoopAspectRatio = 0.6 // Width ratio to height of the three lines
+
+	// Lifeline activity boxes
+	activityBoxWidthK = 2.0
 )

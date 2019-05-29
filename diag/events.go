@@ -41,22 +41,24 @@ precede the corresponding line events.
 */
 var EventsRequired = map[string][]EventType{
 	umli.Lane: []EventType{
-		LaneTitleBox,
+		LaneTitleBox, // advances tidemark
 		LaneLine,
 	},
-	umli.Dash: []EventType{ // Boxes for *returning* interactions must exist already
-		InteractionLabel,
-		InteractionLine,
+	umli.Dash: []EventType{
+		InteractionLabel,      // advances tidemark
+		PotentiallyStartToBox, // no advance
+		InteractionLine,       // advances tidemark
 	},
-	umli.Full: []EventType{ // Boxes for *outgoing* interactions may not exist already
-		PotentiallyStartFromBox,
-		InteractionLabel,
-		InteractionLine,
-		PotentiallyStartToBox,
+	umli.Full: []EventType{
+		PotentiallyStartFromBox, // advances tidemark
+		InteractionLabel,        // advances tidemark
+		PotentiallyStartToBox,   // no advance
+		InteractionLine,         // advances tidemark
 	},
-	umli.Self: []EventType{ // Boxes for *self* interactions must exist already
-		SelfInteractionLabel,
-		SelfInteractionLines,
+	umli.Self: []EventType{
+		PotentiallyStartFromBox, // advances tidemark
+		SelfInteractionLabel,    // advances tidemark
+		SelfInteractionLines,    // advances tidemark
 	},
 	umli.Stop: []EventType{
 		EndBox,

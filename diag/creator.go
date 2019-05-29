@@ -7,59 +7,107 @@ import (
 	sizers "github.com/peterhoward42/umli/sizer"
 )
 
-// Creator is the top level entry point for the diag package.
-// It is capable of consuming a sequence of dslmodel.Statement(s), and
-// producing the corresponding diagram definition in terms of its low-level
-// primitives - i.e. lists of line segments and strings to render.
+/*
+Creator is the top level type for the diag package and provides the API
+to create diagrams.
+*/
 type Creator struct {
-	width      int
-	fontHeight float64
-	statements []*dslmodel.Statement
-	sizer      *sizers.Sizer
-	tideMark   float64 // Gradually moves down the page during creation.
+	width              int
+	fontHeight         float64
+	allStatements      []*dslmodel.Statement
+	lifelineStatements []*dslmodel.Statement
+	boxState           *BoxState
+	graphicsModel      *graphics.Model
+	sizer              *sizers.Sizer
+	tideMark           float64 // Gradually moves down the page during creation.
 }
 
-// NewCreator creates a Creator ready to use.
+/*
+NewCreator provides a Creator ready to use.  All the layout and sizing
+decisions are derived from the diagram width and fontHeight parameters (in
+pixels), while the required height is calculated automatially.
+*/
 func NewCreator(width int, fontHeight float64,
-	statements []*dslmodel.Statement) *Creator {
-	sizer := sizers.NewSizer(width, fontHeight, statements)
+	allStatements []*dslmodel.Statement) *Creator {
+	lifelineStatements := isolateLifelines(allStatements)
+	boxState := NewBoxState(lifelineStatements)
+	sizer := sizers.NewSizer(width, fontHeight, lifelineStatements)
 	creator := &Creator{
-		width:      width,
-		fontHeight: fontHeight,
-		statements: statements,
-		sizer:      sizer,
+		width:              width,
+		fontHeight:         fontHeight,
+		allStatements:      allStatements,
+		lifelineStatements: lifelineStatements,
+		boxState:           boxState,
+		sizer:              sizer,
 	}
 	return creator
 }
 
-// Create works out what the diagram should look like by analysing the
-// DSL Statement(s) provided. It is responsible for gradually moving
-// creator.tideMark down the page as each diagram element is produced.
-// All sizing and spacing decisions are
-// based on the diagram width, and font height (in pixels) parameters.
+/*
+Create is the main API method which work out what the diagram should look
+like. It orchestrates a multi-pass creation process.
+*/
 func (c *Creator) Create() *graphics.Model {
-	graphicalEvents := NewScanner().Scan(c.statements)
-	initialHeightAssumption := int(0.33 * float64(c.width)) // Overriden later.
-	graphicsModel := graphics.NewModel(
-		c.width, initialHeightAssumption, c.fontHeight,
+	diagHeight := 0 // Set later.
+	c.graphicsModel = graphics.NewModel(
+		c.width, diagHeight, c.fontHeight,
 		c.sizer.DashLineDashLen, c.sizer.DashLineDashGap)
-	// First pass is per-statement.
-	for _, statement := range c.statements {
-		statementEvents := graphicalEvents[statement]
-		for _, evt := range statementEvents {
-			// Inner loop is for each graphics event called for by the statement.
-			prims := c.graphicsForDrawingEvent(evt, statement)
-			graphicsModel.Primitives.Add(prims)
-		}
-	}
-	return graphicsModel
+	c.createFirstPass()
+	c.finalizeDiagramHeight()
+	return c.graphicsModel
 }
 
-// graphicsForDrawingEvent synthesizes the lines and label strings primititives
-// required to render a single diagram element drawing event. It also advances
-// c.tideMark, to accomodate the space taken up by the new primitives.
-func (c *Creator) graphicsForDrawingEvent(
-	evt EventType, statement *dslmodel.Statement) (prims *graphics.Primitives) {
+// isolateLifelines provides the subset of Statements from the
+// given list that correspond to lifelines.
+func isolateLifelines(
+	allStatements []*dslmodel.Statement) []*dslmodel.Statement {
+	lifelineStatements := []*dslmodel.Statement{}
+	for _, statement := range allStatements {
+		if statement.Keyword == umli.Lane {
+			lifelineStatements = append(lifelineStatements, statement)
+		}
+	}
+	return lifelineStatements
+}
+
+/*
+createFirstPass takes each parsed statement from the DSL script in turn, to
+generate the primitives required that can be determined from a first pass.
+This includes for example the lane title boxes and the interaction lines and
+labels. But it excludes the generation of primitives that can only be
+dimensioned once the interaction line Y coordinates are known; for example
+the activity boxes that sit on lanes.
+*/
+func (c *Creator) createFirstPass() {
+	graphicalEvents := NewScanner().Scan(c.allStatements)
+	// Outer loop is per DSL statement
+	for _, statement := range c.allStatements {
+		statementEvents := graphicalEvents[statement]
+		// Inner loop is for the (multiple) graphical events called for
+		// by that statement.
+		for _, evt := range statementEvents {
+			// Evaluate and accumulate the graphics primitives required.
+			prims := c.graphicsForDrawingEvent(evt, statement)
+			c.graphicsModel.Primitives.Add(prims)
+		}
+	}
+}
+
+/*
+finalizeDiagramHeight sets the graphics model's Height attribute to just
+large enough to accomodate the final tide mark.
+*/
+func (c *Creator) finalizeDiagramHeight() {
+	c.graphicsModel.Height = int(c.tideMark + c.sizer.DiagramPadB)
+}
+
+/*
+graphicsForDrawingEvent synthesizes the lines and label strings primititives
+required to render a single diagram element drawing event. It also advances
+c.tideMark, to accomodate the space taken up by the new primitives.
+*/
+func (c *Creator) graphicsForDrawingEvent(evt EventType,
+	statement *dslmodel.Statement) (prims *graphics.Primitives) {
 
 	prims = graphics.NewPrimitives()
 
@@ -78,13 +126,16 @@ func (c *Creator) graphicsForDrawingEvent(
 		prims = c.selfInteractionLabels(statement)
 	case PotentiallyStartFromBox:
 	case PotentiallyStartToBox:
+		prims = c.potentiallyStartToBox(statement)
 	}
 	return prims
 }
 
-// laneTitleBox generates the lines to represent the
-// rectangular box at the top of a lane, and calculates the tide mark
-// corresponding to the bottom of these boxes.
+/*
+laneTitleBox generates the lines to represent the rectangular box at the top
+of a lane, and calculates the tide mark corresponding to the bottom of these
+boxes.
+*/
 func (c *Creator) laneTitleBox(
 	statement *dslmodel.Statement) (prims *graphics.Primitives) {
 	prims = graphics.NewPrimitives()
@@ -109,9 +160,11 @@ func (c *Creator) laneTitleBox(
 	return prims
 }
 
-// interactionLabel generates the labels that sit above one of the
-// horizontal interaction arrows. It then claims the vertical space
-// it has consumed for itself by advancing the tide mark.
+/*
+interactionLabel generates the labels that sit above one of the horizontal
+interaction lines. It then claims the vertical space it has consumed for
+itself by advancing the tide mark.
+*/
 func (c *Creator) interactionLabel(
 	statement *dslmodel.Statement) (prims *graphics.Primitives) {
 	prims = graphics.NewPrimitives()
@@ -126,37 +179,42 @@ func (c *Creator) interactionLabel(
 	return prims
 }
 
-// selfInteractionLabels generates the labels that sit above one of the
-// self interaction loops. It then claims the vertical space
-// it has consumed for itself by advancing the tide mark.
+/*
+selfInteractionLabels generates the labels that sit above one of the *self*
+interaction loops. It then claims the vertical space it has consumed for
+itself by advancing the tide mark.
+*/
 func (c *Creator) selfInteractionLabels(
 	statement *dslmodel.Statement) (prims *graphics.Primitives) {
 	theLane := statement.ReferencedLanes[0]
 	labelCentreX := c.sizer.Lanes.Individual[theLane].SelfLoopCentre
-    firstRowY := c.tideMark
-    prims = c.rowOfLabels(labelCentreX, firstRowY, statement.LabelSegments)
+	firstRowY := c.tideMark
+	prims = c.rowOfLabels(labelCentreX, firstRowY, statement.LabelSegments)
 	c.tideMark += float64(len(statement.LabelSegments))*
 		c.fontHeight + c.sizer.InteractionLineTextPadB
 	return prims
 }
 
-// rowOfLabels is a (DRY) helper function to make a graphics.Primitives
-// object for the set of strings in a label. It hard-codes centred horizontal
-// justification and top vertical justification.
+/*
+rowOfLabels is a (DRY) helper function to make the graphics.Primitives
+objects for the set of strings in a label. It hard-codes centred horizontal
+justification and top vertical justification.
+*/
 func (c *Creator) rowOfLabels(centreX float64, firstRowY float64,
-        labelSegments []string) (prims *graphics.Primitives) {
+	labelSegments []string) (prims *graphics.Primitives) {
 	prims = graphics.NewPrimitives()
 	for i, labelSeg := range labelSegments {
 		y := firstRowY + float64(i)*c.fontHeight
 		prims.AddLabel(labelSeg, c.fontHeight, centreX, y,
 			graphics.Centre, graphics.Top)
 	}
-    return prims
+	return prims
 }
 
-// interactionLine generates the horizontal line and arrow head.
-// It then claims the vertical space
-// it claims for itself by advancing the tide mark.
+/*
+interactionLine generates the horizontal line and arrow head.  It then claims
+the vertical space it claims for itself by advancing the tide mark.
+*/
 func (c *Creator) interactionLine(
 	statement *dslmodel.Statement) (prims *graphics.Primitives) {
 	prims = graphics.NewPrimitives()
@@ -164,17 +222,20 @@ func (c *Creator) interactionLine(
 	rightLane := statement.ReferencedLanes[1]
 	x1 := c.sizer.Lanes.Individual[leftLane].Centre
 	x2 := c.sizer.Lanes.Individual[rightLane].Centre
-	y := c.tideMark + 0.5*c.sizer.ArrowHeight
+	y := c.tideMark
 	prims.AddLine(x1, y, x2, y, statement.Keyword == umli.Dash)
-	arrowVertices := makeArrow(x1, x2, y, c.sizer.ArrowLen, c.sizer.ArrowHeight)
+	arrowVertices := makeArrow(x1, x2, y, c.sizer.ArrowLen,
+		c.sizer.ArrowHeight)
 	prims.AddFilledPoly(arrowVertices)
-	c.tideMark += c.sizer.ArrowHeight + c.sizer.InteractionLinePadB
+	c.tideMark += 0.5*c.sizer.ArrowHeight + c.sizer.InteractionLinePadB
 	return prims
 }
 
-// interactionLine generates the horizontal line and arrow head.
-// It then claims the vertical space
-// it claims for itself by advancing the tide mark.
+/*
+selfInteractionLines generates the three lines and arrow head for a *self*
+interaction loop.  It then claims the vertical space it claims for itself by
+advancing the tide mark.
+*/
 func (c *Creator) selfInteractionLines(
 	statement *dslmodel.Statement) (prims *graphics.Primitives) {
 	prims = graphics.NewPrimitives()
@@ -191,5 +252,27 @@ func (c *Creator) selfInteractionLines(
 		c.sizer.ArrowLen, c.sizer.ArrowHeight)
 	prims.AddFilledPoly(arrowVertices)
 	c.tideMark = bot + c.sizer.InteractionLinePadB
+	return prims
+}
+
+/*
+potentiallyStartToBox works out if the Creator has already started a
+lifeline activity box for the lifeline that this interaction line is
+going to, and if it hasn't does so by drawing the top edge.
+*/
+func (c *Creator) potentiallyStartToBox(
+	statement *dslmodel.Statement) (prims *graphics.Primitives) {
+	prims = graphics.NewPrimitives()
+	toLifeline := statement.ReferencedLanes[1]
+	if c.boxState.boxIsInProgress(toLifeline) {
+		return prims
+	}
+	left := c.sizer.Lanes.Individual[toLifeline].ActivityBoxLeft
+	right := c.sizer.Lanes.Individual[toLifeline].ActivityBoxRight
+	y := c.tideMark
+	prims.AddLine(left, y, right, y, false)
+	c.boxState.boxesInProgress[toLifeline] = true
+	// tide mark is unchanged because the interaction lines that come into
+	// newly started activity boxes line up with the top of the box
 	return prims
 }

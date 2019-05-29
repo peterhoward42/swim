@@ -4,7 +4,6 @@ package sizers
 // sizing data for lanes.
 
 import (
-	"github.com/peterhoward42/umli"
 	"github.com/peterhoward42/umli/dslmodel"
 )
 
@@ -17,7 +16,7 @@ import (
 type Lanes struct {
 	DiagramWidth            float64
 	FontHeight              float64
-	LaneStatements          []*dslmodel.Statement
+	LifelineStatements      []*dslmodel.Statement
 	NumLanes                int
 	TitleBoxWidth           float64
 	TitleBoxPitch           float64
@@ -27,6 +26,7 @@ type Lanes struct {
 	FirstTitleBoxPadL       float64 // Positions leftmost title box
 	TitleBoxPadB            float64 // Below title box as a whole
 	SelfLoopWidth           float64
+	ActivityBoxWidth		float64
 	Individual              InfoPerLane
 }
 
@@ -36,24 +36,27 @@ type InfoPerLane map[*dslmodel.Statement]*LaneInfo
 
 // LaneInfo carries information about one Lane.
 type LaneInfo struct {
-	TitleBoxLeft   float64
-	Centre         float64
-	TitleBoxRight  float64
-	SelfLoopRight  float64
-	SelfLoopCentre float64
+	TitleBoxLeft     float64
+	Centre           float64
+	TitleBoxRight    float64
+	SelfLoopRight    float64
+	SelfLoopCentre   float64
+	ActivityBoxLeft  float64
+	ActivityBoxRight float64
 }
 
 // NewLanes provides a Lanes structure that has been initialised
 // as is ready for use.
 func NewLanes(diagramWidth int, fontHeight float64,
-	statements []*dslmodel.Statement) *Lanes {
+	lifelineStatements []*dslmodel.Statement) *Lanes {
 	lanes := &Lanes{}
 	lanes.DiagramWidth = float64(diagramWidth)
 	lanes.FontHeight = fontHeight
-	lanes.isolateLaneStatements(statements)
-	lanes.NumLanes = len(lanes.LaneStatements)
+	lanes.LifelineStatements = lifelineStatements
+	lanes.NumLanes = len(lanes.LifelineStatements)
 	lanes.populateTitleBoxAttribs()
 	lanes.SelfLoopWidth = 0.5 * lanes.TitleBoxWidth // see how this works out
+	lanes.ActivityBoxWidth = activityBoxWidthK * fontHeight
 	lanes.populateIndividualLaneInfo()
 
 	return lanes
@@ -83,7 +86,7 @@ func (lanes *Lanes) populateTitleBoxAttribs() {
 // title box with the most label lines.
 func (lanes *Lanes) titleBoxHeight() float64 {
 	maxNLabelLines := 0
-	for _, s := range lanes.LaneStatements {
+	for _, s := range lanes.LifelineStatements {
 		n := len(s.LabelSegments)
 		if n > maxNLabelLines {
 			maxNLabelLines = n
@@ -99,24 +102,17 @@ func (lanes *Lanes) titleBoxHeight() float64 {
 // left, right and centre of the lane title box.
 func (lanes *Lanes) populateIndividualLaneInfo() {
 	lanes.Individual = InfoPerLane{}
-	for laneNumber, statement := range lanes.LaneStatements {
+	for laneNumber, statement := range lanes.LifelineStatements {
 		centre := lanes.FirstTitleBoxPadL + 0.5*lanes.TitleBoxWidth +
 			float64((laneNumber))*lanes.TitleBoxPitch
 		left := centre - 0.5*lanes.TitleBoxWidth
 		right := centre + 0.5*lanes.TitleBoxWidth
 		selfLoopRight := centre + lanes.SelfLoopWidth
 		selfLoopCentre := 0.5 * (centre + selfLoopRight)
+		activityBoxLeft := centre - 0.5*lanes.ActivityBoxWidth
+		activityBoxRight := centre + 0.5*lanes.ActivityBoxWidth
 		laneInfo := &LaneInfo{left, centre, right, selfLoopRight,
-			selfLoopCentre}
+			selfLoopCentre, activityBoxLeft, activityBoxRight}
 		lanes.Individual[statement] = laneInfo
-	}
-}
-
-// isolateLaneStatements isolates the lane statements in a DSL list.
-func (lanes *Lanes) isolateLaneStatements(statements []*dslmodel.Statement) {
-	for _, s := range statements {
-		if s.Keyword == umli.Lane {
-			lanes.LaneStatements = append(lanes.LaneStatements, s)
-		}
 	}
 }

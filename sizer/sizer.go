@@ -14,6 +14,7 @@ it delegates to. For example: sizing.Lanes.
 package sizers
 
 import (
+	"fmt"
 	"github.com/peterhoward42/umli/dslmodel"
 )
 
@@ -24,6 +25,7 @@ import (
 // Sizer is the top level sizing component.
 type Sizer struct {
 	DiagramPadT             float64
+	DiagramPadB             float64
 	Lanes                   *Lanes
 	InteractionLinePadB     float64
 	InteractionLineTextPadB float64
@@ -31,16 +33,17 @@ type Sizer struct {
 	ArrowHeight             float64
 	DashLineDashLen         float64
 	DashLineDashGap         float64
-	SelfLoopHeight           float64
+	SelfLoopHeight          float64
 }
 
 // NewSizer provides a Sizer structure that has been initialised
 // as is ready for use.
 func NewSizer(diagramWidth int, fontHeight float64,
-	statements []*dslmodel.Statement) *Sizer {
+	lifelineStatements []*dslmodel.Statement) *Sizer {
 	sizer := &Sizer{}
 	sizer.DiagramPadT = diagramPadTK * fontHeight
-	sizer.Lanes = NewLanes(diagramWidth, fontHeight, statements)
+	sizer.DiagramPadB = diagramPadBK * fontHeight
+	sizer.Lanes = NewLanes(diagramWidth, fontHeight, lifelineStatements)
 	sizer.InteractionLinePadB = interactionLinePadBK * fontHeight
 	sizer.InteractionLineTextPadB = interactionLineTextPadBK * fontHeight
 	sizer.ArrowLen = arrowLenK * fontHeight
@@ -48,6 +51,12 @@ func NewSizer(diagramWidth int, fontHeight float64,
 	sizer.DashLineDashLen = dashLineDashLenK * fontHeight
 	sizer.DashLineDashGap = dashLineDashGapK * fontHeight
 	sizer.SelfLoopHeight = sizer.Lanes.SelfLoopWidth * selfLoopAspectRatio
+
+	// for debugging
+	fmt.Printf("XXXX sizer.Lanes.LifelineStatements:\n")
+	for _, s := range sizer.Lanes.LifelineStatements {
+		fmt.Printf("XXXX %p\n", s)
+	}
 
 	return sizer
 }

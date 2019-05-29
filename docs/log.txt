@@ -1,86 +1,41 @@
-*  Do the geometry model and test it is good for json or yaml serialisation
-*  Refactor parser and improve tests
-*  Psuedo code diagram builder
-*  Tease out CRC and cf original plans
-*  Challenge tests so far wrt recent test guidance
-    *  Find visualisation pathway
-    *  rename package umli?
-    *  export be separate repo
-    o  Go back to diag.Create() tdd
-        *  Title Boxes
-        *  Title Box Text
-        *  Full / Dash labels
-        *  Full / Dash lines
-        *  Replace literal graphics.Point with NewPoint
-        *  tune dash line settings
-        *  ditch duplication in settings and sizer
-        *  patch up sizer tests
-        *  rename sizers package as sizer
-        *  augment creator tests? necessary yet
-            *  quantitative equiv of interaction line visuals
-            *  another (before) for arrow head at correct end
-        *  separate polygon in graphics, and then put in test for hasExactly blah
-        o  Self interactions
-            *  Make sure are self label and interaction events
-            o  Set up sizing for width and height of self lines
-                *  setting for self width/ht as ratios
-                *  paddingB claim for label (reuse the one for interaction line
-                *  paddingB claim for entire box  (reuse the one for interaction line)
-                *  consts in sizer for above (no don't need width and height
-                   stored - only indi right coords below
-                *  indi lanes right X for the lines
-                    *  new attrib
-                    *  calc and store
-                *  indi lanes centre X for the text
-                    *  new attrib
-                    *  calc and store
-                *  Do need self line height
-                    *  setting
-                    *  sizer attrib
-                    *  init thereof
-                *  Builds?
-            *  Add quant tests for this stuff
-                *  sizer top level
-                *  lanes top level
-                *  indi lanes selfloop
-            *  Implement lines with visual test
-                *  Wrongly putting in dashed lines on final leg
-            *  Implement label with visual test
-            *  Add reference model to visual test so don't waste time
-               on quant tests when layout is not good enough
-                *  self not properly updating tidemark
-            *  Split tests into visuals and quant
-            *  Make in common creator.selfInteractionLabels and interactions
-            o  Rationalise Visual Tests
-                o  Plan
-                o  Add many lane example
-                o  Add single lane example
-            o  Timeout to set diagram height based on tidemark and diagPadB
-            o  Move self interaction labels inside the self box
-            o  Change reference model to make label not too long
-            o  Add self interactions to quant tests
-        o  Activity boxes
-            o  Style
-            o  Lifecycle? and start / stop events
-            o  Modify interaction and self lines to suit
-        o  Lane lines
-        o  Diagram height setting
-    o  make sure everything works with one lane only
-    o  make sure have tested at extremes of num-lanes
-    o  make sure have tested at extremes of diagram aspect ratio
-    o  make sure have tested at extremes of plausible scales
-
+    o  Activity boxes
+        o  Implement potentially start to box
+        o  Shorten full/dash/self lines now we have size
+        o  Jump ahead to final pass to finalize boxes in progress at end
+        o  Handler for explicit end box should be fairly self evident now
+    o  Lane lines
+        o  Rename to lifelines first
+    o  Might be best to hard code and hide the size  - and
+       encourage client to scale in context, or to make images big and
+       then use image lib to scale to suit?
+        o  if so, then make sure no pointless tests
+    o  Change reference model to make label not too long, and maybe
+       be more computer sciency - plus update readme to suit
+    o  Add title keyword
+    o  Change terminology
+        o  Lane -> lifeline
+        o  TitleBox -> lifelineheader
+    o  Lifeline should be coarser mark space than response line
     o  todo resurrect regressions tests for images
+    o  benchmarks and tuning
+    o  may need to rebrand as uml sequence diagram
+
 
 ----------------------------------------------------------------------------
-Rationalise Visual Tests
+Actitity Boxes
 ----------------------------------------------------------------------------
-o  Reference model
-o  Many lanes
-o  1 lane
-o  Many interactions
-o  Large font wrt diag
-o  Small font wrt diag
-o  V small diag
-o  V large diag
+o  Scanning state has box in progress boolean (inbox)
+o  Triggers to start a box:
+    o  When an interaction or self loop originates from X, and X is not
+       inbox, then start X box before the interaction line.
+    o  When an interaction or self loop arrives at X, and X is not
+       inbox, then start X box level with the interaction line.
+o  Triggers to finish a box:
+    o  Explicit stop
+    o  End of diagram
+o  Need state for inbox for each lane 
+    o  Init before first pass create
+    o  Preserved through to later passes to close off any remianing open
+    o  Must also track Y coords at which each in box started to support
+       drawing box sides at end
 
