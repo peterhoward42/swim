@@ -23,17 +23,17 @@ import (
 
 // Sizer is the top level sizing component.
 type Sizer struct {
-	DiagramPadT             float64
-	DiagramPadB             float64
-	Lanes                   *Lanes
-	InteractionLinePadB     float64
-	InteractionLineTextPadB float64
-	ArrowLen                float64
-	ArrowHeight             float64
-	DashLineDashLen         float64
-	DashLineDashGap         float64
-	SelfLoopHeight          float64
-	ActivityBoxTopPadB      float64
+	DiagramPadT                float64
+	DiagramPadB                float64
+	Lanes                      *Lanes
+	InteractionLinePadB        float64
+	InteractionLineTextPadB    float64
+	ArrowLen                   float64
+	ArrowHeight                float64
+	DashLineDashLen            float64
+	DashLineDashGap            float64
+	SelfLoopHeight             float64
+	ActivityBoxVerticalOverlap float64
 }
 
 // NewSizer provides a Sizer structure that has been initialised
@@ -51,7 +51,7 @@ func NewSizer(diagramWidth int, fontHeight float64,
 	sizer.DashLineDashLen = dashLineDashLenK * fontHeight
 	sizer.DashLineDashGap = dashLineDashGapK * fontHeight
 	sizer.SelfLoopHeight = sizer.Lanes.SelfLoopWidth * selfLoopAspectRatio
-	sizer.ActivityBoxTopPadB = activityBoxTopPadBK * fontHeight
+	sizer.ActivityBoxVerticalOverlap = activityBoxVerticalOverlapK * fontHeight
 
 	return sizer
 }

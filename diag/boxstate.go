@@ -1,46 +1,33 @@
 package diag
 
 import (
-	"fmt"
-
 	"github.com/peterhoward42/umli/dslmodel"
 )
 
-/*
-BoxState keeps track of the Lifeline Activity Boxes during the
-drawing element creation process as it works through the DSL statements
-and works down the page.
-*/
-type BoxState struct {
-	// Boxes are said to be in progress when the interaction that
-	// implies their existence has been encountered, but no trigger
-	// has yet been encountered to terminate it. The map is keyed
-	// on the Lifeline Statements.
-	boxesInProgress map[*dslmodel.Statement]bool
+// Type boxState keeps track of the in-progress state of a lifeline
+// activity box (for one lifeline) during diagram creation.
+type boxState struct {
+	inProgress bool
+	topY float64
 }
 
-// NewBoxState provides a BoxState ready to use.
-func NewBoxState(lifelineStatements []*dslmodel.Statement) *BoxState {
-	b := &BoxState{
-		boxesInProgress: map[*dslmodel.Statement]bool{},
+// newBoxState provides a boxState ready to use.
+func newBoxState(lifelineStatement *dslmodel.Statement) *boxState {
+	return &boxState{
+		inProgress: false,
 	}
-	// for debugging
-	fmt.Printf("XXXX registering statements in BoxState:\n")
-	for _, statement := range lifelineStatements {
-		fmt.Printf("XXXX %p\n", statement)
-		b.boxesInProgress[statement] = false
-	}
-	return b
 }
 
-// boxIsInProgress yields if a lifeline activity box is in progress
-// for the given lifelineStatement
-func (bs *BoxState) boxIsInProgress(
-	lifelineStatement *dslmodel.Statement) bool {
-	fmt.Printf("XXXX boxIsInProgress() test: %p\n", lifelineStatement)
-	inProgress, ok := bs.boxesInProgress[lifelineStatement]
-	if !ok {
-		return false
+// Type allBoxStates maps lifeline statements to a
+// boxState.
+type allBoxStates map[*dslmodel.Statement]*boxState
+
+// NewLifelineActivityBoxes creates a lifelineActivityBoxes ready to use.
+func newAllBoxStates(
+	lifelineStatements []*dslmodel.Statement) allBoxStates {
+	boxes := allBoxStates{}
+	for _, lifelineStatement := range lifelineStatements {
+		boxes[lifelineStatement] = newBoxState(lifelineStatement)
 	}
-	return inProgress
+	return boxes
 }

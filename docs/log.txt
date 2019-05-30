@@ -2,8 +2,12 @@
         *  Implement potentially start to box
         *  Shorten full/dash/self lines now we have size
         *  Implement potentially start from-box
-        o  Jump ahead to final pass to finalize boxes in progress at end
+        *  Jump ahead to final pass to finalize boxes in progress at end
+        o  Should private types be lower case?
+            o  Might need wider look! or lint check?
         o  Handler for explicit end box should be fairly self evident now
+            o  gun for a reusable term this box at Y helper
+            o  Can avoid drawing top edges earlier now I think 
         o  Now check that self interactons get the right boxes even when
            the boxes are stopped and re-started in mid-stream
     o  Lane lines

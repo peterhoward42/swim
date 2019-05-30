@@ -12,32 +12,38 @@ Creator is the top level type for the diag package and provides the API
 to create diagrams.
 */
 type Creator struct {
-	width              int
-	fontHeight         float64
-	allStatements      []*dslmodel.Statement
+	// Width of the diagram required - in virtual pixels.
+	width int
+	// Font height is used as the root for all sizing decisions.
+	fontHeight float64
+	// Parsed DSL script.
+	allStatements []*dslmodel.Statement
+	// The statements representing lifelines - isolated.
 	lifelineStatements []*dslmodel.Statement
-	boxState           *BoxState
-	graphicsModel      *graphics.Model
-	sizer              *sizers.Sizer
-	tideMark           float64 // Gradually moves down the page during creation.
+	// Keeps track of activity boxes in progress.
+	allBoxStates allBoxStates
+	// The output.
+	graphicsModel *graphics.Model
+	// Knows how to size everything.
+	sizer *sizers.Sizer
+	// Gradually moves down the page during creation.
+	tideMark float64
 }
 
 /*
-NewCreator provides a Creator ready to use.  All the layout and sizing
-decisions are derived from the diagram width and fontHeight parameters (in
-pixels), while the required height is calculated automatially.
+NewCreator provides a Creator ready to use.
 */
 func NewCreator(width int, fontHeight float64,
 	allStatements []*dslmodel.Statement) *Creator {
 	lifelineStatements := isolateLifelines(allStatements)
-	boxState := NewBoxState(lifelineStatements)
+	allBoxStates := newAllBoxStates(lifelineStatements)
 	sizer := sizers.NewSizer(width, fontHeight, lifelineStatements)
 	creator := &Creator{
 		width:              width,
 		fontHeight:         fontHeight,
 		allStatements:      allStatements,
 		lifelineStatements: lifelineStatements,
-		boxState:           boxState,
+		allBoxStates:       allBoxStates,
 		sizer:              sizer,
 	}
 	return creator
@@ -48,11 +54,12 @@ Create is the main API method which work out what the diagram should look
 like. It orchestrates a multi-pass creation process.
 */
 func (c *Creator) Create() *graphics.Model {
-	diagHeight := 0 // Set later.
+	diagHeight := 0 // Set later to accomodate contents once known.
 	c.graphicsModel = graphics.NewModel(
 		c.width, diagHeight, c.fontHeight,
 		c.sizer.DashLineDashLen, c.sizer.DashLineDashGap)
 	c.createFirstPass()
+	c.finalizeActivityBoxes()
 	c.finalizeDiagramHeight()
 	return c.graphicsModel
 }
@@ -278,7 +285,7 @@ with its label (which has already been emitted).
 */
 func (c *Creator) potentiallyStartFromBox(
 	statement *dslmodel.Statement) (prims *graphics.Primitives) {
-	behindTidemarkDelta := c.sizer.ActivityBoxTopPadB
+	behindTidemarkDelta := c.sizer.ActivityBoxVerticalOverlap
 	return c.potentiallyStartActivityBox(statement.ReferencedLanes[0],
 		behindTidemarkDelta)
 }
@@ -290,7 +297,7 @@ func (c *Creator) potentiallyStartActivityBox(
 	prims *graphics.Primitives) {
 	prims = graphics.NewPrimitives()
 	// Already a box in progress?
-	if c.boxState.boxIsInProgress(lifeline) {
+	if c.allBoxStates[lifeline].inProgress {
 		return prims
 	}
 	left := c.sizer.Lanes.Individual[lifeline].ActivityBoxLeft
@@ -298,6 +305,24 @@ func (c *Creator) potentiallyStartActivityBox(
 	// Render potentially **behind** the tidemark.
 	y := c.tideMark - behindTidemarkDelta
 	prims.AddLine(left, y, right, y, false)
-	c.boxState.boxesInProgress[lifeline] = true
+	c.allBoxStates[lifeline].inProgress = true
+	c.allBoxStates[lifeline].topY = y
 	return prims
+}
+
+// finalizeActivityBoxes identifies lifeline activity boxes that
+// have been started, but not *stopped*, and draws them now that
+// their size and position can be determined.
+func (c *Creator) finalizeActivityBoxes() {
+	bottom := c.tideMark + c.sizer.ActivityBoxVerticalOverlap
+	for lifeline, boxState := range c.allBoxStates {
+		if !boxState.inProgress {
+			continue
+		}
+		top := boxState.topY
+		left := c.sizer.Lanes.Individual[lifeline].ActivityBoxLeft
+		right := c.sizer.Lanes.Individual[lifeline].ActivityBoxRight
+		c.graphicsModel.Primitives.AddRect(left, top, right, bottom)
+	}
+	c.tideMark = bottom
 }
