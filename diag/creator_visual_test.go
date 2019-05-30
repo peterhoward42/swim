@@ -26,7 +26,6 @@ import (
 
 var testResultsDir = filepath.Join(".", "testresults", "new")
 
-
 // TestScratch is a wip test to isolate something during dev
 func TestScratch(t *testing.T) {
 	width := 2000
@@ -34,7 +33,7 @@ func TestScratch(t *testing.T) {
 	script := `
 		lane A foo
 		lane B bar
-		full AB baz
+		full AB multi | line | label
 	`
 	genericCreateHelper(t, script, width, fontHeight, "scratch.png")
 }
@@ -47,7 +46,6 @@ func TestReferenceModel(t *testing.T) {
 	script := parser.ReferenceInput
 	genericCreateHelper(t, script, width, fontHeight, "canonical.png")
 }
-
 
 // TestOneLane illustrates the sizing and composition logic in the context
 // of a diagram with just one lane in.
@@ -63,7 +61,7 @@ func TestOneLane(t *testing.T) {
 	genericCreateHelper(t, script, width, fontHeight, "onelane.png")
 }
 
-// TestLargeNumberOfLanes illustrates the sizing and composition logic 
+// TestLargeNumberOfLanes illustrates the sizing and composition logic
 // when there are a large number of lanes.
 func TestLargeNumberOfLanes(t *testing.T) {
 	width := 2000
@@ -92,7 +90,7 @@ func TestLargeNumberOfLanes(t *testing.T) {
 	genericCreateHelper(t, script, width, fontHeight, "manylanes.png")
 }
 
-// TestLargeNumberOfInteractions illustrates the sizing and composition 
+// TestLargeNumberOfInteractions illustrates the sizing and composition
 // logic when there are a large number of interactions.
 func TestLargeNumberOfInteraction(t *testing.T) {
 	width := 2000
@@ -122,7 +120,7 @@ func TestLargeNumberOfInteraction(t *testing.T) {
 	genericCreateHelper(t, script, width, fontHeight, "manyinteractions.png")
 }
 
-// TestLargeFont illustrates the sizing and composition 
+// TestLargeFont illustrates the sizing and composition
 // logic when font is relatively large.
 func TestLargeFont(t *testing.T) {
 	width := 2000
@@ -131,7 +129,7 @@ func TestLargeFont(t *testing.T) {
 	genericCreateHelper(t, script, width, fontHeight, "largfont.png")
 }
 
-// TestSmallFont illustrates the sizing and composition 
+// TestSmallFont illustrates the sizing and composition
 // logic when font is relatively small.
 func TestSmallFont(t *testing.T) {
 	width := 2000
@@ -140,7 +138,7 @@ func TestSmallFont(t *testing.T) {
 	genericCreateHelper(t, script, width, fontHeight, "smallfont.png")
 }
 
-// TestSmallDiagram illustrates the sizing and composition 
+// TestSmallDiagram illustrates the sizing and composition
 // logic when the diagram size (width) is specified to be rather
 // small.
 func TestSmallDiagram(t *testing.T) {
@@ -149,7 +147,6 @@ func TestSmallDiagram(t *testing.T) {
 	script := parser.ReferenceInput
 	genericCreateHelper(t, script, width, fontHeight, "smalldiag.png")
 }
-
 
 // Helper functions (DRY)
 

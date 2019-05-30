@@ -14,7 +14,6 @@ it delegates to. For example: sizing.Lanes.
 package sizers
 
 import (
-	"fmt"
 	"github.com/peterhoward42/umli/dslmodel"
 )
 
@@ -34,6 +33,7 @@ type Sizer struct {
 	DashLineDashLen         float64
 	DashLineDashGap         float64
 	SelfLoopHeight          float64
+	ActivityBoxTopPadB      float64
 }
 
 // NewSizer provides a Sizer structure that has been initialised
@@ -51,12 +51,7 @@ func NewSizer(diagramWidth int, fontHeight float64,
 	sizer.DashLineDashLen = dashLineDashLenK * fontHeight
 	sizer.DashLineDashGap = dashLineDashGapK * fontHeight
 	sizer.SelfLoopHeight = sizer.Lanes.SelfLoopWidth * selfLoopAspectRatio
-
-	// for debugging
-	fmt.Printf("XXXX sizer.Lanes.LifelineStatements:\n")
-	for _, s := range sizer.Lanes.LifelineStatements {
-		fmt.Printf("XXXX %p\n", s)
-	}
+	sizer.ActivityBoxTopPadB = activityBoxTopPadBK * fontHeight
 
 	return sizer
 }

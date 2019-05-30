@@ -50,14 +50,14 @@ var EventsRequired = map[string][]EventType{
 		InteractionLine,       // advances tidemark
 	},
 	umli.Full: []EventType{
-		PotentiallyStartFromBox, // advances tidemark
 		InteractionLabel,        // advances tidemark
+		PotentiallyStartFromBox, // no advance (renders behind tidemark)
 		PotentiallyStartToBox,   // no advance
 		InteractionLine,         // advances tidemark
 	},
 	umli.Self: []EventType{
-		PotentiallyStartFromBox, // advances tidemark
 		SelfInteractionLabel,    // advances tidemark
+		PotentiallyStartFromBox, // no advance (renders behind tidemark)
 		SelfInteractionLines,    // advances tidemark
 	},
 	umli.Stop: []EventType{

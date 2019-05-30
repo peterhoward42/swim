@@ -26,7 +26,7 @@ type Lanes struct {
 	FirstTitleBoxPadL       float64 // Positions leftmost title box
 	TitleBoxPadB            float64 // Below title box as a whole
 	SelfLoopWidth           float64
-	ActivityBoxWidth		float64
+	ActivityBoxWidth        float64
 	Individual              InfoPerLane
 }
 
@@ -60,6 +60,22 @@ func NewLanes(diagramWidth int, fontHeight float64,
 	lanes.populateIndividualLaneInfo()
 
 	return lanes
+}
+
+// InteractionLineEndPoints works out the x coordinates for an interaction
+// line between two given lifelines.
+func (lanes *Lanes) InteractionLineEndPoints(
+	fromLane, toLane *dslmodel.Statement) (x1, x2 float64) {
+	fromLaneSiz := lanes.Individual[fromLane]
+	toLaneSiz := lanes.Individual[toLane]
+	if toLaneSiz.Centre > fromLaneSiz.Centre {
+		x1 = fromLaneSiz.ActivityBoxRight
+		x2 = toLaneSiz.ActivityBoxLeft
+	} else {
+		x1 = fromLaneSiz.ActivityBoxLeft
+		x2 = toLaneSiz.ActivityBoxRight
+	}
+	return
 }
 
 // populateTitleBoxAttribs works out the values for the TitleBoxXXX attributes.

@@ -1,8 +1,11 @@
     o  Activity boxes
-        o  Implement potentially start to box
-        o  Shorten full/dash/self lines now we have size
+        *  Implement potentially start to box
+        *  Shorten full/dash/self lines now we have size
+        *  Implement potentially start from-box
         o  Jump ahead to final pass to finalize boxes in progress at end
         o  Handler for explicit end box should be fairly self evident now
+        o  Now check that self interactons get the right boxes even when
+           the boxes are stopped and re-started in mid-stream
     o  Lane lines
         o  Rename to lifelines first
     o  Might be best to hard code and hide the size  - and

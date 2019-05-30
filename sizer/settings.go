@@ -33,5 +33,6 @@ const (
 	selfLoopAspectRatio = 0.6 // Width ratio to height of the three lines
 
 	// Lifeline activity boxes
-	activityBoxWidthK = 2.0
+	activityBoxWidthK   = 2.0
+	activityBoxTopPadBK = 0.5
 )

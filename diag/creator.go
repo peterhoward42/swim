@@ -104,7 +104,7 @@ func (c *Creator) finalizeDiagramHeight() {
 /*
 graphicsForDrawingEvent synthesizes the lines and label strings primititives
 required to render a single diagram element drawing event. It also advances
-c.tideMark, to accomodate the space taken up by the new primitives.
+c.tideMark, to accomodate the space taken up by what it generated.
 */
 func (c *Creator) graphicsForDrawingEvent(evt EventType,
 	statement *dslmodel.Statement) (prims *graphics.Primitives) {
@@ -125,6 +125,7 @@ func (c *Creator) graphicsForDrawingEvent(evt EventType,
 	case SelfInteractionLabel:
 		prims = c.selfInteractionLabels(statement)
 	case PotentiallyStartFromBox:
+		prims = c.potentiallyStartFromBox(statement)
 	case PotentiallyStartToBox:
 		prims = c.potentiallyStartToBox(statement)
 	}
@@ -218,10 +219,9 @@ the vertical space it claims for itself by advancing the tide mark.
 func (c *Creator) interactionLine(
 	statement *dslmodel.Statement) (prims *graphics.Primitives) {
 	prims = graphics.NewPrimitives()
-	leftLane := statement.ReferencedLanes[0]
-	rightLane := statement.ReferencedLanes[1]
-	x1 := c.sizer.Lanes.Individual[leftLane].Centre
-	x2 := c.sizer.Lanes.Individual[rightLane].Centre
+	fromLane := statement.ReferencedLanes[0]
+	toLane := statement.ReferencedLanes[1]
+	x1, x2 := c.sizer.Lanes.InteractionLineEndPoints(fromLane, toLane)
 	y := c.tideMark
 	prims.AddLine(x1, y, x2, y, statement.Keyword == umli.Dash)
 	arrowVertices := makeArrow(x1, x2, y, c.sizer.ArrowLen,
@@ -240,7 +240,7 @@ func (c *Creator) selfInteractionLines(
 	statement *dslmodel.Statement) (prims *graphics.Primitives) {
 	prims = graphics.NewPrimitives()
 	theLane := statement.ReferencedLanes[0]
-	left := c.sizer.Lanes.Individual[theLane].Centre
+	left := c.sizer.Lanes.Individual[theLane].ActivityBoxRight
 	right := c.sizer.Lanes.Individual[theLane].SelfLoopRight
 	top := c.tideMark
 	bot := c.tideMark + c.sizer.SelfLoopHeight
@@ -262,17 +262,42 @@ going to, and if it hasn't does so by drawing the top edge.
 */
 func (c *Creator) potentiallyStartToBox(
 	statement *dslmodel.Statement) (prims *graphics.Primitives) {
+	behindTidemarkDelta := 0.0
+	return c.potentiallyStartActivityBox(statement.ReferencedLanes[1],
+		behindTidemarkDelta)
+}
+
+/*
+potentiallyStartFromBox works out if the Creator has already started a
+lifeline activity box for the lifeline that this interaction line is
+being emited from, and if it hasn't does so by drawing the top edge.
+Note it is atypical because it renders behind the tidemark, to position the
+start of the box a little before the interaction line, but then leaves the
+tidemark unchanged, so that the interaction line that follows, stays in contact
+with its label (which has already been emitted).
+*/
+func (c *Creator) potentiallyStartFromBox(
+	statement *dslmodel.Statement) (prims *graphics.Primitives) {
+	behindTidemarkDelta := c.sizer.ActivityBoxTopPadB
+	return c.potentiallyStartActivityBox(statement.ReferencedLanes[0],
+		behindTidemarkDelta)
+}
+
+// potentiallyStartActivityBox is a DRY helper to (potentially) draw the
+// top edge of a lifeline's activity box.
+func (c *Creator) potentiallyStartActivityBox(
+	lifeline *dslmodel.Statement, behindTidemarkDelta float64) (
+	prims *graphics.Primitives) {
 	prims = graphics.NewPrimitives()
-	toLifeline := statement.ReferencedLanes[1]
-	if c.boxState.boxIsInProgress(toLifeline) {
+	// Already a box in progress?
+	if c.boxState.boxIsInProgress(lifeline) {
 		return prims
 	}
-	left := c.sizer.Lanes.Individual[toLifeline].ActivityBoxLeft
-	right := c.sizer.Lanes.Individual[toLifeline].ActivityBoxRight
-	y := c.tideMark
+	left := c.sizer.Lanes.Individual[lifeline].ActivityBoxLeft
+	right := c.sizer.Lanes.Individual[lifeline].ActivityBoxRight
+	// Render potentially **behind** the tidemark.
+	y := c.tideMark - behindTidemarkDelta
 	prims.AddLine(left, y, right, y, false)
-	c.boxState.boxesInProgress[toLifeline] = true
-	// tide mark is unchanged because the interaction lines that come into
-	// newly started activity boxes line up with the top of the box
+	c.boxState.boxesInProgress[lifeline] = true
 	return prims
 }
