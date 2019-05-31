@@ -93,9 +93,8 @@ func (c *Creator) createFirstPass() {
 		// Inner loop is for the (multiple) graphical events called for
 		// by that statement.
 		for _, evt := range statementEvents {
-			// Evaluate and accumulate the graphics primitives required.
-			prims := c.graphicsForDrawingEvent(evt, statement)
-			c.graphicsModel.Primitives.Add(prims)
+			// Evaluate and add the graphics primitives required.
+			c.graphicsForDrawingEvent(evt, statement)
 		}
 	}
 }
@@ -114,29 +113,27 @@ required to render a single diagram element drawing event. It also advances
 c.tideMark, to accomodate the space taken up by what it generated.
 */
 func (c *Creator) graphicsForDrawingEvent(evt EventType,
-	statement *dslmodel.Statement) (prims *graphics.Primitives) {
-
-	prims = graphics.NewPrimitives()
+	statement *dslmodel.Statement) {
 
 	switch evt {
 	case EndBox:
+		c.endBox(statement)
 	case InteractionLine:
-		prims = c.interactionLine(statement)
+		c.interactionLine(statement)
 	case InteractionLabel:
-		prims = c.interactionLabel(statement)
+		c.interactionLabel(statement)
 	case LaneLine:
 	case LaneTitleBox:
-		prims = c.laneTitleBox(statement)
+		c.laneTitleBox(statement)
 	case SelfInteractionLines:
-		prims = c.selfInteractionLines(statement)
+		c.selfInteractionLines(statement)
 	case SelfInteractionLabel:
-		prims = c.selfInteractionLabels(statement)
+		c.selfInteractionLabels(statement)
 	case PotentiallyStartFromBox:
-		prims = c.potentiallyStartFromBox(statement)
+		c.potentiallyStartFromBox(statement)
 	case PotentiallyStartToBox:
-		prims = c.potentiallyStartToBox(statement)
+		c.potentiallyStartToBox(statement)
 	}
-	return prims
 }
 
 /*
@@ -145,27 +142,25 @@ of a lane, and calculates the tide mark corresponding to the bottom of these
 boxes.
 */
 func (c *Creator) laneTitleBox(
-	statement *dslmodel.Statement) (prims *graphics.Primitives) {
-	prims = graphics.NewPrimitives()
+	statement *dslmodel.Statement) {
 	thisLane := c.sizer.Lanes.Individual[statement]
 	// First the rectangular box
 	left := thisLane.TitleBoxLeft
 	right := thisLane.TitleBoxRight
 	top := c.sizer.DiagramPadT
 	bot := c.sizer.DiagramPadT + c.sizer.Lanes.TitleBoxHeight
-	prims.AddRect(left, top, right, bot)
+	c.graphicsModel.Primitives.AddRect(left, top, right, bot)
 	// Now the strings
 	nRows := len(statement.LabelSegments)
 	for i, str := range statement.LabelSegments {
 		rowOffset := float64(nRows-1-i) * c.fontHeight
 		y := top + c.sizer.Lanes.TitleBoxBottomRowOfText - rowOffset
-		prims.AddLabel(str, c.fontHeight, thisLane.Centre, y,
+		c.graphicsModel.Primitives.AddLabel(str, c.fontHeight, thisLane.Centre, y,
 			graphics.Centre, graphics.Bottom)
 	}
 	// In the particular case of a title box, the tide mark can
 	// be set absolutely rather than advancing it by an increment.
 	c.tideMark = bot + c.sizer.Lanes.TitleBoxPadB
-	return prims
 }
 
 /*
@@ -174,17 +169,15 @@ interaction lines. It then claims the vertical space it has consumed for
 itself by advancing the tide mark.
 */
 func (c *Creator) interactionLabel(
-	statement *dslmodel.Statement) (prims *graphics.Primitives) {
-	prims = graphics.NewPrimitives()
+	statement *dslmodel.Statement) {
 	leftLane := statement.ReferencedLanes[0]
 	rightLane := statement.ReferencedLanes[1]
 	centreX := 0.5 * (c.sizer.Lanes.Individual[leftLane].Centre +
 		c.sizer.Lanes.Individual[rightLane].Centre)
 	firstRowY := c.tideMark
-	prims = c.rowOfLabels(centreX, firstRowY, statement.LabelSegments)
+	c.rowOfLabels(centreX, firstRowY, statement.LabelSegments)
 	c.tideMark += float64(len(statement.LabelSegments))*
 		c.fontHeight + c.sizer.InteractionLineTextPadB
-	return prims
 }
 
 /*
@@ -193,14 +186,13 @@ interaction loops. It then claims the vertical space it has consumed for
 itself by advancing the tide mark.
 */
 func (c *Creator) selfInteractionLabels(
-	statement *dslmodel.Statement) (prims *graphics.Primitives) {
+	statement *dslmodel.Statement) {
 	theLane := statement.ReferencedLanes[0]
 	labelCentreX := c.sizer.Lanes.Individual[theLane].SelfLoopCentre
 	firstRowY := c.tideMark
-	prims = c.rowOfLabels(labelCentreX, firstRowY, statement.LabelSegments)
+	c.rowOfLabels(labelCentreX, firstRowY, statement.LabelSegments)
 	c.tideMark += float64(len(statement.LabelSegments))*
 		c.fontHeight + c.sizer.InteractionLineTextPadB
-	return prims
 }
 
 /*
@@ -209,14 +201,12 @@ objects for the set of strings in a label. It hard-codes centred horizontal
 justification and top vertical justification.
 */
 func (c *Creator) rowOfLabels(centreX float64, firstRowY float64,
-	labelSegments []string) (prims *graphics.Primitives) {
-	prims = graphics.NewPrimitives()
+	labelSegments []string) {
 	for i, labelSeg := range labelSegments {
 		y := firstRowY + float64(i)*c.fontHeight
-		prims.AddLabel(labelSeg, c.fontHeight, centreX, y,
+		c.graphicsModel.Primitives.AddLabel(labelSeg, c.fontHeight, centreX, y,
 			graphics.Centre, graphics.Top)
 	}
-	return prims
 }
 
 /*
@@ -224,18 +214,16 @@ interactionLine generates the horizontal line and arrow head.  It then claims
 the vertical space it claims for itself by advancing the tide mark.
 */
 func (c *Creator) interactionLine(
-	statement *dslmodel.Statement) (prims *graphics.Primitives) {
-	prims = graphics.NewPrimitives()
+	statement *dslmodel.Statement) {
 	fromLane := statement.ReferencedLanes[0]
 	toLane := statement.ReferencedLanes[1]
 	x1, x2 := c.sizer.Lanes.InteractionLineEndPoints(fromLane, toLane)
 	y := c.tideMark
-	prims.AddLine(x1, y, x2, y, statement.Keyword == umli.Dash)
+	c.graphicsModel.Primitives.AddLine(x1, y, x2, y, statement.Keyword == umli.Dash)
 	arrowVertices := makeArrow(x1, x2, y, c.sizer.ArrowLen,
 		c.sizer.ArrowHeight)
-	prims.AddFilledPoly(arrowVertices)
+	c.graphicsModel.Primitives.AddFilledPoly(arrowVertices)
 	c.tideMark += 0.5*c.sizer.ArrowHeight + c.sizer.InteractionLinePadB
-	return prims
 }
 
 /*
@@ -244,14 +232,14 @@ interaction loop.  It then claims the vertical space it claims for itself by
 advancing the tide mark.
 */
 func (c *Creator) selfInteractionLines(
-	statement *dslmodel.Statement) (prims *graphics.Primitives) {
-	prims = graphics.NewPrimitives()
+	statement *dslmodel.Statement) {
 	theLane := statement.ReferencedLanes[0]
 	left := c.sizer.Lanes.Individual[theLane].ActivityBoxRight
 	right := c.sizer.Lanes.Individual[theLane].SelfLoopRight
 	top := c.tideMark
 	bot := c.tideMark + c.sizer.SelfLoopHeight
 
+	prims := c.graphicsModel.Primitives
 	prims.AddLine(left, top, right, top, false)
 	prims.AddLine(right, top, right, bot, false)
 	prims.AddLine(right, bot, left, bot, false)
@@ -259,7 +247,6 @@ func (c *Creator) selfInteractionLines(
 		c.sizer.ArrowLen, c.sizer.ArrowHeight)
 	prims.AddFilledPoly(arrowVertices)
 	c.tideMark = bot + c.sizer.InteractionLinePadB
-	return prims
 }
 
 /*
@@ -268,9 +255,9 @@ lifeline activity box for the lifeline that this interaction line is
 going to, and if it hasn't does so by drawing the top edge.
 */
 func (c *Creator) potentiallyStartToBox(
-	statement *dslmodel.Statement) (prims *graphics.Primitives) {
+	statement *dslmodel.Statement) {
 	behindTidemarkDelta := 0.0
-	return c.potentiallyStartActivityBox(statement.ReferencedLanes[1],
+	c.potentiallyStartActivityBox(statement.ReferencedLanes[1],
 		behindTidemarkDelta)
 }
 
@@ -284,30 +271,35 @@ tidemark unchanged, so that the interaction line that follows, stays in contact
 with its label (which has already been emitted).
 */
 func (c *Creator) potentiallyStartFromBox(
-	statement *dslmodel.Statement) (prims *graphics.Primitives) {
+	statement *dslmodel.Statement) {
 	behindTidemarkDelta := c.sizer.ActivityBoxVerticalOverlap
-	return c.potentiallyStartActivityBox(statement.ReferencedLanes[0],
+	c.potentiallyStartActivityBox(statement.ReferencedLanes[0],
 		behindTidemarkDelta)
 }
 
 // potentiallyStartActivityBox is a DRY helper to (potentially) draw the
 // top edge of a lifeline's activity box.
 func (c *Creator) potentiallyStartActivityBox(
-	lifeline *dslmodel.Statement, behindTidemarkDelta float64) (
-	prims *graphics.Primitives) {
-	prims = graphics.NewPrimitives()
+	lifeline *dslmodel.Statement, behindTidemarkDelta float64) {
 	// Already a box in progress?
 	if c.allBoxStates[lifeline].inProgress {
-		return prims
+		return
 	}
 	left := c.sizer.Lanes.Individual[lifeline].ActivityBoxLeft
 	right := c.sizer.Lanes.Individual[lifeline].ActivityBoxRight
 	// Render potentially **behind** the tidemark.
 	y := c.tideMark - behindTidemarkDelta
-	prims.AddLine(left, y, right, y, false)
+	c.graphicsModel.Primitives.AddLine(left, y, right, y, false)
 	c.allBoxStates[lifeline].inProgress = true
 	c.allBoxStates[lifeline].topY = y
-	return prims
+}
+
+func (c *Creator) endBox(
+	lifeline *dslmodel.Statement) (prims *graphics.Primitives) {
+	// bottom is tidemark
+	//
+	// advance tidemark
+	return nil
 }
 
 // finalizeActivityBoxes identifies lifeline activity boxes that
@@ -324,5 +316,18 @@ func (c *Creator) finalizeActivityBoxes() {
 		right := c.sizer.Lanes.Individual[lifeline].ActivityBoxRight
 		c.graphicsModel.Primitives.AddRect(left, top, right, bottom)
 	}
+	c.tideMark = bottom
+}
+
+// finalizeActivityBox draws a single lifeline activity box - based
+// on the top Y coordinate stored in c.allBoxStates and the given
+// bottom Y coordinate. It then advances the tide mark to the bottom
+// value provided.
+func (c *Creator) finalizeActivityBox(lifeline *dslmodel.Statement,
+	bottom float64) {
+	top := c.allBoxStates[lifeline].topY
+	left := c.sizer.Lanes.Individual[lifeline].ActivityBoxLeft
+	right := c.sizer.Lanes.Individual[lifeline].ActivityBoxRight
+	c.graphicsModel.Primitives.AddRect(left, top, right, bottom)
 	c.tideMark = bottom
 }

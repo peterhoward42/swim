@@ -3,11 +3,21 @@
         *  Shorten full/dash/self lines now we have size
         *  Implement potentially start from-box
         *  Jump ahead to final pass to finalize boxes in progress at end
-        o  Should private types be lower case?
-            o  Might need wider look! or lint check?
         o  Handler for explicit end box should be fairly self evident now
-            o  gun for a reusable term this box at Y helper
-            o  Can avoid drawing top edges earlier now I think 
+            o  try coding to see what can be DRYed
+                o  is mixed up in creator with mutating c and returning
+                   new prims structure to add
+                    o  clear out and make sure ALL methods (not funcs) mutate c
+                        *  code
+                        *  build
+                        *  regression tests
+                        o  change names and comments and format
+                        o  regression tests
+                    o  resume DRY finish activity box
+            o  Can avoid drawing top edges earlier now I think when registering
+               start of box?
+            o  what if the stop statement comes when there is not an
+               active box?
         o  Now check that self interactons get the right boxes even when
            the boxes are stopped and re-started in mid-stream
     o  Lane lines
@@ -22,6 +32,7 @@
     o  Change terminology
         o  Lane -> lifeline
         o  TitleBox -> lifelineheader
+    o  Should private types be lower case?
     o  Lifeline should be coarser mark space than response line
     o  todo resurrect regressions tests for images
     o  benchmarks and tuning
