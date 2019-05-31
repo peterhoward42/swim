@@ -4,19 +4,18 @@
         *  Implement potentially start from-box
         *  Jump ahead to final pass to finalize boxes in progress at end
         o  Handler for explicit end box should be fairly self evident now
-            o  try coding to see what can be DRYed
-                o  is mixed up in creator with mutating c and returning
+            *  try coding to see what can be DRYed
+                *  is mixed up in creator with mutating c and returning
                    new prims structure to add
-                    o  clear out and make sure ALL methods (not funcs) mutate c
-                        *  code
-                        *  build
-                        *  regression tests
-                        o  change names and comments and format
-                        o  regression tests
-                    o  resume DRY finish activity box
-            o  Can avoid drawing top edges earlier now I think when registering
+                    *  clear out and make sure ALL methods (not funcs) mutate c
+                    *  resume DRY finish activity box
+                    *  now use for stop event
+            *  Can avoid drawing top edges earlier now I think when registering
                start of box?
-            o  what if the stop statement comes when there is not an
+            *  Check all visual diagrams
+            o  test case to show that a new box is minted after one
+               is closed earlier, or extend reference case
+            o  error handling when stop statement comes when there is not an
                active box?
         o  Now check that self interactons get the right boxes even when
            the boxes are stopped and re-started in mid-stream

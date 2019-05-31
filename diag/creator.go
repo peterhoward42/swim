@@ -51,7 +51,9 @@ func NewCreator(width int, fontHeight float64,
 
 /*
 Create is the main API method which work out what the diagram should look
-like. It orchestrates a multi-pass creation process.
+like. It orchestrates a multi-pass creation process which accumulates
+the graphics primitives required in its graphicsModel attribute and then
+returns that model.
 */
 func (c *Creator) Create() *graphics.Model {
 	diagHeight := 0 // Set later to accomodate contents once known.
@@ -155,8 +157,8 @@ func (c *Creator) laneTitleBox(
 	for i, str := range statement.LabelSegments {
 		rowOffset := float64(nRows-1-i) * c.fontHeight
 		y := top + c.sizer.Lanes.TitleBoxBottomRowOfText - rowOffset
-		c.graphicsModel.Primitives.AddLabel(str, c.fontHeight, thisLane.Centre, y,
-			graphics.Centre, graphics.Bottom)
+		c.graphicsModel.Primitives.AddLabel(str, c.fontHeight, thisLane.Centre,
+			y, graphics.Centre, graphics.Bottom)
 	}
 	// In the particular case of a title box, the tide mark can
 	// be set absolutely rather than advancing it by an increment.
@@ -204,8 +206,8 @@ func (c *Creator) rowOfLabels(centreX float64, firstRowY float64,
 	labelSegments []string) {
 	for i, labelSeg := range labelSegments {
 		y := firstRowY + float64(i)*c.fontHeight
-		c.graphicsModel.Primitives.AddLabel(labelSeg, c.fontHeight, centreX, y,
-			graphics.Centre, graphics.Top)
+		c.graphicsModel.Primitives.AddLabel(labelSeg, c.fontHeight,
+			centreX, y, graphics.Centre, graphics.Top)
 	}
 }
 
@@ -219,7 +221,8 @@ func (c *Creator) interactionLine(
 	toLane := statement.ReferencedLanes[1]
 	x1, x2 := c.sizer.Lanes.InteractionLineEndPoints(fromLane, toLane)
 	y := c.tideMark
-	c.graphicsModel.Primitives.AddLine(x1, y, x2, y, statement.Keyword == umli.Dash)
+	c.graphicsModel.Primitives.AddLine(x1, y, x2, y,
+		statement.Keyword == umli.Dash)
 	arrowVertices := makeArrow(x1, x2, y, c.sizer.ArrowLen,
 		c.sizer.ArrowHeight)
 	c.graphicsModel.Primitives.AddFilledPoly(arrowVertices)
@@ -277,29 +280,29 @@ func (c *Creator) potentiallyStartFromBox(
 		behindTidemarkDelta)
 }
 
-// potentiallyStartActivityBox is a DRY helper to (potentially) draw the
-// top edge of a lifeline's activity box.
+// potentiallyStartActivityBox is a DRY helper to (potentially) note the
+// top edge of a lifeline's activity box in c.allBoxStates.
 func (c *Creator) potentiallyStartActivityBox(
 	lifeline *dslmodel.Statement, behindTidemarkDelta float64) {
 	// Already a box in progress?
 	if c.allBoxStates[lifeline].inProgress {
 		return
 	}
-	left := c.sizer.Lanes.Individual[lifeline].ActivityBoxLeft
-	right := c.sizer.Lanes.Individual[lifeline].ActivityBoxRight
-	// Render potentially **behind** the tidemark.
 	y := c.tideMark - behindTidemarkDelta
-	c.graphicsModel.Primitives.AddLine(left, y, right, y, false)
 	c.allBoxStates[lifeline].inProgress = true
 	c.allBoxStates[lifeline].topY = y
 }
 
+/*
+endBox finishes off a lifeline activity box in response to an
+explicit *stop* instruction in the DSL. It then advances the
+tide mark to a little beyond the bottom of the box.
+*/
 func (c *Creator) endBox(
-	lifeline *dslmodel.Statement) (prims *graphics.Primitives) {
-	// bottom is tidemark
-	//
-	// advance tidemark
-	return nil
+	endBoxStatement *dslmodel.Statement) {
+	lifeline := endBoxStatement.ReferencedLanes[0]
+	bottom := c.tideMark
+	c.finalizeActivityBox(lifeline, bottom)
 }
 
 // finalizeActivityBoxes identifies lifeline activity boxes that
@@ -311,23 +314,21 @@ func (c *Creator) finalizeActivityBoxes() {
 		if !boxState.inProgress {
 			continue
 		}
-		top := boxState.topY
-		left := c.sizer.Lanes.Individual[lifeline].ActivityBoxLeft
-		right := c.sizer.Lanes.Individual[lifeline].ActivityBoxRight
-		c.graphicsModel.Primitives.AddRect(left, top, right, bottom)
+		c.finalizeActivityBox(lifeline, bottom)
 	}
-	c.tideMark = bottom
 }
 
-// finalizeActivityBox draws a single lifeline activity box - based
-// on the top Y coordinate stored in c.allBoxStates and the given
-// bottom Y coordinate. It then advances the tide mark to the bottom
-// value provided.
-func (c *Creator) finalizeActivityBox(lifeline *dslmodel.Statement,
-	bottom float64) {
+/*
+finalizeActivityBox is a DRY helper that draws a single lifeline activity box -
+based on the top Y coordinate stored in c.allBoxStates and the given bottom Y
+coordinate. It then advances the tide mark to the bottom value provided.
+*/
+func (c *Creator) finalizeActivityBox(
+	lifeline *dslmodel.Statement, bottom float64) {
 	top := c.allBoxStates[lifeline].topY
 	left := c.sizer.Lanes.Individual[lifeline].ActivityBoxLeft
 	right := c.sizer.Lanes.Individual[lifeline].ActivityBoxRight
 	c.graphicsModel.Primitives.AddRect(left, top, right, bottom)
 	c.tideMark = bottom
+	c.allBoxStates[lifeline].inProgress = false
 }
