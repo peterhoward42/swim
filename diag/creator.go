@@ -172,10 +172,10 @@ itself by advancing the tide mark.
 */
 func (c *Creator) interactionLabel(
 	statement *dslmodel.Statement) {
-	leftLane := statement.ReferencedLanes[0]
-	rightLane := statement.ReferencedLanes[1]
-	centreX := 0.5 * (c.sizer.Lanes.Individual[leftLane].Centre +
-		c.sizer.Lanes.Individual[rightLane].Centre)
+	sourceLane := statement.ReferencedLanes[0]
+	destLane := statement.ReferencedLanes[1]
+	centreX := 0.5 * (c.sizer.Lanes.Individual[sourceLane].Centre +
+		c.sizer.Lanes.Individual[destLane].Centre)
 	firstRowY := c.tideMark
 	c.rowOfLabels(centreX, firstRowY, statement.LabelSegments)
 	c.tideMark += float64(len(statement.LabelSegments))*

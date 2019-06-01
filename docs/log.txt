@@ -1,7 +1,7 @@
     *  Activity boxes
     o  Why creator referring to left and right things?
         *  Replace existing use of from/to with source/dest
-        o  Replace where appropriate with source and dest
+        *  Replace where appropriate with source and dest
     o  Try out left or right justifying labels near their arrow,
         o  Start a branch
             o  Upgrade label helper to take left justifications and regression
