@@ -1,24 +1,6 @@
-    o  Activity boxes
-        *  Implement potentially start to box
-        *  Shorten full/dash/self lines now we have size
-        *  Implement potentially start from-box
-        *  Jump ahead to final pass to finalize boxes in progress at end
-        o  Handler for explicit end box should be fairly self evident now
-            *  try coding to see what can be DRYed
-                *  is mixed up in creator with mutating c and returning
-                   new prims structure to add
-                    *  clear out and make sure ALL methods (not funcs) mutate c
-                    *  resume DRY finish activity box
-                    *  now use for stop event
-            *  Can avoid drawing top edges earlier now I think when registering
-               start of box?
-            *  Check all visual diagrams
-            o  test case to show that a new box is minted after one
-               is closed earlier, or extend reference case
-            o  error handling when stop statement comes when there is not an
-               active box?
-        o  Now check that self interactons get the right boxes even when
-           the boxes are stopped and re-started in mid-stream
+    *  Activity boxes
+    o  Try out left or right justifying labels near their arrow,
+    o  Try out pushing self label inside its box
     o  Lane lines
         o  Rename to lifelines first
     o  Might be best to hard code and hide the size  - and
@@ -27,7 +9,7 @@
         o  if so, then make sure no pointless tests
     o  Change reference model to make label not too long, and maybe
        be more computer sciency - plus update readme to suit
-    o  Add title keyword
+    o  Add title keyword which could be edit me
     o  Change terminology
         o  Lane -> lifeline
         o  TitleBox -> lifelineheader
@@ -36,6 +18,7 @@
     o  todo resurrect regressions tests for images
     o  benchmarks and tuning
     o  may need to rebrand as uml sequence diagram
+    o  cf creately differentiate
 
 
 ----------------------------------------------------------------------------

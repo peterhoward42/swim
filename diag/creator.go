@@ -325,6 +325,12 @@ coordinate. It then advances the tide mark to the bottom value provided.
 */
 func (c *Creator) finalizeActivityBox(
 	lifeline *dslmodel.Statement, bottom float64) {
+	// Silently ignore this mandate if the lifeline does not have
+	// a box in progress. (The parser cannot trap this because it knows
+	// nothing about activity box inference).
+	if c.allBoxStates[lifeline].inProgress == false {
+		return
+	}
 	top := c.allBoxStates[lifeline].topY
 	left := c.sizer.Lanes.Individual[lifeline].ActivityBoxLeft
 	right := c.sizer.Lanes.Individual[lifeline].ActivityBoxRight

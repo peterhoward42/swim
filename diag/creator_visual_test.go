@@ -33,7 +33,10 @@ func TestScratch(t *testing.T) {
 	script := `
 		lane A foo
 		lane B bar
-		full AB multi | line | label
+		full AB baz
+		stop B
+		self A henrietta
+        stop B
 	`
 	genericCreateHelper(t, script, width, fontHeight, "scratch.png")
 }
@@ -41,14 +44,52 @@ func TestScratch(t *testing.T) {
 // TestReferenceModel uses the reference DSL script and a typical
 // diagram size and font size.
 func TestReferenceModel(t *testing.T) {
-		width := 2000
+	width := 2000
 	fontHeight := 20.0
 	script := parser.ReferenceInput
 	genericCreateHelper(t, script, width, fontHeight, "canonical.png")
 }
 
-// TestOneLane illustrates the sizing and composition logic in the context
-// of a diagram with just one lane in.
+/*
+TestStopStartBox *stops* a lifeline activity box explicitly with
+a *stop* line in the DSL, and then sends a message to that lane
+later in the script, to check that a new activity box gets started.
+*/
+func TestStopStartBox(t *testing.T) {
+	width := 2000
+	fontHeight := 20.0
+	script := `
+        lane A foo
+        lane B bar
+        full AB apple
+        dash BA orange
+        stop B
+        full AB banana
+    `
+	genericCreateHelper(t, script, width, fontHeight, "stopstartbox.png")
+}
+
+/*
+TestIgnoresRedundantStop uses a script that tries to *stop* a lifeline
+activity box, when that lifeline doesn't have a box in progress. It provides
+visual confirmation that the statement is silently ignored.
+*/
+func TestIgnoresRedundantStop(t *testing.T) {
+	width := 2000
+	fontHeight := 20.0
+	script := `
+		lane A foo
+		lane B bar
+		full AB baz
+		stop B
+		self A henrietta:w
+        stop B
+	`
+	genericCreateHelper(t, script, width, fontHeight, "redundantstop.png")
+}
+
+// TestOneLane makes a diagram with just one lane - to help reveal
+// corner cases.
 func TestOneLane(t *testing.T) {
 	width := 2000
 	fontHeight := 20.0
