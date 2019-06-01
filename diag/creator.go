@@ -217,9 +217,9 @@ the vertical space it claims for itself by advancing the tide mark.
 */
 func (c *Creator) interactionLine(
 	statement *dslmodel.Statement) {
-	fromLane := statement.ReferencedLanes[0]
-	toLane := statement.ReferencedLanes[1]
-	x1, x2 := c.sizer.Lanes.InteractionLineEndPoints(fromLane, toLane)
+	sourceLane := statement.ReferencedLanes[0]
+	destLane := statement.ReferencedLanes[1]
+	x1, x2 := c.sizer.Lanes.InteractionLineEndPoints(sourceLane, destLane)
 	y := c.tideMark
 	c.graphicsModel.Primitives.AddLine(x1, y, x2, y,
 		statement.Keyword == umli.Dash)
