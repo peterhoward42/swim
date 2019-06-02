@@ -18,21 +18,22 @@ const (
 	titleBoxPadRK     = 0.25 // w.r.t title box width
 	titleBoxTextPadTK = 0.25 // Between top of title box and first line txt
 	titleBoxTextPadBK = 0.75 // Between text and the bottom of title box
-	titleBoxPadBK     = 0.5  // Below entire title box
+	titleBoxPadBK     = 1.5  // Below entire title box
 
 	// Full and Dashed interaction lines
 	dashLineDashLenK = 0.5
 	dashLineDashGapK = 0.25
 
-	interactionLinePadBK     = 0.5 // Allows for half arrow height!
-	interactionLineTextPadBK = 0.5 // Between the text and its line
-	arrowLenK                = 1.5
-	arrowAspectRatio         = 0.4 // Width of arrow head w.r.t. length
+	interactionLinePadBK       = 0.5 // Allows for half arrow height!
+	interactionLineTextPadBK   = 0.5 // Between the text and its line
+	interactionLineLabelIndent = 1.0 // Offset from arrow
+	arrowLenK                  = 1.5
+	arrowAspectRatio           = 0.4 // Width of arrow head w.r.t. length
 
 	// Self interactions
 	selfLoopAspectRatio = 0.6 // Width ratio to height of the three lines
 
 	// Lifeline activity boxes
-	activityBoxWidthK           = 2.0
+	activityBoxWidthK           = 1.5
 	activityBoxVerticalOverlapK = 0.5
 )

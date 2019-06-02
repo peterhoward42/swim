@@ -129,8 +129,6 @@ func (c *Creator) graphicsForDrawingEvent(evt EventType,
 		c.laneTitleBox(statement)
 	case SelfInteractionLines:
 		c.selfInteractionLines(statement)
-	case SelfInteractionLabel:
-		c.selfInteractionLabels(statement)
 	case PotentiallyStartFromBox:
 		c.potentiallyStartFromBox(statement)
 	case PotentiallyStartToBox:
@@ -174,10 +172,10 @@ func (c *Creator) interactionLabel(
 	statement *dslmodel.Statement) {
 	sourceLane := statement.ReferencedLanes[0]
 	destLane := statement.ReferencedLanes[1]
-	centreX := 0.5 * (c.sizer.Lanes.Individual[sourceLane].Centre +
-		c.sizer.Lanes.Individual[destLane].Centre)
+	x, horizJustification := c.sizer.Lanes.InteractionLabelPosition(
+		sourceLane, destLane, c.sizer.InteractionLineLabelIndent)
 	firstRowY := c.tideMark
-	c.rowOfLabels(centreX, firstRowY, statement.LabelSegments)
+	c.rowOfLabels(x, firstRowY, horizJustification, statement.LabelSegments)
 	c.tideMark += float64(len(statement.LabelSegments))*
 		c.fontHeight + c.sizer.InteractionLineTextPadB
 }
@@ -187,27 +185,30 @@ selfInteractionLabels generates the labels that sit above one of the *self*
 interaction loops. It then claims the vertical space it has consumed for
 itself by advancing the tide mark.
 */
+/*
 func (c *Creator) selfInteractionLabels(
 	statement *dslmodel.Statement) {
 	theLane := statement.ReferencedLanes[0]
-	labelCentreX := c.sizer.Lanes.Individual[theLane].SelfLoopCentre
+	labelX := c.sizer.Lanes.Individual[theLane].ActivityBoxRight +
+		c.sizer.InteractionLineLabelIndent
 	firstRowY := c.tideMark
-	c.rowOfLabels(labelCentreX, firstRowY, statement.LabelSegments)
+	c.rowOfLabels(labelX, firstRowY, graphics.Left, statement.LabelSegments)
 	c.tideMark += float64(len(statement.LabelSegments))*
 		c.fontHeight + c.sizer.InteractionLineTextPadB
 }
+*/
 
 /*
 rowOfLabels is a (DRY) helper function to make the graphics.Primitives
-objects for the set of strings in a label. It hard-codes centred horizontal
-justification and top vertical justification.
+objects for the set of strings in a label. It hard-codes top vertical
+justification.
 */
 func (c *Creator) rowOfLabels(centreX float64, firstRowY float64,
-	labelSegments []string) {
+	horizJustification graphics.Justification, labelSegments []string) {
 	for i, labelSeg := range labelSegments {
 		y := firstRowY + float64(i)*c.fontHeight
 		c.graphicsModel.Primitives.AddLabel(labelSeg, c.fontHeight,
-			centreX, y, graphics.Centre, graphics.Top)
+			centreX, y, horizJustification, graphics.Top)
 	}
 }
 
@@ -249,6 +250,13 @@ func (c *Creator) selfInteractionLines(
 	arrowVertices := makeArrow(right, left, bot,
 		c.sizer.ArrowLen, c.sizer.ArrowHeight)
 	prims.AddFilledPoly(arrowVertices)
+
+	// Labels go inside the self-loop.
+	labelX := left + c.sizer.InteractionLineLabelIndent
+	n := len(statement.LabelSegments)
+	firstRowY := bot - float64(n)*c.fontHeight - c.sizer.InteractionLineTextPadB
+	c.rowOfLabels(labelX, firstRowY, graphics.Left, statement.LabelSegments)
+
 	c.tideMark = bot + c.sizer.InteractionLinePadB
 }
 

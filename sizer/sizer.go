@@ -28,6 +28,7 @@ type Sizer struct {
 	Lanes                      *Lanes
 	InteractionLinePadB        float64
 	InteractionLineTextPadB    float64
+	InteractionLineLabelIndent float64
 	ArrowLen                   float64
 	ArrowHeight                float64
 	DashLineDashLen            float64
@@ -44,10 +45,13 @@ func NewSizer(diagramWidth int, fontHeight float64,
 	sizer.DiagramPadT = diagramPadTK * fontHeight
 	sizer.DiagramPadB = diagramPadBK * fontHeight
 	sizer.Lanes = NewLanes(diagramWidth, fontHeight, lifelineStatements)
-	sizer.InteractionLinePadB = interactionLinePadBK * fontHeight
-	sizer.InteractionLineTextPadB = interactionLineTextPadBK * fontHeight
+
 	sizer.ArrowLen = arrowLenK * fontHeight
 	sizer.ArrowHeight = arrowAspectRatio * sizer.ArrowLen
+	sizer.InteractionLinePadB = interactionLinePadBK * fontHeight
+	sizer.InteractionLineTextPadB = interactionLineTextPadBK * fontHeight
+	sizer.InteractionLineLabelIndent = sizer.ArrowLen +
+		interactionLineLabelIndent*fontHeight
 	sizer.DashLineDashLen = dashLineDashLenK * fontHeight
 	sizer.DashLineDashGap = dashLineDashGapK * fontHeight
 	sizer.SelfLoopHeight = sizer.Lanes.SelfLoopWidth * selfLoopAspectRatio

@@ -1,15 +1,8 @@
     *  Activity boxes
     *  Why creator referring to left and right things?
-    o  Try out left or right justifying labels near their arrow,
-        o  Start a branch
-            o  Upgrade label helper to take left justifications and regression
-            *  Does sizer have static label centre? = no
-            o  Where will side logic live? creator.interactionLabel and
-               creator.selfInteractionLabels
-            o  Possibly DRY of above two?
+    *  Try out left or right justifying labels near their arrow,
         o  Merge branch
     o  Why does sizer have LifelineStatements attribute? (smell)
-    o  Try out pushing self label inside its box
     o  Anything that can make creator module smaller?
     o  Lane lines
         o  Rename to lifelines first

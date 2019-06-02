@@ -5,6 +5,7 @@ package sizers
 
 import (
 	"github.com/peterhoward42/umli/dslmodel"
+	"github.com/peterhoward42/umli/graphics"
 )
 
 // Naming conventions:
@@ -65,17 +66,34 @@ func NewLanes(diagramWidth int, fontHeight float64,
 // InteractionLineEndPoints works out the x coordinates for an interaction
 // line between two given lifelines.
 func (lanes *Lanes) InteractionLineEndPoints(
-	fromLane, toLane *dslmodel.Statement) (x1, x2 float64) {
-	fromLaneSiz := lanes.Individual[fromLane]
-	toLaneSiz := lanes.Individual[toLane]
-	if toLaneSiz.Centre > fromLaneSiz.Centre {
-		x1 = fromLaneSiz.ActivityBoxRight
-		x2 = toLaneSiz.ActivityBoxLeft
+	sourceLane, destLane *dslmodel.Statement) (x1, x2 float64) {
+	sourceLaneSiz := lanes.Individual[sourceLane]
+	destLaneSiz := lanes.Individual[destLane]
+	if destLaneSiz.Centre > sourceLaneSiz.Centre {
+		x1 = sourceLaneSiz.ActivityBoxRight
+		x2 = destLaneSiz.ActivityBoxLeft
 	} else {
-		x1 = fromLaneSiz.ActivityBoxLeft
-		x2 = toLaneSiz.ActivityBoxRight
+		x1 = sourceLaneSiz.ActivityBoxLeft
+		x2 = destLaneSiz.ActivityBoxRight
 	}
 	return
+}
+
+// InteractionLabelPosition works out the position and justification
+// that should be used for an interaction line's label.
+func (lanes *Lanes) InteractionLabelPosition(
+    sourceLane, destLane *dslmodel.Statement, padding float64) (
+    x float64, horizJustification graphics.Justification) {
+	sourceLaneSiz := lanes.Individual[sourceLane]
+	destLaneSiz := lanes.Individual[destLane]
+	if destLaneSiz.Centre > sourceLaneSiz.Centre {
+        x = destLaneSiz.ActivityBoxLeft - padding
+        horizJustification = graphics.Right
+    } else {
+        x = destLaneSiz.ActivityBoxRight + padding
+        horizJustification = graphics.Left
+    }
+    return
 }
 
 // populateTitleBoxAttribs works out the values for the TitleBoxXXX attributes.

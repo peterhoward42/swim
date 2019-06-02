@@ -18,6 +18,7 @@ func TestNewSizerSetsItsScalarAttributesCorrectlyWhenOneLaneOnly(t *testing.T) {
 	assert.InDelta(10, sizer.InteractionLineTextPadB, 0.1)
 	assert.InDelta(30, sizer.ArrowLen, 0.1)
 	assert.InDelta(12, sizer.ArrowHeight, 0.1)
+	assert.InDelta(70, sizer.InteractionLineLabelIndent, 0.1)
 	assert.InDelta(10, sizer.DashLineDashLen, 0.1)
 	assert.InDelta(5, sizer.DashLineDashGap, 0.1)
 	assert.InDelta(400, sizer.SelfLoopHeight, 0.1)
