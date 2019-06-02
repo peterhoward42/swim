@@ -56,7 +56,7 @@ func TestNewLanesSetsScalarAttributesCorrectlyForOneLane(t *testing.T) {
 	assert.InDelta(25, lanes.TitleBoxBottomRowOfText, 0.1)
 	assert.InDelta(333.3, lanes.TitleBoxPadR, 0.1)
 	assert.InDelta(333.3, lanes.FirstTitleBoxPadL, 0.1)
-	assert.InDelta(10, lanes.TitleBoxPadB, 0.1)
+	assert.InDelta(30.0, lanes.TitleBoxPadB, 0.1)
 }
 
 func TestNewLanesSetsScalarAttributesCorrectlyForTwoLanes(t *testing.T) {
@@ -96,6 +96,6 @@ func TestNewLanesSetsIndividualLaneAttributesCorrectlyForTwoLanes(t *testing.T) 
 	assert.InDelta(1818.2, individual.SelfLoopRight, 0.1)
 	assert.InDelta(1636.4, individual.SelfLoopCentre, 0.1)
 
-	assert.InDelta(1434.5, individual.ActivityBoxLeft, 0.1)
-	assert.InDelta(1474.5, individual.ActivityBoxRight, 0.1)
+	assert.InDelta(1439.5, individual.ActivityBoxLeft, 0.1)
+	assert.InDelta(1469.5, individual.ActivityBoxRight, 0.1)
 }
