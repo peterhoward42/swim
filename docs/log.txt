@@ -1,7 +1,5 @@
     *  Activity boxes
-    o  Why creator referring to left and right things?
-        *  Replace existing use of from/to with source/dest
-        *  Replace where appropriate with source and dest
+    *  Why creator referring to left and right things?
     o  Try out left or right justifying labels near their arrow,
         o  Start a branch
             o  Upgrade label helper to take left justifications and regression
@@ -12,6 +10,7 @@
         o  Merge branch
     o  Why does sizer have LifelineStatements attribute? (smell)
     o  Try out pushing self label inside its box
+    o  Anything that can make creator module smaller?
     o  Lane lines
         o  Rename to lifelines first
     o  Might be best to hard code and hide the size  - and
@@ -28,7 +27,8 @@
     o  Lifeline should be coarser mark space than response line
     o  todo resurrect regressions tests for images
     o  benchmarks and tuning
-    o  may need to rebrand as uml sequence diagram
+    o  godoc example
+    o  may need to rebrand as uml **sequence** diagram
     o  cf creately differentiate
 
 
