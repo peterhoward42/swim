@@ -150,14 +150,13 @@ func (c *Creator) laneTitleBox(
 	top := c.sizer.DiagramPadT
 	bot := c.sizer.DiagramPadT + c.sizer.Lanes.TitleBoxHeight
 	c.graphicsModel.Primitives.AddRect(left, top, right, bot)
-	// Now the strings
-	nRows := len(statement.LabelSegments)
-	for i, str := range statement.LabelSegments {
-		rowOffset := float64(nRows-1-i) * c.fontHeight
-		y := top + c.sizer.Lanes.TitleBoxBottomRowOfText - rowOffset
-		c.graphicsModel.Primitives.AddLabel(str, c.fontHeight, thisLane.Centre,
-			y, graphics.Centre, graphics.Bottom)
-	}
+
+    // Label
+	n := len(statement.LabelSegments)
+	firstRowY := bot - float64(n)*c.fontHeight - c.sizer.Lanes.TitleBoxLabelPadB
+	c.rowOfLabels(thisLane.Centre, firstRowY, graphics.Centre, 
+        statement.LabelSegments)
+
 	// In the particular case of a title box, the tide mark can
 	// be set absolutely rather than advancing it by an increment.
 	c.tideMark = bot + c.sizer.Lanes.TitleBoxPadB
@@ -179,24 +178,6 @@ func (c *Creator) interactionLabel(
 	c.tideMark += float64(len(statement.LabelSegments))*
 		c.fontHeight + c.sizer.InteractionLineTextPadB
 }
-
-/*
-selfInteractionLabels generates the labels that sit above one of the *self*
-interaction loops. It then claims the vertical space it has consumed for
-itself by advancing the tide mark.
-*/
-/*
-func (c *Creator) selfInteractionLabels(
-	statement *dslmodel.Statement) {
-	theLane := statement.ReferencedLanes[0]
-	labelX := c.sizer.Lanes.Individual[theLane].ActivityBoxRight +
-		c.sizer.InteractionLineLabelIndent
-	firstRowY := c.tideMark
-	c.rowOfLabels(labelX, firstRowY, graphics.Left, statement.LabelSegments)
-	c.tideMark += float64(len(statement.LabelSegments))*
-		c.fontHeight + c.sizer.InteractionLineTextPadB
-}
-*/
 
 /*
 rowOfLabels is a (DRY) helper function to make the graphics.Primitives
@@ -231,9 +212,9 @@ func (c *Creator) interactionLine(
 }
 
 /*
-selfInteractionLines generates the three lines and arrow head for a *self*
-interaction loop.  It then claims the vertical space it claims for itself by
-advancing the tide mark.
+selfInteractionLines generates a set of *self* interaction lines (i.e. a loop),
+including the arrow head and labels. It then claims the vertical space it it
+has occupied by advancing the tide mark.
 */
 func (c *Creator) selfInteractionLines(
 	statement *dslmodel.Statement) {
@@ -263,7 +244,7 @@ func (c *Creator) selfInteractionLines(
 /*
 potentiallyStartToBox works out if the Creator has already started a
 lifeline activity box for the lifeline that this interaction line is
-going to, and if it hasn't does so by drawing the top edge.
+going to, and if it hasn't it registers where it should start.
 */
 func (c *Creator) potentiallyStartToBox(
 	statement *dslmodel.Statement) {
@@ -274,8 +255,8 @@ func (c *Creator) potentiallyStartToBox(
 
 /*
 potentiallyStartFromBox works out if the Creator has already started a
-lifeline activity box for the lifeline that this interaction line is
-being emited from, and if it hasn't does so by drawing the top edge.
+lifeline activity box when an interactionline is about to be emitted
+from it. If it hasn't it registers where it should start.
 Note it is atypical because it renders behind the tidemark, to position the
 start of the box a little before the interaction line, but then leaves the
 tidemark unchanged, so that the interaction line that follows, stays in contact

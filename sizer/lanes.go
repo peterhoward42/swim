@@ -15,20 +15,20 @@ import (
 // Lanes holds sizing information for the lanes collectively.
 // It delegates to LaneInfo instances for lane-specific data.
 type Lanes struct {
-	DiagramWidth            float64
-	FontHeight              float64
-	LifelineStatements      []*dslmodel.Statement
-	NumLanes                int
-	TitleBoxWidth           float64
-	TitleBoxPitch           float64
-	TitleBoxHeight          float64
-	TitleBoxBottomRowOfText float64 // Offset below top of title box.
-	TitleBoxPadR            float64 // Holds title boxes apart
-	FirstTitleBoxPadL       float64 // Positions leftmost title box
-	TitleBoxPadB            float64 // Below title box as a whole
-	SelfLoopWidth           float64
-	ActivityBoxWidth        float64
-	Individual              InfoPerLane
+	DiagramWidth       float64
+	FontHeight         float64
+	LifelineStatements []*dslmodel.Statement
+	NumLanes           int
+	TitleBoxWidth      float64
+	TitleBoxPitch      float64
+	TitleBoxHeight     float64
+	TitleBoxLabelPadB  float64
+	TitleBoxPadR       float64 // Holds title boxes apart
+	FirstTitleBoxPadL  float64 // Positions leftmost title box
+	TitleBoxPadB       float64 // Below title box as a whole
+	SelfLoopWidth      float64
+	ActivityBoxWidth   float64
+	Individual         InfoPerLane
 }
 
 // InfoPerLane provides information about individual lanes, keyed on
@@ -82,26 +82,25 @@ func (lanes *Lanes) InteractionLineEndPoints(
 // InteractionLabelPosition works out the position and justification
 // that should be used for an interaction line's label.
 func (lanes *Lanes) InteractionLabelPosition(
-    sourceLane, destLane *dslmodel.Statement, padding float64) (
-    x float64, horizJustification graphics.Justification) {
+	sourceLane, destLane *dslmodel.Statement, padding float64) (
+	x float64, horizJustification graphics.Justification) {
 	sourceLaneSiz := lanes.Individual[sourceLane]
 	destLaneSiz := lanes.Individual[destLane]
 	if destLaneSiz.Centre > sourceLaneSiz.Centre {
-        x = destLaneSiz.ActivityBoxLeft - padding
-        horizJustification = graphics.Right
-    } else {
-        x = destLaneSiz.ActivityBoxRight + padding
-        horizJustification = graphics.Left
-    }
-    return
+		x = destLaneSiz.ActivityBoxLeft - padding
+		horizJustification = graphics.Right
+	} else {
+		x = destLaneSiz.ActivityBoxRight + padding
+		horizJustification = graphics.Left
+	}
+	return
 }
 
 // populateTitleBoxAttribs works out the values for the TitleBoxXXX attributes.
 func (lanes *Lanes) populateTitleBoxAttribs() {
 	// The title boxes are all the same width and height.
 	lanes.TitleBoxHeight = lanes.titleBoxHeight()
-	lanes.TitleBoxBottomRowOfText = lanes.TitleBoxHeight -
-		titleBoxTextPadBK*lanes.FontHeight
+	lanes.TitleBoxLabelPadB = titleBoxTextPadBK * lanes.FontHeight
 	// The horizontal gaps between them are a fixed proportion of their width.
 	// The margins from the edge of the diagram is the same as this gap.
 	n := float64(lanes.NumLanes)

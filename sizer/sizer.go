@@ -18,8 +18,9 @@ import (
 )
 
 // Naming conventions:
-// - begins with the graphics entity if applies to
-// - the fragment <PadT> should be read as paddingTop (where T is from {LRTB})
+// Consider the name: <XxxPadT> 
+// This should be read as the padding required by
+// thing Xxxx at the top (T). Where T is from {LRTB}
 
 // Sizer is the top level sizing component.
 type Sizer struct {

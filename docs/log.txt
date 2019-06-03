@@ -1,9 +1,7 @@
     *  Activity boxes
     *  Why creator referring to left and right things?
     *  Try out left or right justifying labels near their arrow,
-        o  Merge branch
-    o  Why does sizer have LifelineStatements attribute? (smell)
-    o  Anything that can make creator module smaller?
+    *  Anything that can make creator module smaller?
     o  Lane lines
         o  Rename to lifelines first
     o  Might be best to hard code and hide the size  - and
@@ -26,20 +24,7 @@
 
 
 ----------------------------------------------------------------------------
-Actitity Boxes
+Creator code tackles:
 ----------------------------------------------------------------------------
-o  Scanning state has box in progress boolean (inbox)
-o  Triggers to start a box:
-    o  When an interaction or self loop originates from X, and X is not
-       inbox, then start X box before the interaction line.
-    o  When an interaction or self loop arrives at X, and X is not
-       inbox, then start X box level with the interaction line.
-o  Triggers to finish a box:
-    o  Explicit stop
-    o  End of diagram
-o  Need state for inbox for each lane 
-    o  Init before first pass create
-    o  Preserved through to later passes to close off any remianing open
-    o  Must also track Y coords at which each in box started to support
-       drawing box sides at end
+o  k
 
