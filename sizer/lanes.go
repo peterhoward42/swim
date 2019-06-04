@@ -28,12 +28,12 @@ type Lifelines struct {
 	TitleBoxPadB       float64 // Below title box as a whole
 	SelfLoopWidth      float64
 	ActivityBoxWidth   float64
-	Individual         InfoPerLane
+	Individual         InfoPerLifeline
 }
 
-// InfoPerLane provides information about individual lanes, keyed on
+// InfoPerLifeline provides information about individual lanes, keyed on
 // the DSL Lane statement.
-type InfoPerLane map[*dslmodel.Statement]*LifelineInfo
+type InfoPerLifeline map[*dslmodel.Statement]*LifelineInfo
 
 // LifelineInfo carries information about one Lane.
 type LifelineInfo struct {
@@ -134,7 +134,7 @@ func (lanes *Lifelines) titleBoxHeight() float64 {
 // populateIndividualLaneInfo sets attributes for things like the
 // left, right and centre of the lane title box.
 func (lanes *Lifelines) populateIndividualLaneInfo() {
-	lanes.Individual = InfoPerLane{}
+	lanes.Individual = InfoPerLifeline{}
 	for laneNumber, statement := range lanes.LifelineStatements {
 		centre := lanes.FirstTitleBoxPadL + 0.5*lanes.TitleBoxWidth +
 			float64((laneNumber))*lanes.TitleBoxPitch

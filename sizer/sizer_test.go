@@ -31,5 +31,5 @@ func TestNewSizerComposesItsDelegatesProperly(t *testing.T) {
 	sizer := NewSizer(2000, 20.0, statements)
 	// Have the embedded individual lane sizing data structures been
 	// installed?
-	assert.Equal(1, len(sizer.Lanes.Individual), "Should be one Lane")
+	assert.Equal(1, len(sizer.Lifelines.Individual), "Should be one Lane")
 }

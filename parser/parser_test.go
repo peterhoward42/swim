@@ -134,8 +134,8 @@ func TestMakeSureARepresentativeStatementOutputIsProperlyFormed(t *testing.T) {
 	// full CB  get_user_permissions( | token)
 	s := statements[4]
 	assert.Equal("full", s.Keyword)
-	assert.Equal("C", s.ReferencedLanes[0].LaneName)
-	assert.Equal("B", s.ReferencedLanes[1].LaneName)
+	assert.Equal("C", s.ReferencedLifelines[0].LaneName)
+	assert.Equal("B", s.ReferencedLifelines[1].LaneName)
 	assert.Equal("get_user_permissions(", s.LabelSegments[0])
 	assert.Equal("token)", s.LabelSegments[1])
 }

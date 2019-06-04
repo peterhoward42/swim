@@ -28,18 +28,38 @@ var testResultsDir = filepath.Join(".", "testresults", "new")
 
 // TestScratch is a wip test to isolate something during dev
 func TestScratch(t *testing.T) {
-	width := 2000
-	fontHeight := 20.0
+	width := 3000
+	fontHeight := 30.0
 	script := `
-		life A foo
-		life B bar
-		full AB baz
-		stop B
-		self A henrietta
-        stop B
+		life A hbuild | store
+		life B dp_graph | neptune | hierarchy
+		life C dp_graph | neptune | query
+		life D dp_graph | neptune.go
+		life E gremgo | neptune | pool
+		life F gremgo | neptune | client
+		life G graphson
+		full AB CountNodes
+		full BC CountHierarchyNodes
+		dash CB "g.V().hasLabel ..."
+		stop C
+		full BD GetNumber(query)
+		full DE GetCount
+		self D retry
+		full EF GetCount
+		full FG Deserialize
+		dash GF number json
+		stop G
+		
 	`
 	genericCreateHelper(t, script, width, fontHeight, "scratch.png")
 }
+
+/*
+self E retry
+		full EF Deserialize
+		dash FE count json
+		stop F
+*/
 
 // TestReferenceModel uses the reference DSL script and a typical
 // diagram size and font size.
@@ -102,9 +122,9 @@ func TestOneLane(t *testing.T) {
 	genericCreateHelper(t, script, width, fontHeight, "onelane.png")
 }
 
-// TestLargeNumberOfLanes illustrates the sizing and composition logic
-// when there are a large number of lanes.
-func TestLargeNumberOfLanes(t *testing.T) {
+// TestLargeNumberOfLifelines illustrates the sizing and composition logic
+// when there are a large number of Lifelines.
+func TestLargeNumberOfLifelines(t *testing.T) {
 	width := 2000
 	fontHeight := 20.0
 	script := `
@@ -128,7 +148,7 @@ func TestLargeNumberOfLanes(t *testing.T) {
         self I three word | message
         self I three word | message
 	`
-	genericCreateHelper(t, script, width, fontHeight, "manylanes.png")
+	genericCreateHelper(t, script, width, fontHeight, "manylifelines.png")
 }
 
 // TestLargeNumberOfInteractions illustrates the sizing and composition

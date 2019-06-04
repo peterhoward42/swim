@@ -14,14 +14,14 @@ import (
 	"github.com/peterhoward42/umli/dslmodel"
 )
 
-type laneStatementsByName = map[string]*dslmodel.Statement
+type lifelineStatementsByName = map[string]*dslmodel.Statement
 
 // Parse is the parsing invocation method.
 func Parse(DSLScript string) ([]*dslmodel.Statement, error) {
 	reader := strings.NewReader(DSLScript)
 	scanner := bufio.NewScanner(reader)
 	statements := []*dslmodel.Statement{}
-	knownLanes := laneStatementsByName{}
+	knownLanes := lifelineStatementsByName{}
 	lineNo := 0
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -48,7 +48,7 @@ var twoUCLetters = re.MustCompile(`^[A-Z][A-Z]$`)
 // parseLine parses the text present in a single line of DSL, into
 // the fields expected, validates them, and packages the result into a
 // dslmodel.Statement.
-func parseLine(line string, knownLanes laneStatementsByName) (
+func parseLine(line string, knownLanes lifelineStatementsByName) (
 	*dslmodel.Statement, error) {
 	// Fail fast when < 2 words.
 	words := strings.Split(line, " ")
@@ -83,7 +83,7 @@ func parseLine(line string, knownLanes laneStatementsByName) (
 	statement := dslmodel.NewStatement()
 	statement.Keyword = keyWord
 	statement.LabelSegments = labelIndividualLines
-	statement.ReferencedLanes = lanesReferenced
+	statement.ReferencedLifelines = lanesReferenced
 
 	// A few extra steps for *Life* statements
 	if statement.Keyword == umli.Life {
@@ -116,11 +116,11 @@ func isolateLabelConstituentLines(labelText string) []string {
 // It also maintains a look up table of lane name to corresponding Lane
 // statement in the parser.
 func parseLanesOperand(
-	laneNamesOperand, keyWord string, knownLanes laneStatementsByName) (
+	laneNamesOperand, keyWord string, knownLanes lifelineStatementsByName) (
 	[]*dslmodel.Statement, error) {
 
-	// Fail fast on statement types that require a single lane to be specified,
-	// when this is not so.
+	// Fail fast on statement types that require a single lifline to be
+	// specified, when this is not so.
 	if keyWord == umli.Life || keyWord == umli.Stop || keyWord == umli.Self {
 		if !singleUCLetter.MatchString(laneNamesOperand) {
 			return nil,

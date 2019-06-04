@@ -143,23 +143,23 @@ boxes.
 */
 func (c *Creator) laneTitleBox(
 	statement *dslmodel.Statement) {
-	thisLane := c.sizer.Lanes.Individual[statement]
+	thisLane := c.sizer.Lifelines.Individual[statement]
 	// First the rectangular box
 	left := thisLane.TitleBoxLeft
 	right := thisLane.TitleBoxRight
 	top := c.sizer.DiagramPadT
-	bot := c.sizer.DiagramPadT + c.sizer.Lanes.TitleBoxHeight
+	bot := c.sizer.DiagramPadT + c.sizer.Lifelines.TitleBoxHeight
 	c.graphicsModel.Primitives.AddRect(left, top, right, bot)
 
 	// Label
 	n := len(statement.LabelSegments)
-	firstRowY := bot - float64(n)*c.fontHeight - c.sizer.Lanes.TitleBoxLabelPadB
+	firstRowY := bot - float64(n)*c.fontHeight - c.sizer.Lifelines.TitleBoxLabelPadB
 	c.rowOfLabels(thisLane.Centre, firstRowY, graphics.Centre,
 		statement.LabelSegments)
 
 	// In the particular case of a title box, the tide mark can
 	// be set absolutely rather than advancing it by an increment.
-	c.tideMark = bot + c.sizer.Lanes.TitleBoxPadB
+	c.tideMark = bot + c.sizer.Lifelines.TitleBoxPadB
 }
 
 /*
@@ -169,9 +169,9 @@ itself by advancing the tide mark.
 */
 func (c *Creator) interactionLabel(
 	statement *dslmodel.Statement) {
-	sourceLane := statement.ReferencedLanes[0]
-	destLane := statement.ReferencedLanes[1]
-	x, horizJustification := c.sizer.Lanes.InteractionLabelPosition(
+	sourceLane := statement.ReferencedLifelines[0]
+	destLane := statement.ReferencedLifelines[1]
+	x, horizJustification := c.sizer.Lifelines.InteractionLabelPosition(
 		sourceLane, destLane, c.sizer.InteractionLineLabelIndent)
 	firstRowY := c.tideMark
 	c.rowOfLabels(x, firstRowY, horizJustification, statement.LabelSegments)
@@ -199,9 +199,9 @@ the vertical space it claims for itself by advancing the tide mark.
 */
 func (c *Creator) interactionLine(
 	statement *dslmodel.Statement) {
-	sourceLane := statement.ReferencedLanes[0]
-	destLane := statement.ReferencedLanes[1]
-	x1, x2 := c.sizer.Lanes.InteractionLineEndPoints(sourceLane, destLane)
+	sourceLane := statement.ReferencedLifelines[0]
+	destLane := statement.ReferencedLifelines[1]
+	x1, x2 := c.sizer.Lifelines.InteractionLineEndPoints(sourceLane, destLane)
 	y := c.tideMark
 	c.graphicsModel.Primitives.AddLine(x1, y, x2, y,
 		statement.Keyword == umli.Dash)
@@ -218,9 +218,9 @@ has occupied by advancing the tide mark.
 */
 func (c *Creator) selfInteractionLines(
 	statement *dslmodel.Statement) {
-	theLane := statement.ReferencedLanes[0]
-	left := c.sizer.Lanes.Individual[theLane].ActivityBoxRight
-	right := c.sizer.Lanes.Individual[theLane].SelfLoopRight
+	theLane := statement.ReferencedLifelines[0]
+	left := c.sizer.Lifelines.Individual[theLane].ActivityBoxRight
+	right := c.sizer.Lifelines.Individual[theLane].SelfLoopRight
 	top := c.tideMark
 	bot := c.tideMark + c.sizer.SelfLoopHeight
 
@@ -249,7 +249,7 @@ going to, and if it hasn't it registers where it should start.
 func (c *Creator) potentiallyStartToBox(
 	statement *dslmodel.Statement) {
 	behindTidemarkDelta := 0.0
-	c.potentiallyStartActivityBox(statement.ReferencedLanes[1],
+	c.potentiallyStartActivityBox(statement.ReferencedLifelines[1],
 		behindTidemarkDelta)
 }
 
@@ -265,7 +265,7 @@ with its label (which has already been emitted).
 func (c *Creator) potentiallyStartFromBox(
 	statement *dslmodel.Statement) {
 	behindTidemarkDelta := c.sizer.ActivityBoxVerticalOverlap
-	c.potentiallyStartActivityBox(statement.ReferencedLanes[0],
+	c.potentiallyStartActivityBox(statement.ReferencedLifelines[0],
 		behindTidemarkDelta)
 }
 
@@ -289,7 +289,7 @@ tide mark to a little beyond the bottom of the box.
 */
 func (c *Creator) endBox(
 	endBoxStatement *dslmodel.Statement) {
-	lifeline := endBoxStatement.ReferencedLanes[0]
+	lifeline := endBoxStatement.ReferencedLifelines[0]
 	bottom := c.tideMark
 	c.finalizeActivityBox(lifeline, bottom)
 }
@@ -321,8 +321,8 @@ func (c *Creator) finalizeActivityBox(
 		return
 	}
 	top := c.allBoxStates[lifeline].topY
-	left := c.sizer.Lanes.Individual[lifeline].ActivityBoxLeft
-	right := c.sizer.Lanes.Individual[lifeline].ActivityBoxRight
+	left := c.sizer.Lifelines.Individual[lifeline].ActivityBoxLeft
+	right := c.sizer.Lifelines.Individual[lifeline].ActivityBoxRight
 	c.graphicsModel.Primitives.AddRect(left, top, right, bottom)
 	c.tideMark = bottom
 	c.allBoxStates[lifeline].inProgress = false

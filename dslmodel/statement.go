@@ -9,16 +9,16 @@ package dslmodel
 // types in the DSL - and provides a superset of attributes for the data each
 // must be qualified with.
 type Statement struct {
-	Keyword         string
-	LaneName        string       // For <lane> statements.
-	ReferencedLanes []*Statement // When lane operands are present
-	LabelSegments   []string     // Each line of text called for in the label
+	Keyword             string
+	LaneName            string       // For <lane> statements.
+	ReferencedLifelines []*Statement // When lane operands are present
+	LabelSegments       []string     // Each line of text called for in the label
 }
 
 // NewStatement instantiates a Statement, ready to use.
 func NewStatement() *Statement {
 	return &Statement{
-		ReferencedLanes: []*Statement{},
-		LabelSegments:   []string{},
+		ReferencedLifelines: []*Statement{},
+		LabelSegments:       []string{},
 	}
 }
