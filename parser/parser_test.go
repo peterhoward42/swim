@@ -53,7 +53,7 @@ func TestErrorMsgWhenLaneIsNotSingleUCLetterForStopAndLane(t *testing.T) {
 		"Error on this line <self a> (line: 1): Lane name must be single, upper case letter")
 }
 
-func TestErrorMsgForKeywordsThatExpectTwoLanesDontSpecifyTwoUCLetters(
+func TestErrorMsgForKeywordsThatExpectTwoLifelinesDontSpecifyTwoUCLetters(
 	t *testing.T) {
 	assert := assert.New(t)
 
@@ -62,17 +62,17 @@ func TestErrorMsgForKeywordsThatExpectTwoLanesDontSpecifyTwoUCLetters(
 	// Upper case letter but only one of them, <full> keyword
 	_, err := Parse("full A")
 	assert.EqualError(err,
-		"Error on this line <full A> (line: 1): Lanes specified must be two, upper case letters")
+		"Error on this line <full A> (line: 1): Lifelines specified must be two, upper case letters")
 
 	// Two letters but wrong case - dash keyword
 	_, err = Parse("dash ab")
 	assert.EqualError(err,
-		"Error on this line <dash ab> (line: 1): Lanes specified must be two, upper case letters")
+		"Error on this line <dash ab> (line: 1): Lifelines specified must be two, upper case letters")
 
 	// Two characters but one is not a letter - dash keyword
 	_, err = Parse("dash A3")
 	assert.EqualError(err,
-		"Error on this line <dash A3> (line: 1): Lanes specified must be two, upper case letters")
+		"Error on this line <dash A3> (line: 1): Lifelines specified must be two, upper case letters")
 }
 
 func TestItIgnoresBlankLines(t *testing.T) {

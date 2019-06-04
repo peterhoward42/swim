@@ -8,27 +8,27 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewLanesSetsTitleBoxHeightWhenLabelHasOneLineOfText(t *testing.T) {
+func TestNewLifelinesSetsTitleBoxHeightWhenLabelHasOneLineOfText(t *testing.T) {
 	assert := assert.New(t)
 	statements := parser.MustCompileParse(`
 		life A foo
 	`)
 	diagWidth := 2000
 	fontHeight := 20.0
-	lanes := NewLanes(diagWidth, fontHeight, statements)
-	assert.InDelta(40.0, lanes.TitleBoxHeight, 0.1)
+	lifelines := NewLifelines(diagWidth, fontHeight, statements)
+	assert.InDelta(40.0, lifelines.TitleBoxHeight, 0.1)
 }
-func TestNewLanesSetsTitleBoxHeightWhenLabelHasThreeLinesOfText(t *testing.T) {
+func TestNewLifelinesSetsTitleBoxHeightWhenLabelHasThreeLinesOfText(t *testing.T) {
 	assert := assert.New(t)
 	statements := parser.MustCompileParse(`
 		life A foo | bar | baz
 	`)
 	diagWidth := 2000
 	fontHeight := 20.0
-	lanes := NewLanes(diagWidth, fontHeight, statements)
-	assert.InDelta(80.0, lanes.TitleBoxHeight, 0.1)
+	lifelines := NewLifelines(diagWidth, fontHeight, statements)
+	assert.InDelta(80.0, lifelines.TitleBoxHeight, 0.1)
 }
-func TestNewLanesSetsTitleBoxHeightWhenLabelsHaveDifferingHeight(t *testing.T) {
+func TestNewLifelineLifelinesTitleBoxHeightWhenLabelsHaveDifferingHeight(t *testing.T) {
 	assert := assert.New(t)
 	statements := parser.MustCompileParse(`
 		life A fibble
@@ -36,30 +36,30 @@ func TestNewLanesSetsTitleBoxHeightWhenLabelsHaveDifferingHeight(t *testing.T) {
 	`)
 	diagWidth := 2000
 	fontHeight := 20.0
-	lanes := NewLanes(diagWidth, fontHeight, statements)
-	assert.InDelta(80.0, lanes.TitleBoxHeight, 0.1)
+	lifelines := NewLifelines(diagWidth, fontHeight, statements)
+	assert.InDelta(80.0, lifelines.TitleBoxHeight, 0.1)
 }
 
-func TestNewLanesSetsScalarAttributesCorrectlyForOneLane(t *testing.T) {
+func TestNewLifelinesSetsScalarAttributesCorrectlyForOneLane(t *testing.T) {
 	assert := assert.New(t)
 	statements := parser.MustCompileParse(`
 		life A foo
 	`)
 	diagWidth := 2000
 	fontHeight := 20.0
-	lanes := NewLanes(diagWidth, fontHeight, statements)
+	lifelines := NewLifelines(diagWidth, fontHeight, statements)
 
-	assert.Equal(1, lanes.NumLanes)
-	assert.InDelta(1333.3, lanes.TitleBoxWidth, 0.1)
-	assert.InDelta(40, lanes.TitleBoxHeight, 0.1)
-	assert.InDelta(1666.7, lanes.TitleBoxPitch, 0.1)
+	assert.Equal(1, lifelines.NumLifelines)
+	assert.InDelta(1333.3, lifelines.TitleBoxWidth, 0.1)
+	assert.InDelta(40, lifelines.TitleBoxHeight, 0.1)
+	assert.InDelta(1666.7, lifelines.TitleBoxPitch, 0.1)
 
-	assert.InDelta(333.3, lanes.TitleBoxPadR, 0.1)
-	assert.InDelta(333.3, lanes.FirstTitleBoxPadL, 0.1)
-	assert.InDelta(30.0, lanes.TitleBoxPadB, 0.1)
+	assert.InDelta(333.3, lifelines.TitleBoxPadR, 0.1)
+	assert.InDelta(333.3, lifelines.FirstTitleBoxPadL, 0.1)
+	assert.InDelta(30.0, lifelines.TitleBoxPadB, 0.1)
 }
 
-func TestNewLanesSetsScalarAttributesCorrectlyForTwoLanes(t *testing.T) {
+func TestNewLifelinesSetsScalarAttributesCorrectlyForTwoLifelines(t *testing.T) {
 	assert := assert.New(t)
 	statements := parser.MustCompileParse(`
 		life A foo
@@ -67,16 +67,16 @@ func TestNewLanesSetsScalarAttributesCorrectlyForTwoLanes(t *testing.T) {
 	`)
 	diagWidth := 2000
 	fontHeight := 20.0
-	lanes := NewLanes(diagWidth, fontHeight, statements)
+	lifelines := NewLifelines(diagWidth, fontHeight, statements)
 
-	assert.Equal(2, lanes.NumLanes)
-	assert.InDelta(727.2, lanes.TitleBoxWidth, 0.1)
-	assert.InDelta(909.1, lanes.TitleBoxPitch, 0.1)
-	assert.InDelta(181.8, lanes.TitleBoxPadR, 0.1)
-	assert.InDelta(181.8, lanes.FirstTitleBoxPadL, 0.1)
+	assert.Equal(2, lifelines.NumLifelines)
+	assert.InDelta(727.2, lifelines.TitleBoxWidth, 0.1)
+	assert.InDelta(909.1, lifelines.TitleBoxPitch, 0.1)
+	assert.InDelta(181.8, lifelines.TitleBoxPadR, 0.1)
+	assert.InDelta(181.8, lifelines.FirstTitleBoxPadL, 0.1)
 }
 
-func TestNewLanesSetsIndividualLaneAttributesCorrectlyForTwoLanes(t *testing.T) {
+func TestNewLifelinesSetsIndividualLaneAttributesCorrectlyForTwoLifelines(t *testing.T) {
 	assert := assert.New(t)
 	statements := parser.MustCompileParse(`
 		life A foo
@@ -86,8 +86,8 @@ func TestNewLanesSetsIndividualLaneAttributesCorrectlyForTwoLanes(t *testing.T) 
 
 	diagWidth := 2000
 	fontHeight := 20.0
-	lanes := NewLanes(diagWidth, fontHeight, statements)
-	individual := lanes.Individual[b]
+	lifelines := NewLifelines(diagWidth, fontHeight, statements)
+	individual := lifelines.Individual[b]
 
 	assert.InDelta(1090.9, individual.TitleBoxLeft, 0.1)
 	assert.InDelta(1454.5, individual.Centre, 0.1)

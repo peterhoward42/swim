@@ -1,7 +1,7 @@
 package sizers
 
-// This module provides the *Lanes* and *LaneInfo* types, which encapsulate
-// sizing data for lanes.
+// This module provides the *Lifeline* and *LifelineInfo* types, which 
+// encapsulatesizing data for lifelines.
 
 import (
 	"github.com/peterhoward42/umli/dslmodel"
@@ -12,13 +12,13 @@ import (
 // - begins with the graphics entity if applies to
 // - the fragment <PadT> should be read as paddingTop (where T is from {LRTB})
 
-// Lifelines holds sizing information for the lanes collectively.
-// It delegates to LaneInfo instances for lane-specific data.
+// Lifelines holds sizing information for the lifelines collectively.
+// It delegates to LifelineInfo instances for lane-specific data.
 type Lifelines struct {
 	DiagramWidth       float64
 	FontHeight         float64
 	LifelineStatements []*dslmodel.Statement
-	NumLanes           int
+	NumLifelines       int
 	TitleBoxWidth      float64
 	TitleBoxPitch      float64
 	TitleBoxHeight     float64
@@ -31,11 +31,11 @@ type Lifelines struct {
 	Individual         InfoPerLifeline
 }
 
-// InfoPerLifeline provides information about individual lanes, keyed on
-// the DSL Lane statement.
+// InfoPerLifeline provides information about individual lifelines, keyed on
+// the DSL Lifeline statement.
 type InfoPerLifeline map[*dslmodel.Statement]*LifelineInfo
 
-// LifelineInfo carries information about one Lane.
+// LifelineInfo carries information about one Lifeline.
 type LifelineInfo struct {
 	TitleBoxLeft     float64
 	Centre           float64
@@ -46,106 +46,106 @@ type LifelineInfo struct {
 	ActivityBoxRight float64
 }
 
-// NewLanes provides a Lanes structure that has been initialised
+// NewLifelines provides a lifelines structure that has been initialised
 // as is ready for use.
-func NewLanes(diagramWidth int, fontHeight float64,
+func NewLifelines(diagramWidth int, fontHeight float64,
 	lifelineStatements []*dslmodel.Statement) *Lifelines {
-	lanes := &Lifelines{}
-	lanes.DiagramWidth = float64(diagramWidth)
-	lanes.FontHeight = fontHeight
-	lanes.LifelineStatements = lifelineStatements
-	lanes.NumLanes = len(lanes.LifelineStatements)
-	lanes.populateTitleBoxAttribs()
-	lanes.SelfLoopWidth = 0.5 * lanes.TitleBoxWidth // see how this works out
-	lanes.ActivityBoxWidth = activityBoxWidthK * fontHeight
-	lanes.populateIndividualLaneInfo()
+	lifelines := &Lifelines{}
+	lifelines.DiagramWidth = float64(diagramWidth)
+	lifelines.FontHeight = fontHeight
+	lifelines.LifelineStatements = lifelineStatements
+	lifelines.NumLifelines = len(lifelines.LifelineStatements)
+	lifelines.populateTitleBoxAttribs()
+	lifelines.SelfLoopWidth = 0.5 * lifelines.TitleBoxWidth // see how this works out
+	lifelines.ActivityBoxWidth = activityBoxWidthK * fontHeight
+	lifelines.populateIndividualLifelineInfo()
 
-	return lanes
+	return lifelines
 }
 
 // InteractionLineEndPoints works out the x coordinates for an interaction
 // line between two given lifelines.
-func (lanes *Lifelines) InteractionLineEndPoints(
-	sourceLane, destLane *dslmodel.Statement) (x1, x2 float64) {
-	sourceLaneSiz := lanes.Individual[sourceLane]
-	destLaneSiz := lanes.Individual[destLane]
-	if destLaneSiz.Centre > sourceLaneSiz.Centre {
-		x1 = sourceLaneSiz.ActivityBoxRight
-		x2 = destLaneSiz.ActivityBoxLeft
+func (lifelines *Lifelines) InteractionLineEndPoints(
+	sourceLifeline, destLifeline *dslmodel.Statement) (x1, x2 float64) {
+	sourceLifelineSiz := lifelines.Individual[sourceLifeline]
+	destLifelineSiz := lifelines.Individual[destLifeline]
+	if destLifelineSiz.Centre > sourceLifelineSiz.Centre {
+		x1 = sourceLifelineSiz.ActivityBoxRight
+		x2 = destLifelineSiz.ActivityBoxLeft
 	} else {
-		x1 = sourceLaneSiz.ActivityBoxLeft
-		x2 = destLaneSiz.ActivityBoxRight
+		x1 = sourceLifelineSiz.ActivityBoxLeft
+		x2 = destLifelineSiz.ActivityBoxRight
 	}
 	return
 }
 
 // InteractionLabelPosition works out the position and justification
 // that should be used for an interaction line's label.
-func (lanes *Lifelines) InteractionLabelPosition(
-	sourceLane, destLane *dslmodel.Statement, padding float64) (
+func (lifelines *Lifelines) InteractionLabelPosition(
+	sourceLifeline, destLifeline *dslmodel.Statement, padding float64) (
 	x float64, horizJustification graphics.Justification) {
-	sourceLaneSiz := lanes.Individual[sourceLane]
-	destLaneSiz := lanes.Individual[destLane]
-	if destLaneSiz.Centre > sourceLaneSiz.Centre {
-		x = destLaneSiz.ActivityBoxLeft - padding
+	sourceLifelineSiz := lifelines.Individual[sourceLifeline]
+	destLifelineSiz := lifelines.Individual[destLifeline]
+	if destLifelineSiz.Centre > sourceLifelineSiz.Centre {
+		x = destLifelineSiz.ActivityBoxLeft - padding
 		horizJustification = graphics.Right
 	} else {
-		x = destLaneSiz.ActivityBoxRight + padding
+		x = destLifelineSiz.ActivityBoxRight + padding
 		horizJustification = graphics.Left
 	}
 	return
 }
 
 // populateTitleBoxAttribs works out the values for the TitleBoxXXX attributes.
-func (lanes *Lifelines) populateTitleBoxAttribs() {
+func (lifelines *Lifelines) populateTitleBoxAttribs() {
 	// The title boxes are all the same width and height.
-	lanes.TitleBoxHeight = lanes.titleBoxHeight()
-	lanes.TitleBoxLabelPadB = titleBoxTextPadBK * lanes.FontHeight
+	lifelines.TitleBoxHeight = lifelines.titleBoxHeight()
+	lifelines.TitleBoxLabelPadB = titleBoxTextPadBK * lifelines.FontHeight
 	// The horizontal gaps between them are a fixed proportion of their width.
 	// The margins from the edge of the diagram is the same as this gap.
-	n := float64(lanes.NumLanes)
+	n := float64(lifelines.NumLifelines)
 	nMargins := 2.0
 	nGaps := n - 1
 	k := titleBoxPadRK
-	w := lanes.DiagramWidth / (k*(nMargins+nGaps) + n)
-	lanes.TitleBoxWidth = w
-	lanes.TitleBoxPadR = k * w
-	lanes.TitleBoxPitch = w * (1 + k)
-	lanes.FirstTitleBoxPadL = k * w
-	lanes.TitleBoxPadB = titleBoxPadBK * lanes.FontHeight
+	w := lifelines.DiagramWidth / (k*(nMargins+nGaps) + n)
+	lifelines.TitleBoxWidth = w
+	lifelines.TitleBoxPadR = k * w
+	lifelines.TitleBoxPitch = w * (1 + k)
+	lifelines.FirstTitleBoxPadL = k * w
+	lifelines.TitleBoxPadB = titleBoxPadBK * lifelines.FontHeight
 }
 
 // titleBoxHeight calculates the height based on sufficient room for the
 // title box with the most label lines.
-func (lanes *Lifelines) titleBoxHeight() float64 {
+func (lifelines *Lifelines) titleBoxHeight() float64 {
 	maxNLabelLines := 0
-	for _, s := range lanes.LifelineStatements {
+	for _, s := range lifelines.LifelineStatements {
 		n := len(s.LabelSegments)
 		if n > maxNLabelLines {
 			maxNLabelLines = n
 		}
 	}
-	topMargin := titleBoxTextPadTK * lanes.FontHeight
-	botMargin := titleBoxTextPadBK * lanes.FontHeight
-	ht := topMargin + botMargin + float64(maxNLabelLines)*lanes.FontHeight
+	topMargin := titleBoxTextPadTK * lifelines.FontHeight
+	botMargin := titleBoxTextPadBK * lifelines.FontHeight
+	ht := topMargin + botMargin + float64(maxNLabelLines)*lifelines.FontHeight
 	return ht
 }
 
-// populateIndividualLaneInfo sets attributes for things like the
+// populateIndividualLifelineInfo sets attributes for things like the
 // left, right and centre of the lane title box.
-func (lanes *Lifelines) populateIndividualLaneInfo() {
-	lanes.Individual = InfoPerLifeline{}
-	for laneNumber, statement := range lanes.LifelineStatements {
-		centre := lanes.FirstTitleBoxPadL + 0.5*lanes.TitleBoxWidth +
-			float64((laneNumber))*lanes.TitleBoxPitch
-		left := centre - 0.5*lanes.TitleBoxWidth
-		right := centre + 0.5*lanes.TitleBoxWidth
-		selfLoopRight := centre + lanes.SelfLoopWidth
+func (lifelines *Lifelines) populateIndividualLifelineInfo() {
+	lifelines.Individual = InfoPerLifeline{}
+	for laneNumber, statement := range lifelines.LifelineStatements {
+		centre := lifelines.FirstTitleBoxPadL + 0.5*lifelines.TitleBoxWidth +
+			float64((laneNumber))*lifelines.TitleBoxPitch
+		left := centre - 0.5*lifelines.TitleBoxWidth
+		right := centre + 0.5*lifelines.TitleBoxWidth
+		selfLoopRight := centre + lifelines.SelfLoopWidth
 		selfLoopCentre := 0.5 * (centre + selfLoopRight)
-		activityBoxLeft := centre - 0.5*lanes.ActivityBoxWidth
-		activityBoxRight := centre + 0.5*lanes.ActivityBoxWidth
+		activityBoxLeft := centre - 0.5*lifelines.ActivityBoxWidth
+		activityBoxRight := centre + 0.5*lifelines.ActivityBoxWidth
 		laneInfo := &LifelineInfo{left, centre, right, selfLoopRight,
 			selfLoopCentre, activityBoxLeft, activityBoxRight}
-		lanes.Individual[statement] = laneInfo
+		lifelines.Individual[statement] = laneInfo
 	}
 }

@@ -6,16 +6,12 @@
         *  Keyword
             *  Change in kewords and ref diag and fix up so
                everything compiles and tests pass
-        *  Lanes type
-        *  Lane type
+        *  Plural type
+        *  Singular type
         *  What other types?
-        o  pick through ag lanes
-        o  pick through ag lane
-        o  What attributes
-        o  What variables
-        o  What consts?
-        o  What comments
-        o  What is left?
+        *  pick through ag plural
+        o  pick through ag singular
+        o  Reformat
     o  Might be best to hard code and hide the size  - and
        encourage client to scale in context, or to make images big and
        then use image lib to scale to suit?

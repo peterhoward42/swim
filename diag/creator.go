@@ -85,7 +85,7 @@ generate the primitives required that can be determined from a first pass.
 This includes for example the lane title boxes and the interaction lines and
 labels. But it excludes the generation of primitives that can only be
 dimensioned once the interaction line Y coordinates are known; for example
-the activity boxes that sit on lanes.
+the activity boxes that sit on lifelines.
 */
 func (c *Creator) createFirstPass() {
 	graphicalEvents := NewScanner().Scan(c.allStatements)

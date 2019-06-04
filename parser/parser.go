@@ -21,7 +21,7 @@ func Parse(DSLScript string) ([]*dslmodel.Statement, error) {
 	reader := strings.NewReader(DSLScript)
 	scanner := bufio.NewScanner(reader)
 	statements := []*dslmodel.Statement{}
-	knownLanes := lifelineStatementsByName{}
+	knownLifelines := lifelineStatementsByName{}
 	lineNo := 0
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -30,7 +30,7 @@ func Parse(DSLScript string) ([]*dslmodel.Statement, error) {
 		if len(trimmed) == 0 {
 			continue
 		}
-		statement, err := parseLine(trimmed, knownLanes)
+		statement, err := parseLine(trimmed, knownLifelines)
 		if err != nil {
 			return nil, umli.DSLError(trimmed, lineNo, err.Error())
 		}
@@ -48,7 +48,7 @@ var twoUCLetters = re.MustCompile(`^[A-Z][A-Z]$`)
 // parseLine parses the text present in a single line of DSL, into
 // the fields expected, validates them, and packages the result into a
 // dslmodel.Statement.
-func parseLine(line string, knownLanes lifelineStatementsByName) (
+func parseLine(line string, knownLifelines lifelineStatementsByName) (
 	*dslmodel.Statement, error) {
 	// Fail fast when < 2 words.
 	words := strings.Split(line, " ")
@@ -60,10 +60,10 @@ func parseLine(line string, knownLanes lifelineStatementsByName) (
 	if !strings.Contains(strings.Join(umli.AllKeywords, " "), keyWord) {
 		return nil, fmt.Errorf("unrecognized keyword: %s", keyWord)
 	}
-	// Validate and reconcile the lanes referenced in the second word.
+	// Validate and reconcile the lifelines referenced in the second word.
 	laneNamesOperand := words[1]
-	lanesReferenced, err := parseLanesOperand(
-		laneNamesOperand, keyWord, knownLanes)
+	lifelinesReferenced, err := parseLifelinesOperand(
+		laneNamesOperand, keyWord, knownLifelines)
 	if err != nil {
 		return nil, err
 	}
@@ -83,12 +83,12 @@ func parseLine(line string, knownLanes lifelineStatementsByName) (
 	statement := dslmodel.NewStatement()
 	statement.Keyword = keyWord
 	statement.LabelSegments = labelIndividualLines
-	statement.ReferencedLifelines = lanesReferenced
+	statement.ReferencedLifelines = lifelinesReferenced
 
 	// A few extra steps for *Life* statements
 	if statement.Keyword == umli.Life {
 		statement.LaneName = laneNamesOperand
-		knownLanes[statement.LaneName] = statement
+		knownLifelines[statement.LaneName] = statement
 	}
 	return statement, nil
 }
@@ -111,12 +111,12 @@ func isolateLabelConstituentLines(labelText string) []string {
 	return constituentLines
 }
 
-// parseLanesOperand makes sure the lanes that are specified in the second
+// parseLifelinesOperand makes sure the lifelines that are specified in the second
 // word of a DSL line are properly formed. This depends on the keyword.
 // It also maintains a look up table of lane name to corresponding Lane
 // statement in the parser.
-func parseLanesOperand(
-	laneNamesOperand, keyWord string, knownLanes lifelineStatementsByName) (
+func parseLifelinesOperand(
+	laneNamesOperand, keyWord string, knownLifelines lifelineStatementsByName) (
 	[]*dslmodel.Statement, error) {
 
 	// Fail fast on statement types that require a single lifline to be
@@ -127,25 +127,25 @@ func parseLanesOperand(
 				errors.New("Lane name must be single, upper case letter")
 		}
 	}
-	// Same sort of thing where two lanes must be specified.
+	// Same sort of thing where two lifelines must be specified.
 	if keyWord == umli.Full || keyWord == umli.Dash {
 		if !twoUCLetters.MatchString(laneNamesOperand) {
 			return nil,
-				errors.New("Lanes specified must be two, upper case letters")
+				errors.New("Lifelines specified must be two, upper case letters")
 		}
 	}
 	// Capture ptrs to the lane Statement being referenced by the second word.
 	// (Unless this IS a lane statement).
-	laneStatements := []*dslmodel.Statement{}
+	lifelinestatements := []*dslmodel.Statement{}
 	if keyWord != umli.Life {
 		laneLetters := strings.Split(laneNamesOperand, "")
 		for _, laneLetter := range laneLetters {
-			laneStatement, ok := knownLanes[laneLetter]
+			lifelinestatement, ok := knownLifelines[laneLetter]
 			if !ok {
 				return nil, fmt.Errorf("Unknown lane: %v", laneLetter)
 			}
-			laneStatements = append(laneStatements, laneStatement)
+			lifelinestatements = append(lifelinestatements, lifelinestatement)
 		}
 	}
-	return laneStatements, nil
+	return lifelinestatements, nil
 }

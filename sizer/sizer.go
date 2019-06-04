@@ -9,7 +9,7 @@ from the umli.diag package, so that umli.diag can deal only with the
 algorithmic part of diagram creation.
 
 It provides the top level *Sizer* type, along with some subordinate types
-it delegates to. For example: sizing.Lanes.
+it delegates to. For example: sizing.Lifelines.
 */
 package sizers
 
@@ -45,7 +45,7 @@ func NewSizer(diagramWidth int, fontHeight float64,
 	sizer := &Sizer{}
 	sizer.DiagramPadT = diagramPadTK * fontHeight
 	sizer.DiagramPadB = diagramPadBK * fontHeight
-	sizer.Lifelines = NewLanes(diagramWidth, fontHeight, lifelineStatements)
+	sizer.Lifelines = NewLifelines(diagramWidth, fontHeight, lifelineStatements)
 
 	sizer.ArrowLen = arrowLenK * fontHeight
 	sizer.ArrowHeight = arrowAspectRatio * sizer.ArrowLen
