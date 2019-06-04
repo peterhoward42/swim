@@ -15,7 +15,7 @@ func TestScannerProperlyAggregatesGraphicsEvents(t *testing.T) {
 	assert := assert.New(t)
 
 	statements := parser.MustCompileParse(`
-		lane A foo
+		life A foo
 		self A msg
 	`)
 	lane := statements[0]

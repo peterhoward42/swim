@@ -18,7 +18,7 @@ import (
 )
 
 // Naming conventions:
-// Consider the name: <XxxPadT> 
+// Consider the name: <XxxPadT>
 // This should be read as the padding required by
 // thing Xxxx at the top (T). Where T is from {LRTB}
 
@@ -26,7 +26,7 @@ import (
 type Sizer struct {
 	DiagramPadT                float64
 	DiagramPadB                float64
-	Lanes                      *Lanes
+	Lanes                      *Lifelines
 	InteractionLinePadB        float64
 	InteractionLineTextPadB    float64
 	InteractionLineLabelIndent float64

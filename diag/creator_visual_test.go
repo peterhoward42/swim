@@ -31,8 +31,8 @@ func TestScratch(t *testing.T) {
 	width := 2000
 	fontHeight := 20.0
 	script := `
-		lane A foo
-		lane B bar
+		life A foo
+		life B bar
 		full AB baz
 		stop B
 		self A henrietta
@@ -59,8 +59,8 @@ func TestStopStartBox(t *testing.T) {
 	width := 2000
 	fontHeight := 20.0
 	script := `
-        lane A foo
-        lane B bar
+        life A foo
+        life B bar
         full AB apple
         dash BA orange
         stop B
@@ -78,8 +78,8 @@ func TestIgnoresRedundantStop(t *testing.T) {
 	width := 2000
 	fontHeight := 20.0
 	script := `
-		lane A foo
-		lane B bar
+		life A foo
+		life B bar
 		full AB baz
 		stop B
 		self A henrietta:w
@@ -94,7 +94,7 @@ func TestOneLane(t *testing.T) {
 	width := 2000
 	fontHeight := 20.0
 	script := `
-		lane A Foo
+		life A Foo
 		self A Bar
 		self A Baz
 		self A A long | label over | multiple lines
@@ -108,16 +108,16 @@ func TestLargeNumberOfLanes(t *testing.T) {
 	width := 2000
 	fontHeight := 20.0
 	script := `
-		lane A two word | title
-		lane B two word | title
-		lane C two word | title
-		lane D two word | title
-		lane E two word | title
-		lane F two word | title
-		lane G two word | title
-		lane H two word | title
-		lane I two word | title
-		lane J two word | title
+		life A two word | title
+		life B two word | title
+		life C two word | title
+		life D two word | title
+		life E two word | title
+		life F two word | title
+		life G two word | title
+		life H two word | title
+		life I two word | title
+		life J two word | title
 
         full AB three word | message
         full BC three word | message
@@ -137,9 +137,9 @@ func TestLargeNumberOfInteraction(t *testing.T) {
 	width := 2000
 	fontHeight := 20.0
 	script := `
-		lane A two word | title
-		lane B two word | title
-		lane C two word | title
+		life A two word | title
+		life B two word | title
+		life C two word | title
 
         full AB three word | message
         full BC three word | message

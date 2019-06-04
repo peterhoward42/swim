@@ -8,10 +8,10 @@ import (
 
 func TestErrorMsgWhenTooFewWords(t *testing.T) {
 	assert := assert.New(t)
-	_, err := Parse("Lane")
+	_, err := Parse("life")
 	assert.EqualError(
 		err,
-		"Error on this line <Lane> (line: 1): must have at least 2 words")
+		"Error on this line <life> (line: 1): must have at least 2 words")
 }
 
 func TestErrorMsgWhenKeywordIsUnrecognized(t *testing.T) {
@@ -26,13 +26,13 @@ func TestErrorMsgWhenLaneIsNotSingleUCLetterForStopAndLane(t *testing.T) {
 	assert := assert.New(t)
 
 	// Few cases to look at details of error message.
-	_, err := Parse("lane AB")
+	_, err := Parse("life AB")
 	assert.EqualError(err,
-		"Error on this line <lane AB> (line: 1): Lane name must be single, upper case letter")
-	_, err = Parse("lane a")
+		"Error on this line <life AB> (line: 1): Lane name must be single, upper case letter")
+	_, err = Parse("life a")
 	assert.NotNil(err)
 	assert.EqualError(err,
-		"Error on this line <lane a> (line: 1): Lane name must be single, upper case letter")
+		"Error on this line <life a> (line: 1): Lane name must be single, upper case letter")
 
 	// Make sure it behaves the same way with the only other keywords that
 	// requires a single lane to be specified: "stop".
@@ -78,9 +78,9 @@ func TestErrorMsgForKeywordsThatExpectTwoLanesDontSpecifyTwoUCLetters(
 func TestItIgnoresBlankLines(t *testing.T) {
 	assert := assert.New(t)
 	statements, err := Parse(`
-		lane A  SL App
+		life A  SL App
 
-		lane B  Core Permissions API
+		life B  Core Permissions API
     `)
 	assert.Nil(err)
 	assert.Len(statements, 2)
@@ -88,7 +88,7 @@ func TestItIgnoresBlankLines(t *testing.T) {
 
 func TestItCapturesLabelTextWithNoLineBreaksIn(t *testing.T) {
 	assert := assert.New(t)
-	statements, err := Parse("lane A SL App")
+	statements, err := Parse("life A SL App")
 	assert.Nil(err)
 	assert.Len(statements[0].LabelSegments, 1)
 	assert.Equal("SL App", statements[0].LabelSegments[0], 1)
@@ -96,7 +96,7 @@ func TestItCapturesLabelTextWithNoLineBreaksIn(t *testing.T) {
 
 func TestItCapturesLabelTextWithLineBreaksIn(t *testing.T) {
 	assert := assert.New(t)
-	statements, err := Parse("lane A  The quick | brown fox | etc")
+	statements, err := Parse("life A  The quick | brown fox | etc")
 	assert.Nil(err)
 	assert.Len(statements[0].LabelSegments, 3)
 	// Note we check not only the splitting but also that each
@@ -115,9 +115,9 @@ func TestErrorMessageWhenAnUnknownLaneIsReferenced(t *testing.T) {
 
 func TestErrorMessageWhenAStatementOmitsALabel(t *testing.T) {
 	assert := assert.New(t)
-	_, err := Parse("lane A")
+	_, err := Parse("life A")
 	assert.EqualError(err,
-		"Error on this line <lane A> (line: 1): Label text missing")
+		"Error on this line <life A> (line: 1): Label text missing")
 }
 
 func TestMakeSureEveryKeywordIsHandledWithoutError(t *testing.T) {

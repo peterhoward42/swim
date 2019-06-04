@@ -9,8 +9,8 @@ import (
 func TestParsedOutputIsCorrectWhenInputIsProper(t *testing.T) {
 	assert := assert.New(t)
 	statements := MustCompileParse(`
-		lane A foo
-		lane B bar
+		life A foo
+		life B bar
 	`)
 	assert.Len(statements, 2)
 }
@@ -18,8 +18,8 @@ func TestParsedOutputIsCorrectWhenInputIsProper(t *testing.T) {
 func TestPanicsWhenImportIsMalformed(t *testing.T) {
 	assert := assert.New(t)
 	malformed := `
-		lane A foo
-		laXe B bar
+		life A foo
+		liXe B bar
 	`
 	assert.Panics(func() { MustCompileParse(malformed) })
 }

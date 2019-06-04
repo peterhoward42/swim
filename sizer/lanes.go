@@ -12,9 +12,9 @@ import (
 // - begins with the graphics entity if applies to
 // - the fragment <PadT> should be read as paddingTop (where T is from {LRTB})
 
-// Lanes holds sizing information for the lanes collectively.
+// Lifelines holds sizing information for the lanes collectively.
 // It delegates to LaneInfo instances for lane-specific data.
-type Lanes struct {
+type Lifelines struct {
 	DiagramWidth       float64
 	FontHeight         float64
 	LifelineStatements []*dslmodel.Statement
@@ -49,8 +49,8 @@ type LaneInfo struct {
 // NewLanes provides a Lanes structure that has been initialised
 // as is ready for use.
 func NewLanes(diagramWidth int, fontHeight float64,
-	lifelineStatements []*dslmodel.Statement) *Lanes {
-	lanes := &Lanes{}
+	lifelineStatements []*dslmodel.Statement) *Lifelines {
+	lanes := &Lifelines{}
 	lanes.DiagramWidth = float64(diagramWidth)
 	lanes.FontHeight = fontHeight
 	lanes.LifelineStatements = lifelineStatements
@@ -65,7 +65,7 @@ func NewLanes(diagramWidth int, fontHeight float64,
 
 // InteractionLineEndPoints works out the x coordinates for an interaction
 // line between two given lifelines.
-func (lanes *Lanes) InteractionLineEndPoints(
+func (lanes *Lifelines) InteractionLineEndPoints(
 	sourceLane, destLane *dslmodel.Statement) (x1, x2 float64) {
 	sourceLaneSiz := lanes.Individual[sourceLane]
 	destLaneSiz := lanes.Individual[destLane]
@@ -81,7 +81,7 @@ func (lanes *Lanes) InteractionLineEndPoints(
 
 // InteractionLabelPosition works out the position and justification
 // that should be used for an interaction line's label.
-func (lanes *Lanes) InteractionLabelPosition(
+func (lanes *Lifelines) InteractionLabelPosition(
 	sourceLane, destLane *dslmodel.Statement, padding float64) (
 	x float64, horizJustification graphics.Justification) {
 	sourceLaneSiz := lanes.Individual[sourceLane]
@@ -97,7 +97,7 @@ func (lanes *Lanes) InteractionLabelPosition(
 }
 
 // populateTitleBoxAttribs works out the values for the TitleBoxXXX attributes.
-func (lanes *Lanes) populateTitleBoxAttribs() {
+func (lanes *Lifelines) populateTitleBoxAttribs() {
 	// The title boxes are all the same width and height.
 	lanes.TitleBoxHeight = lanes.titleBoxHeight()
 	lanes.TitleBoxLabelPadB = titleBoxTextPadBK * lanes.FontHeight
@@ -117,7 +117,7 @@ func (lanes *Lanes) populateTitleBoxAttribs() {
 
 // titleBoxHeight calculates the height based on sufficient room for the
 // title box with the most label lines.
-func (lanes *Lanes) titleBoxHeight() float64 {
+func (lanes *Lifelines) titleBoxHeight() float64 {
 	maxNLabelLines := 0
 	for _, s := range lanes.LifelineStatements {
 		n := len(s.LabelSegments)
@@ -133,7 +133,7 @@ func (lanes *Lanes) titleBoxHeight() float64 {
 
 // populateIndividualLaneInfo sets attributes for things like the
 // left, right and centre of the lane title box.
-func (lanes *Lanes) populateIndividualLaneInfo() {
+func (lanes *Lifelines) populateIndividualLaneInfo() {
 	lanes.Individual = InfoPerLane{}
 	for laneNumber, statement := range lanes.LifelineStatements {
 		centre := lanes.FirstTitleBoxPadL + 0.5*lanes.TitleBoxWidth +

@@ -40,7 +40,7 @@ lines, will be drawn above the lines to which they refer, and therefore must
 precede the corresponding line events.
 */
 var EventsRequired = map[string][]EventType{
-	umli.Lane: []EventType{
+	umli.Life: []EventType{
 		LaneTitleBox, // advances tidemark
 		LaneLine,
 	},

@@ -10,7 +10,7 @@ import (
 
 func TestNewSizerSetsItsScalarAttributesCorrectlyWhenOneLaneOnly(t *testing.T) {
 	assert := assert.New(t)
-	statements := parser.MustCompileParse("lane A foo")
+	statements := parser.MustCompileParse("life A foo")
 	sizer := NewSizer(2000, 20.0, statements)
 
 	assert.InDelta(20, sizer.DiagramPadT, 0.1)
@@ -27,7 +27,7 @@ func TestNewSizerSetsItsScalarAttributesCorrectlyWhenOneLaneOnly(t *testing.T) {
 
 func TestNewSizerComposesItsDelegatesProperly(t *testing.T) {
 	assert := assert.New(t)
-	statements := parser.MustCompileParse("lane A foo")
+	statements := parser.MustCompileParse("life A foo")
 	sizer := NewSizer(2000, 20.0, statements)
 	// Have the embedded individual lane sizing data structures been
 	// installed?

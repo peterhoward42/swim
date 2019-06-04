@@ -10,7 +10,7 @@ import (
 	re "regexp"
 	"strings"
 
-	 "github.com/peterhoward42/umli"
+	"github.com/peterhoward42/umli"
 	"github.com/peterhoward42/umli/dslmodel"
 )
 
@@ -85,8 +85,8 @@ func parseLine(line string, knownLanes laneStatementsByName) (
 	statement.LabelSegments = labelIndividualLines
 	statement.ReferencedLanes = lanesReferenced
 
-	// A few extra steps for *Lane* statements
-	if statement.Keyword == umli.Lane {
+	// A few extra steps for *Life* statements
+	if statement.Keyword == umli.Life {
 		statement.LaneName = laneNamesOperand
 		knownLanes[statement.LaneName] = statement
 	}
@@ -121,7 +121,7 @@ func parseLanesOperand(
 
 	// Fail fast on statement types that require a single lane to be specified,
 	// when this is not so.
-	if keyWord == umli.Lane || keyWord == umli.Stop || keyWord == umli.Self {
+	if keyWord == umli.Life || keyWord == umli.Stop || keyWord == umli.Self {
 		if !singleUCLetter.MatchString(laneNamesOperand) {
 			return nil,
 				errors.New("Lane name must be single, upper case letter")
@@ -137,7 +137,7 @@ func parseLanesOperand(
 	// Capture ptrs to the lane Statement being referenced by the second word.
 	// (Unless this IS a lane statement).
 	laneStatements := []*dslmodel.Statement{}
-	if keyWord != umli.Lane {
+	if keyWord != umli.Life {
 		laneLetters := strings.Split(laneNamesOperand, "")
 		for _, laneLetter := range laneLetters {
 			laneStatement, ok := knownLanes[laneLetter]

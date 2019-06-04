@@ -72,7 +72,7 @@ func isolateLifelines(
 	allStatements []*dslmodel.Statement) []*dslmodel.Statement {
 	lifelineStatements := []*dslmodel.Statement{}
 	for _, statement := range allStatements {
-		if statement.Keyword == umli.Lane {
+		if statement.Keyword == umli.Life {
 			lifelineStatements = append(lifelineStatements, statement)
 		}
 	}
@@ -151,11 +151,11 @@ func (c *Creator) laneTitleBox(
 	bot := c.sizer.DiagramPadT + c.sizer.Lanes.TitleBoxHeight
 	c.graphicsModel.Primitives.AddRect(left, top, right, bot)
 
-    // Label
+	// Label
 	n := len(statement.LabelSegments)
 	firstRowY := bot - float64(n)*c.fontHeight - c.sizer.Lanes.TitleBoxLabelPadB
-	c.rowOfLabels(thisLane.Centre, firstRowY, graphics.Centre, 
-        statement.LabelSegments)
+	c.rowOfLabels(thisLane.Centre, firstRowY, graphics.Centre,
+		statement.LabelSegments)
 
 	// In the particular case of a title box, the tide mark can
 	// be set absolutely rather than advancing it by an increment.

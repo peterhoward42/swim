@@ -1,8 +1,9 @@
 package sizers
 
 import (
-	"github.com/peterhoward42/umli/parser"
 	"testing"
+
+	"github.com/peterhoward42/umli/parser"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -10,7 +11,7 @@ import (
 func TestNewLanesSetsTitleBoxHeightWhenLabelHasOneLineOfText(t *testing.T) {
 	assert := assert.New(t)
 	statements := parser.MustCompileParse(`
-		lane A foo
+		life A foo
 	`)
 	diagWidth := 2000
 	fontHeight := 20.0
@@ -20,7 +21,7 @@ func TestNewLanesSetsTitleBoxHeightWhenLabelHasOneLineOfText(t *testing.T) {
 func TestNewLanesSetsTitleBoxHeightWhenLabelHasThreeLinesOfText(t *testing.T) {
 	assert := assert.New(t)
 	statements := parser.MustCompileParse(`
-		lane A foo | bar | baz
+		life A foo | bar | baz
 	`)
 	diagWidth := 2000
 	fontHeight := 20.0
@@ -30,8 +31,8 @@ func TestNewLanesSetsTitleBoxHeightWhenLabelHasThreeLinesOfText(t *testing.T) {
 func TestNewLanesSetsTitleBoxHeightWhenLabelsHaveDifferingHeight(t *testing.T) {
 	assert := assert.New(t)
 	statements := parser.MustCompileParse(`
-		lane A fibble
-		lane B foo | bar | baz
+		life A fibble
+		life B foo | bar | baz
 	`)
 	diagWidth := 2000
 	fontHeight := 20.0
@@ -42,7 +43,7 @@ func TestNewLanesSetsTitleBoxHeightWhenLabelsHaveDifferingHeight(t *testing.T) {
 func TestNewLanesSetsScalarAttributesCorrectlyForOneLane(t *testing.T) {
 	assert := assert.New(t)
 	statements := parser.MustCompileParse(`
-		lane A foo
+		life A foo
 	`)
 	diagWidth := 2000
 	fontHeight := 20.0
@@ -53,7 +54,6 @@ func TestNewLanesSetsScalarAttributesCorrectlyForOneLane(t *testing.T) {
 	assert.InDelta(40, lanes.TitleBoxHeight, 0.1)
 	assert.InDelta(1666.7, lanes.TitleBoxPitch, 0.1)
 
-	assert.InDelta(25, lanes.TitleBoxBottomRowOfText, 0.1)
 	assert.InDelta(333.3, lanes.TitleBoxPadR, 0.1)
 	assert.InDelta(333.3, lanes.FirstTitleBoxPadL, 0.1)
 	assert.InDelta(30.0, lanes.TitleBoxPadB, 0.1)
@@ -62,8 +62,8 @@ func TestNewLanesSetsScalarAttributesCorrectlyForOneLane(t *testing.T) {
 func TestNewLanesSetsScalarAttributesCorrectlyForTwoLanes(t *testing.T) {
 	assert := assert.New(t)
 	statements := parser.MustCompileParse(`
-		lane A foo
-		lane B bar
+		life A foo
+		life B bar
 	`)
 	diagWidth := 2000
 	fontHeight := 20.0
@@ -79,8 +79,8 @@ func TestNewLanesSetsScalarAttributesCorrectlyForTwoLanes(t *testing.T) {
 func TestNewLanesSetsIndividualLaneAttributesCorrectlyForTwoLanes(t *testing.T) {
 	assert := assert.New(t)
 	statements := parser.MustCompileParse(`
-		lane A foo
-		lane B bar
+		life A foo
+		life B bar
 	`)
 	b := statements[1]
 

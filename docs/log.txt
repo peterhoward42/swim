@@ -2,8 +2,17 @@
     *  Why creator referring to left and right things?
     *  Try out left or right justifying labels near their arrow,
     *  Anything that can make creator module smaller?
-    o  Lane lines
-        o  Rename to lifelines first
+    o  Lane lines -> lifelines
+        o  Keyword
+            *  Change in kewords and ref diag and fix up so
+               everything compiles and tests pass
+        *  Lanes type
+        o  Lane type
+        o  What other types?
+        o  What variables
+        o  What consts?
+        o  What comments
+        o  What is left?
     o  Might be best to hard code and hide the size  - and
        encourage client to scale in context, or to make images big and
        then use image lib to scale to suit?
