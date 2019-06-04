@@ -7,7 +7,7 @@
             *  Change in kewords and ref diag and fix up so
                everything compiles and tests pass
         *  Lanes type
-        o  Lane type
+        *  Lane type
         o  What other types?
         o  What variables
         o  What consts?

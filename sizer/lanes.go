@@ -33,10 +33,10 @@ type Lifelines struct {
 
 // InfoPerLane provides information about individual lanes, keyed on
 // the DSL Lane statement.
-type InfoPerLane map[*dslmodel.Statement]*LaneInfo
+type InfoPerLane map[*dslmodel.Statement]*LifelineInfo
 
-// LaneInfo carries information about one Lane.
-type LaneInfo struct {
+// LifelineInfo carries information about one Lane.
+type LifelineInfo struct {
 	TitleBoxLeft     float64
 	Centre           float64
 	TitleBoxRight    float64
@@ -144,7 +144,7 @@ func (lanes *Lifelines) populateIndividualLaneInfo() {
 		selfLoopCentre := 0.5 * (centre + selfLoopRight)
 		activityBoxLeft := centre - 0.5*lanes.ActivityBoxWidth
 		activityBoxRight := centre + 0.5*lanes.ActivityBoxWidth
-		laneInfo := &LaneInfo{left, centre, right, selfLoopRight,
+		laneInfo := &LifelineInfo{left, centre, right, selfLoopRight,
 			selfLoopCentre, activityBoxLeft, activityBoxRight}
 		lanes.Individual[statement] = laneInfo
 	}
