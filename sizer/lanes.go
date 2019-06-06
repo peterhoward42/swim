@@ -1,6 +1,6 @@
 package sizers
 
-// This module provides the *Lifeline* and *LifelineInfo* types, which 
+// This module provides the *Lifeline* and *LifelineInfo* types, which
 // encapsulatesizing data for lifelines.
 
 import (

@@ -8,7 +8,7 @@ import (
 // activity box (for one lifeline) during diagram creation.
 type boxState struct {
 	inProgress bool
-	topY float64
+	topY       float64
 }
 
 // newBoxState provides a boxState ready to use.

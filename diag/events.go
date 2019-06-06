@@ -40,26 +40,26 @@ lines, will be drawn above the lines to which they refer, and therefore must
 precede the corresponding line events.
 */
 var EventsRequired = map[string][]EventType{
-	umli.Life: []EventType{
+	umli.Life: {
 		LifelineTitleBox, // advances tidemark
 		LifelineLine,
 	},
-	umli.Dash: []EventType{
+	umli.Dash: {
 		InteractionLabel,      // advances tidemark
 		PotentiallyStartToBox, // no advance
 		InteractionLine,       // advances tidemark
 	},
-	umli.Full: []EventType{
+	umli.Full: {
 		InteractionLabel,        // advances tidemark
 		PotentiallyStartFromBox, // no advance (renders behind tidemark)
 		PotentiallyStartToBox,   // no advance
 		InteractionLine,         // advances tidemark
 	},
-	umli.Self: []EventType{
+	umli.Self: {
 		PotentiallyStartFromBox, // no advance (renders behind tidemark)
 		SelfInteractionLines,    // advances tidemark (includes label inside loop)
 	},
-	umli.Stop: []EventType{
+	umli.Stop: {
 		EndBox,
 	},
 }

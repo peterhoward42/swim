@@ -10,8 +10,11 @@
         *  Singular type
         *  What other types?
         *  pick through ag plural
-        o  pick through ag singular
+        *  pick through ag singular
         o  Reformat
+            o  go fmt with overwrite on entire code base?
+            o  what was blacken?
+            o  linelength folder tool?
     o  Might be best to hard code and hide the size  - and
        encourage client to scale in context, or to make images big and
        then use image lib to scale to suit?
