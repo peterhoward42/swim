@@ -40,7 +40,7 @@ func TestNewLifelineLifelinesTitleBoxHeightWhenLabelsHaveDifferingHeight(t *test
 	assert.InDelta(80.0, lifelines.TitleBoxHeight, 0.1)
 }
 
-func TestNewLifelinesSetsScalarAttributesCorrectlyForOneLane(t *testing.T) {
+func TestNewLifelinesSetsScalarAttributesCorrectlyForOneLifeline(t *testing.T) {
 	assert := assert.New(t)
 	statements := parser.MustCompileParse(`
 		life A foo
@@ -76,7 +76,7 @@ func TestNewLifelinesSetsScalarAttributesCorrectlyForTwoLifelines(t *testing.T) 
 	assert.InDelta(181.8, lifelines.FirstTitleBoxPadL, 0.1)
 }
 
-func TestNewLifelinesSetsIndividualLaneAttributesCorrectlyForTwoLifelines(t *testing.T) {
+func TestNewLifelinesSetsIndividualLifelineAttributesCorrectlyForTwoLifelines(t *testing.T) {
 	assert := assert.New(t)
 	statements := parser.MustCompileParse(`
 		life A foo

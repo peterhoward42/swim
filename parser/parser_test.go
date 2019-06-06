@@ -22,35 +22,35 @@ func TestErrorMsgWhenKeywordIsUnrecognized(t *testing.T) {
 		"Error on this line <foo bar> (line: 1): unrecognized keyword: foo")
 }
 
-func TestErrorMsgWhenLaneIsNotSingleUCLetterForStopAndLane(t *testing.T) {
+func TestErrorMsgWhenLifelineIsNotSingleUCLetterForStopAndLifeline(t *testing.T) {
 	assert := assert.New(t)
 
 	// Few cases to look at details of error message.
 	_, err := Parse("life AB")
 	assert.EqualError(err,
-		"Error on this line <life AB> (line: 1): Lane name must be single, upper case letter")
+		"Error on this line <life AB> (line: 1): Lifeline name must be single, upper case letter")
 	_, err = Parse("life a")
 	assert.NotNil(err)
 	assert.EqualError(err,
-		"Error on this line <life a> (line: 1): Lane name must be single, upper case letter")
+		"Error on this line <life a> (line: 1): Lifeline name must be single, upper case letter")
 
 	// Make sure it behaves the same way with the only other keywords that
-	// requires a single lane to be specified: "stop".
+	// requires a single lifeline to be specified: "stop".
 	_, err = Parse("stop a")
 	assert.EqualError(err,
-		"Error on this line <stop a> (line: 1): Lane name must be single, upper case letter")
+		"Error on this line <stop a> (line: 1): Lifeline name must be single, upper case letter")
 
 	// Make sure it behaves the same way with the other keywords that
-	// requires a single lane to be specified: "stop".
+	// requires a single lifeline to be specified: "stop".
 	_, err = Parse("stop a")
 	assert.EqualError(err,
-		"Error on this line <stop a> (line: 1): Lane name must be single, upper case letter")
+		"Error on this line <stop a> (line: 1): Lifeline name must be single, upper case letter")
 
 	// Make sure it behaves the same way with the other keywords that
-	// requires a single lane to be specified: "self".
+	// requires a single lifeline to be specified: "self".
 	_, err = Parse("self a")
 	assert.EqualError(err,
-		"Error on this line <self a> (line: 1): Lane name must be single, upper case letter")
+		"Error on this line <self a> (line: 1): Lifeline name must be single, upper case letter")
 }
 
 func TestErrorMsgForKeywordsThatExpectTwoLifelinesDontSpecifyTwoUCLetters(
@@ -106,11 +106,11 @@ func TestItCapturesLabelTextWithLineBreaksIn(t *testing.T) {
 	assert.Equal("etc", statements[0].LabelSegments[2])
 }
 
-func TestErrorMessageWhenAnUnknownLaneIsReferenced(t *testing.T) {
+func TestErrorMessageWhenAnUnknownLifelineIsReferenced(t *testing.T) {
 	assert := assert.New(t)
 	_, err := Parse("full AB foo")
 	assert.EqualError(err,
-		"Error on this line <full AB foo> (line: 1): Unknown lane: A")
+		"Error on this line <full AB foo> (line: 1): Unknown lifeline: A")
 }
 
 func TestErrorMessageWhenAStatementOmitsALabel(t *testing.T) {
@@ -134,8 +134,8 @@ func TestMakeSureARepresentativeStatementOutputIsProperlyFormed(t *testing.T) {
 	// full CB  get_user_permissions( | token)
 	s := statements[4]
 	assert.Equal("full", s.Keyword)
-	assert.Equal("C", s.ReferencedLifelines[0].LaneName)
-	assert.Equal("B", s.ReferencedLifelines[1].LaneName)
+	assert.Equal("C", s.ReferencedLifelines[0].LifelineName)
+	assert.Equal("B", s.ReferencedLifelines[1].LifelineName)
 	assert.Equal("get_user_permissions(", s.LabelSegments[0])
 	assert.Equal("token)", s.LabelSegments[1])
 }

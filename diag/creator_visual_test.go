@@ -72,7 +72,7 @@ func TestReferenceModel(t *testing.T) {
 
 /*
 TestStopStartBox *stops* a lifeline activity box explicitly with
-a *stop* line in the DSL, and then sends a message to that lane
+a *stop* line in the DSL, and then sends a message to that lifeline
 later in the script, to check that a new activity box gets started.
 */
 func TestStopStartBox(t *testing.T) {
@@ -108,9 +108,9 @@ func TestIgnoresRedundantStop(t *testing.T) {
 	genericCreateHelper(t, script, width, fontHeight, "redundantstop.png")
 }
 
-// TestOneLane makes a diagram with just one lane - to help reveal
+// TestOneLifeline makes a diagram with just one lifeline - to help reveal
 // corner cases.
-func TestOneLane(t *testing.T) {
+func TestOneLifeline(t *testing.T) {
 	width := 2000
 	fontHeight := 20.0
 	script := `
@@ -119,7 +119,7 @@ func TestOneLane(t *testing.T) {
 		self A Baz
 		self A A long | label over | multiple lines
 	`
-	genericCreateHelper(t, script, width, fontHeight, "onelane.png")
+	genericCreateHelper(t, script, width, fontHeight, "onelifeline.png")
 }
 
 // TestLargeNumberOfLifelines illustrates the sizing and composition logic

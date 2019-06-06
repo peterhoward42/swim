@@ -1,6 +1,6 @@
 /*
 Package sizers is the single source of truth for sizing all the elements
-that make up the diagram. E.g. the coordinates for each lane title box,
+that make up the diagram. E.g. the coordinates for each lifeline title box,
 the mark-space settings for dashed lines, arrow sizing, the margins or
 padding required for each thing etc.
 

@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewSizerSetsItsScalarAttributesCorrectlyWhenOneLaneOnly(t *testing.T) {
+func TestNewSizerSetsItsScalarAttributesCorrectlyWhenOneLifelineOnly(t *testing.T) {
 	assert := assert.New(t)
 	statements := parser.MustCompileParse("life A foo")
 	sizer := NewSizer(2000, 20.0, statements)
@@ -29,7 +29,7 @@ func TestNewSizerComposesItsDelegatesProperly(t *testing.T) {
 	assert := assert.New(t)
 	statements := parser.MustCompileParse("life A foo")
 	sizer := NewSizer(2000, 20.0, statements)
-	// Have the embedded individual lane sizing data structures been
+	// Have the embedded individual lifeline sizing data structures been
 	// installed?
-	assert.Equal(1, len(sizer.Lifelines.Individual), "Should be one Lane")
+	assert.Equal(1, len(sizer.Lifelines.Individual), "Should be one Lifeline")
 }

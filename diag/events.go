@@ -10,7 +10,7 @@ import (
 )
 
 // EventType is the enumerated-type for the constants such as EndBox or
-// LaneLine below.
+// LifelineLine below.
 type EventType int
 
 // These constants comprise the set of values for EventType.
@@ -18,8 +18,8 @@ const (
 	EndBox EventType = iota + 1
 	InteractionLine
 	InteractionLabel
-	LaneLine
-	LaneTitleBox
+	LifelineLine
+	LifelineTitleBox
 	SelfInteractionLines
 	SelfInteractionLabel
 	PotentiallyStartFromBox
@@ -41,8 +41,8 @@ precede the corresponding line events.
 */
 var EventsRequired = map[string][]EventType{
 	umli.Life: []EventType{
-		LaneTitleBox, // advances tidemark
-		LaneLine,
+		LifelineTitleBox, // advances tidemark
+		LifelineLine,
 	},
 	umli.Dash: []EventType{
 		InteractionLabel,      // advances tidemark

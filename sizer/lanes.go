@@ -13,7 +13,7 @@ import (
 // - the fragment <PadT> should be read as paddingTop (where T is from {LRTB})
 
 // Lifelines holds sizing information for the lifelines collectively.
-// It delegates to LifelineInfo instances for lane-specific data.
+// It delegates to LifelineInfo instances for lifeline-specific data.
 type Lifelines struct {
 	DiagramWidth       float64
 	FontHeight         float64
@@ -132,20 +132,20 @@ func (lifelines *Lifelines) titleBoxHeight() float64 {
 }
 
 // populateIndividualLifelineInfo sets attributes for things like the
-// left, right and centre of the lane title box.
+// left, right and centre of the lifeline title box.
 func (lifelines *Lifelines) populateIndividualLifelineInfo() {
 	lifelines.Individual = InfoPerLifeline{}
-	for laneNumber, statement := range lifelines.LifelineStatements {
+	for lifelineNumber, statement := range lifelines.LifelineStatements {
 		centre := lifelines.FirstTitleBoxPadL + 0.5*lifelines.TitleBoxWidth +
-			float64((laneNumber))*lifelines.TitleBoxPitch
+			float64((lifelineNumber))*lifelines.TitleBoxPitch
 		left := centre - 0.5*lifelines.TitleBoxWidth
 		right := centre + 0.5*lifelines.TitleBoxWidth
 		selfLoopRight := centre + lifelines.SelfLoopWidth
 		selfLoopCentre := 0.5 * (centre + selfLoopRight)
 		activityBoxLeft := centre - 0.5*lifelines.ActivityBoxWidth
 		activityBoxRight := centre + 0.5*lifelines.ActivityBoxWidth
-		laneInfo := &LifelineInfo{left, centre, right, selfLoopRight,
+		lifelineInfo := &LifelineInfo{left, centre, right, selfLoopRight,
 			selfLoopCentre, activityBoxLeft, activityBoxRight}
-		lifelines.Individual[statement] = laneInfo
+		lifelines.Individual[statement] = lifelineInfo
 	}
 }

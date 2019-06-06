@@ -12,9 +12,9 @@ For example making this diagram:
 
 From this script:
 
-    lane A  SL App
-    lane B  Core Permissions API
-    lane C  SL Admin API | edit_facilities | endpoint
+    life A  SL App
+    life B  Core Permissions API
+    life C  SL Admin API | edit_facilities | endpoint
 
     full AC  edit_facilities( | payload, user_token)
     full CB  get_user_permissions( | token)

@@ -16,9 +16,9 @@ DSL
 # General form is keyword, operand_word, message word(s).
 # Pipe (|) is to split messages onto multiple lines explicitly.
 
-lane A  SL App
-lane B  Core Permissions API
-lane C  SL Admin API | edit_facilities | endpoint
+life A  SL App
+life B  Core Permissions API
+life C  SL Admin API | edit_facilities | endpoint
 
 full AC  edit_facilities( | payload, user_token)
 full CB  get_user_permissions( | token)

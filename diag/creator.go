@@ -82,7 +82,7 @@ func isolateLifelines(
 /*
 createFirstPass takes each parsed statement from the DSL script in turn, to
 generate the primitives required that can be determined from a first pass.
-This includes for example the lane title boxes and the interaction lines and
+This includes for example the lifeline title boxes and the interaction lines and
 labels. But it excludes the generation of primitives that can only be
 dimensioned once the interaction line Y coordinates are known; for example
 the activity boxes that sit on lifelines.
@@ -124,9 +124,9 @@ func (c *Creator) graphicsForDrawingEvent(evt EventType,
 		c.interactionLine(statement)
 	case InteractionLabel:
 		c.interactionLabel(statement)
-	case LaneLine:
-	case LaneTitleBox:
-		c.laneTitleBox(statement)
+	case LifelineLine:
+	case LifelineTitleBox:
+		c.lifelineTitleBox(statement)
 	case SelfInteractionLines:
 		c.selfInteractionLines(statement)
 	case PotentiallyStartFromBox:
@@ -137,16 +137,16 @@ func (c *Creator) graphicsForDrawingEvent(evt EventType,
 }
 
 /*
-laneTitleBox generates the lines to represent the rectangular box at the top
-of a lane, and calculates the tide mark corresponding to the bottom of these
+lifelineTitleBox generates the lines to represent the rectangular box at the top
+of a lifeline, and calculates the tide mark corresponding to the bottom of these
 boxes.
 */
-func (c *Creator) laneTitleBox(
+func (c *Creator) lifelineTitleBox(
 	statement *dslmodel.Statement) {
-	thisLane := c.sizer.Lifelines.Individual[statement]
+	thisLifeline := c.sizer.Lifelines.Individual[statement]
 	// First the rectangular box
-	left := thisLane.TitleBoxLeft
-	right := thisLane.TitleBoxRight
+	left := thisLifeline.TitleBoxLeft
+	right := thisLifeline.TitleBoxRight
 	top := c.sizer.DiagramPadT
 	bot := c.sizer.DiagramPadT + c.sizer.Lifelines.TitleBoxHeight
 	c.graphicsModel.Primitives.AddRect(left, top, right, bot)
@@ -154,7 +154,7 @@ func (c *Creator) laneTitleBox(
 	// Label
 	n := len(statement.LabelSegments)
 	firstRowY := bot - float64(n)*c.fontHeight - c.sizer.Lifelines.TitleBoxLabelPadB
-	c.rowOfLabels(thisLane.Centre, firstRowY, graphics.Centre,
+	c.rowOfLabels(thisLifeline.Centre, firstRowY, graphics.Centre,
 		statement.LabelSegments)
 
 	// In the particular case of a title box, the tide mark can
@@ -169,10 +169,10 @@ itself by advancing the tide mark.
 */
 func (c *Creator) interactionLabel(
 	statement *dslmodel.Statement) {
-	sourceLane := statement.ReferencedLifelines[0]
-	destLane := statement.ReferencedLifelines[1]
+	sourceLifeline := statement.ReferencedLifelines[0]
+	destLifeline := statement.ReferencedLifelines[1]
 	x, horizJustification := c.sizer.Lifelines.InteractionLabelPosition(
-		sourceLane, destLane, c.sizer.InteractionLineLabelIndent)
+		sourceLifeline, destLifeline, c.sizer.InteractionLineLabelIndent)
 	firstRowY := c.tideMark
 	c.rowOfLabels(x, firstRowY, horizJustification, statement.LabelSegments)
 	c.tideMark += float64(len(statement.LabelSegments))*
@@ -199,9 +199,9 @@ the vertical space it claims for itself by advancing the tide mark.
 */
 func (c *Creator) interactionLine(
 	statement *dslmodel.Statement) {
-	sourceLane := statement.ReferencedLifelines[0]
-	destLane := statement.ReferencedLifelines[1]
-	x1, x2 := c.sizer.Lifelines.InteractionLineEndPoints(sourceLane, destLane)
+	sourceLifeline := statement.ReferencedLifelines[0]
+	destLifeline := statement.ReferencedLifelines[1]
+	x1, x2 := c.sizer.Lifelines.InteractionLineEndPoints(sourceLifeline, destLifeline)
 	y := c.tideMark
 	c.graphicsModel.Primitives.AddLine(x1, y, x2, y,
 		statement.Keyword == umli.Dash)
@@ -218,9 +218,9 @@ has occupied by advancing the tide mark.
 */
 func (c *Creator) selfInteractionLines(
 	statement *dslmodel.Statement) {
-	theLane := statement.ReferencedLifelines[0]
-	left := c.sizer.Lifelines.Individual[theLane].ActivityBoxRight
-	right := c.sizer.Lifelines.Individual[theLane].SelfLoopRight
+	theLifeline := statement.ReferencedLifelines[0]
+	left := c.sizer.Lifelines.Individual[theLifeline].ActivityBoxRight
+	right := c.sizer.Lifelines.Individual[theLifeline].SelfLoopRight
 	top := c.tideMark
 	bot := c.tideMark + c.sizer.SelfLoopHeight
 

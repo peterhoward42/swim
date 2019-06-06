@@ -14,7 +14,7 @@ const (
 	diagramPadTK = 1.0
 	diagramPadBK = 1.0
 
-	// Lane title boxes.
+	// Lifeline title boxes.
 	titleBoxPadRK     = 0.25 // w.r.t title box width
 	titleBoxTextPadTK = 0.25 // Between top of title box and first line txt
 	titleBoxTextPadBK = 0.75 // Between text and the bottom of title box

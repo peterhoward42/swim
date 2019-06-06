@@ -61,9 +61,9 @@ func parseLine(line string, knownLifelines lifelineStatementsByName) (
 		return nil, fmt.Errorf("unrecognized keyword: %s", keyWord)
 	}
 	// Validate and reconcile the lifelines referenced in the second word.
-	laneNamesOperand := words[1]
+	lifelineNamesOperand := words[1]
 	lifelinesReferenced, err := parseLifelinesOperand(
-		laneNamesOperand, keyWord, knownLifelines)
+		lifelineNamesOperand, keyWord, knownLifelines)
 	if err != nil {
 		return nil, err
 	}
@@ -87,8 +87,8 @@ func parseLine(line string, knownLifelines lifelineStatementsByName) (
 
 	// A few extra steps for *Life* statements
 	if statement.Keyword == umli.Life {
-		statement.LaneName = laneNamesOperand
-		knownLifelines[statement.LaneName] = statement
+		statement.LifelineName = lifelineNamesOperand
+		knownLifelines[statement.LifelineName] = statement
 	}
 	return statement, nil
 }
@@ -113,36 +113,36 @@ func isolateLabelConstituentLines(labelText string) []string {
 
 // parseLifelinesOperand makes sure the lifelines that are specified in the second
 // word of a DSL line are properly formed. This depends on the keyword.
-// It also maintains a look up table of lane name to corresponding Lane
+// It also maintains a look up table of lifeline name to corresponding Lifeline
 // statement in the parser.
 func parseLifelinesOperand(
-	laneNamesOperand, keyWord string, knownLifelines lifelineStatementsByName) (
+	lifelineNamesOperand, keyWord string, knownLifelines lifelineStatementsByName) (
 	[]*dslmodel.Statement, error) {
 
 	// Fail fast on statement types that require a single lifline to be
 	// specified, when this is not so.
 	if keyWord == umli.Life || keyWord == umli.Stop || keyWord == umli.Self {
-		if !singleUCLetter.MatchString(laneNamesOperand) {
+		if !singleUCLetter.MatchString(lifelineNamesOperand) {
 			return nil,
-				errors.New("Lane name must be single, upper case letter")
+				errors.New("Lifeline name must be single, upper case letter")
 		}
 	}
 	// Same sort of thing where two lifelines must be specified.
 	if keyWord == umli.Full || keyWord == umli.Dash {
-		if !twoUCLetters.MatchString(laneNamesOperand) {
+		if !twoUCLetters.MatchString(lifelineNamesOperand) {
 			return nil,
 				errors.New("Lifelines specified must be two, upper case letters")
 		}
 	}
-	// Capture ptrs to the lane Statement being referenced by the second word.
-	// (Unless this IS a lane statement).
+	// Capture ptrs to the lifeline Statement being referenced by the second word.
+	// (Unless this IS a lifeline statement).
 	lifelinestatements := []*dslmodel.Statement{}
 	if keyWord != umli.Life {
-		laneLetters := strings.Split(laneNamesOperand, "")
-		for _, laneLetter := range laneLetters {
-			lifelinestatement, ok := knownLifelines[laneLetter]
+		lifelineLetters := strings.Split(lifelineNamesOperand, "")
+		for _, lifelineLetter := range lifelineLetters {
+			lifelinestatement, ok := knownLifelines[lifelineLetter]
 			if !ok {
-				return nil, fmt.Errorf("Unknown lane: %v", laneLetter)
+				return nil, fmt.Errorf("Unknown lifeline: %v", lifelineLetter)
 			}
 			lifelinestatements = append(lifelinestatements, lifelinestatement)
 		}

@@ -10,8 +10,8 @@ package dslmodel
 // must be qualified with.
 type Statement struct {
 	Keyword             string
-	LaneName            string       // For <lane> statements.
-	ReferencedLifelines []*Statement // When lane operands are present
+	LifelineName        string       // For <life> statements.
+	ReferencedLifelines []*Statement // When lifeline operands are present
 	LabelSegments       []string     // Each line of text called for in the label
 }
 
