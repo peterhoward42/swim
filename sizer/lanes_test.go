@@ -18,7 +18,8 @@ func TestNewLifelinesSetsTitleBoxHeightWhenLabelHasOneLineOfText(t *testing.T) {
 	lifelines := NewLifelines(diagWidth, fontHeight, statements)
 	assert.InDelta(40.0, lifelines.TitleBoxHeight, 0.1)
 }
-func TestNewLifelinesSetsTitleBoxHeightWhenLabelHasThreeLinesOfText(t *testing.T) {
+func TestNewLifelinesSetsTitleBoxHeightWhenLabelHasThreeLinesOfText(
+	t *testing.T) {
 	assert := assert.New(t)
 	statements := parser.MustCompileParse(`
 		life A foo | bar | baz
@@ -28,7 +29,8 @@ func TestNewLifelinesSetsTitleBoxHeightWhenLabelHasThreeLinesOfText(t *testing.T
 	lifelines := NewLifelines(diagWidth, fontHeight, statements)
 	assert.InDelta(80.0, lifelines.TitleBoxHeight, 0.1)
 }
-func TestNewLifelineLifelinesTitleBoxHeightWhenLabelsHaveDifferingHeight(t *testing.T) {
+func TestNewLifelineLifelinesTitleBoxHeightWhenLabelsHaveDifferingHeight(
+	t *testing.T) {
 	assert := assert.New(t)
 	statements := parser.MustCompileParse(`
 		life A fibble
@@ -59,7 +61,8 @@ func TestNewLifelinesSetsScalarAttributesCorrectlyForOneLifeline(t *testing.T) {
 	assert.InDelta(30.0, lifelines.TitleBoxPadB, 0.1)
 }
 
-func TestNewLifelinesSetsScalarAttributesCorrectlyForTwoLifelines(t *testing.T) {
+func TestNewLifelinesSetsScalarAttributesCorrectlyForTwoLifelines(
+	t *testing.T) {
 	assert := assert.New(t)
 	statements := parser.MustCompileParse(`
 		life A foo
@@ -76,7 +79,8 @@ func TestNewLifelinesSetsScalarAttributesCorrectlyForTwoLifelines(t *testing.T) 
 	assert.InDelta(181.8, lifelines.FirstTitleBoxPadL, 0.1)
 }
 
-func TestNewLifelinesSetsIndividualLifelineAttributesCorrectlyForTwoLifelines(t *testing.T) {
+func TestNewLifelinesSetsIndividualLifelineAttributesCorrectlyForTwoLifelines(
+	t *testing.T) {
 	assert := assert.New(t)
 	statements := parser.MustCompileParse(`
 		life A foo

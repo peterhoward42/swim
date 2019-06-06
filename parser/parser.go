@@ -111,12 +111,14 @@ func isolateLabelConstituentLines(labelText string) []string {
 	return constituentLines
 }
 
-// parseLifelinesOperand makes sure the lifelines that are specified in the second
-// word of a DSL line are properly formed. This depends on the keyword.
-// It also maintains a look up table of lifeline name to corresponding Lifeline
-// statement in the parser.
-func parseLifelinesOperand(
-	lifelineNamesOperand, keyWord string, knownLifelines lifelineStatementsByName) (
+/*
+parseLifelinesOperand makes sure the lifelines that are specified in the second
+word of a DSL line are properly formed. This depends on the keyword.  It also
+maintains a look up table of lifeline name to corresponding Lifeline statement
+in the parser.
+*/
+func parseLifelinesOperand(lifelineNamesOperand, keyWord string,
+	knownLifelines lifelineStatementsByName) (
 	[]*dslmodel.Statement, error) {
 
 	// Fail fast on statement types that require a single lifline to be
@@ -131,11 +133,12 @@ func parseLifelinesOperand(
 	if keyWord == umli.Full || keyWord == umli.Dash {
 		if !twoUCLetters.MatchString(lifelineNamesOperand) {
 			return nil,
-				errors.New("Lifelines specified must be two, upper case letters")
+				errors.New(
+					"Lifelines specified must be two, upper case letters")
 		}
 	}
-	// Capture ptrs to the lifeline Statement being referenced by the second word.
-	// (Unless this IS a lifeline statement).
+	// Capture ptrs to the lifeline Statement being referenced by the
+	// second word. (Unless this IS a lifeline statement).
 	lifelinestatements := []*dslmodel.Statement{}
 	if keyWord != umli.Life {
 		lifelineLetters := strings.Split(lifelineNamesOperand, "")

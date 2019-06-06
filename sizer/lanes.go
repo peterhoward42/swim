@@ -56,7 +56,7 @@ func NewLifelines(diagramWidth int, fontHeight float64,
 	lifelines.LifelineStatements = lifelineStatements
 	lifelines.NumLifelines = len(lifelines.LifelineStatements)
 	lifelines.populateTitleBoxAttribs()
-	lifelines.SelfLoopWidth = 0.5 * lifelines.TitleBoxWidth // see how this works out
+	lifelines.SelfLoopWidth = 0.5 * lifelines.TitleBoxWidth
 	lifelines.ActivityBoxWidth = activityBoxWidthK * fontHeight
 	lifelines.populateIndividualLifelineInfo()
 

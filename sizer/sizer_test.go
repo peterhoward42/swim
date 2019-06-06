@@ -8,7 +8,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewSizerSetsItsScalarAttributesCorrectlyWhenOneLifelineOnly(t *testing.T) {
+func TestNewSizerSetsItsScalarAttributesCorrectlyWhenOneLifelineOnly(
+	t *testing.T) {
 	assert := assert.New(t)
 	statements := parser.MustCompileParse("life A foo")
 	sizer := NewSizer(2000, 20.0, statements)

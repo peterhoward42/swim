@@ -28,29 +28,34 @@ func TestErrorMsgWhenLifelineIsNotSingleUCLetterForStopAndLifeline(t *testing.T)
 	// Few cases to look at details of error message.
 	_, err := Parse("life AB")
 	assert.EqualError(err,
-		"Error on this line <life AB> (line: 1): Lifeline name must be single, upper case letter")
+		"Error on this line <life AB> (line: 1): Lifeline name "+
+			"must be single, upper case letter")
 	_, err = Parse("life a")
 	assert.NotNil(err)
 	assert.EqualError(err,
-		"Error on this line <life a> (line: 1): Lifeline name must be single, upper case letter")
+		"Error on this line <life a> (line: 1): Lifeline name "+
+			"must be single, upper case letter")
 
 	// Make sure it behaves the same way with the only other keywords that
 	// requires a single lifeline to be specified: "stop".
 	_, err = Parse("stop a")
 	assert.EqualError(err,
-		"Error on this line <stop a> (line: 1): Lifeline name must be single, upper case letter")
+		"Error on this line <stop a> (line: 1): Lifeline name must "+
+			"be single, upper case letter")
 
 	// Make sure it behaves the same way with the other keywords that
 	// requires a single lifeline to be specified: "stop".
 	_, err = Parse("stop a")
 	assert.EqualError(err,
-		"Error on this line <stop a> (line: 1): Lifeline name must be single, upper case letter")
+		"Error on this line <stop a> (line: 1): Lifeline name must "+
+			"be single, upper case letter")
 
 	// Make sure it behaves the same way with the other keywords that
 	// requires a single lifeline to be specified: "self".
 	_, err = Parse("self a")
 	assert.EqualError(err,
-		"Error on this line <self a> (line: 1): Lifeline name must be single, upper case letter")
+		"Error on this line <self a> (line: 1): Lifeline name must "+
+			"be single, upper case letter")
 }
 
 func TestErrorMsgForKeywordsThatExpectTwoLifelinesDontSpecifyTwoUCLetters(
@@ -62,17 +67,20 @@ func TestErrorMsgForKeywordsThatExpectTwoLifelinesDontSpecifyTwoUCLetters(
 	// Upper case letter but only one of them, <full> keyword
 	_, err := Parse("full A")
 	assert.EqualError(err,
-		"Error on this line <full A> (line: 1): Lifelines specified must be two, upper case letters")
+		"Error on this line <full A> (line: 1): Lifelines specified must "+
+			"be two, upper case letters")
 
 	// Two letters but wrong case - dash keyword
 	_, err = Parse("dash ab")
 	assert.EqualError(err,
-		"Error on this line <dash ab> (line: 1): Lifelines specified must be two, upper case letters")
+		"Error on this line <dash ab> (line: 1): Lifelines specified must "+
+			"be two, upper case letters")
 
 	// Two characters but one is not a letter - dash keyword
 	_, err = Parse("dash A3")
 	assert.EqualError(err,
-		"Error on this line <dash A3> (line: 1): Lifelines specified must be two, upper case letters")
+		"Error on this line <dash A3> (line: 1): Lifelines specified "+
+			"must be two, upper case letters")
 }
 
 func TestItIgnoresBlankLines(t *testing.T) {
