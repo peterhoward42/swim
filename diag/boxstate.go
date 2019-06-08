@@ -11,23 +11,23 @@ type boxState struct {
 	topY       float64
 }
 
-// newBoxState provides a boxState ready to use.
-func newBoxState(lifelineStatement *dslmodel.Statement) *boxState {
+// newBoxStates provides a boxState ready to use.
+func newBoxStates(lifelineStatement *dslmodel.Statement) *boxState {
 	return &boxState{
 		inProgress: false,
 	}
 }
 
-// Type allBoxStates maps lifeline statements to a
+// Type boxStates maps lifeline statements to a
 // boxState.
-type allBoxStates map[*dslmodel.Statement]*boxState
+type boxStates map[*dslmodel.Statement]*boxState
 
 // NewLifelineActivityBoxes creates a lifelineActivityBoxes ready to use.
 func newAllBoxStates(
-	lifelineStatements []*dslmodel.Statement) allBoxStates {
-	boxes := allBoxStates{}
+	lifelineStatements []*dslmodel.Statement) boxStates {
+	boxes := boxStates{}
 	for _, lifelineStatement := range lifelineStatements {
-		boxes[lifelineStatement] = newBoxState(lifelineStatement)
+		boxes[lifelineStatement] = newBoxStates(lifelineStatement)
 	}
 	return boxes
 }

@@ -2,40 +2,58 @@
     *  Why creator referring to left and right things?
     *  Try out left or right justifying labels near their arrow,
     *  Anything that can make creator module smaller?
-    o  Lane lines -> lifelines
-        *  Keyword
-            *  Change in kewords and ref diag and fix up so
-               everything compiles and tests pass
-        *  Plural type
-        *  Singular type
-        *  What other types?
-        *  pick through ag plural
-        *  pick through ag singular
-        o  Reformat
-            o  go fmt with overwrite on entire code base?
-            o  what was blacken?
-            o  linelength folder tool?
+    *  Lane lines -> lifelines
+    o  Do lifeline lines
+        *  Design algorithm
+        *  Initiate a sub package under diag - lifeline
+        o  tdd from creator according to design below
+            o  timeout improve name for allBoxStates - vars and types
+        o  Introduce lifeline line pruner
+            o  Track box territories in it
+            o  Track interaction line territories in it
+                o  defer api until needs clear from later
+        o  Introduce and test a chopper
+        o  Ditch lifeline line event
+        o  Introduce method in creator after finalize activity boxes
+            o  Delegate everything to a dedicated type/module
+        o  start global segment pool
+        o  Iterate over each lane in that method
+            o  start a pool of just full length line y coords
+            o  iterate over all activity box segs for that lane
+                o  chop y coords with chopper
+            o  iterate over interaction line space claims only for
+               lines going from immediate neighbours either side
+                fart.... only neighbours
+                o  iterate over tracked interaction space claims for that lane
+                o  chop y coords with same chopper
+            o  add prims for non silly segments
+    o  sizer.Lanes (and test) modules got left behing in rename
     o  Might be best to hard code and hide the size  - and
        encourage client to scale in context, or to make images big and
        then use image lib to scale to suit?
         o  if so, then make sure no pointless tests
     o  Change reference model to make label not too long, and maybe
        be more computer sciency - plus update readme to suit
-    o  Add title keyword which could be edit me
-    o  Change terminology
-        o  Lane -> lifeline
-        o  TitleBox -> lifelineheader
+    o  Add title keyword which could be "edit me"
+    o  Render lifline label letters
     o  Should private types be lower case?
     o  Lifeline should be coarser mark space than response line
-    o  todo resurrect regressions tests for images
+    o  Todo resurrect regressions tests for images
     o  benchmarks and tuning
     o  godoc example
     o  may need to rebrand as uml **sequence** diagram
-    o  cf creately differentiate
+    o  cf creately and sequencediag.com differentiate
 
 
 ----------------------------------------------------------------------------
-Creator code tackles:
+Lifeline lines algorithm
 ----------------------------------------------------------------------------
-o  k
+o  Start with line from bottom of title box to a bit below tidemark
+   made by call to finalize boxes
+o  Add own padB
+o  Init pool of segment = single line
+o  chop out sections where activity boxes live - splintering pool
+o  chop out sections for where interaction lines and labels cross that lane
+o  jettison very short remnants
+o  that's it
 
