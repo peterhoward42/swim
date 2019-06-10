@@ -15,6 +15,7 @@
               *  provision of TitleBoxBottom in sizer.Lifelines and use by
                  creation of titleboxes so single source of truth
                       *  add sizer test
+              o  stop testresults/new being committed
               o  sortGaps test
               o  call to activityBoxExtents() from lifeline.go
               o  call to interactionLineSpaceClaims from lifeline.go
