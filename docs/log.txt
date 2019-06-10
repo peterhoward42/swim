@@ -7,26 +7,14 @@
         *  Design algorithm
         *  Initiate a sub package under diag - lifeline
         o  tdd from creator according to design below
-            o  timeout improve name for allBoxStates - vars and types
-        o  Introduce lifeline line pruner
-            o  Track box territories in it
-            o  Track interaction line territories in it
-                o  defer api until needs clear from later
-        o  Introduce and test a chopper
-        o  Ditch lifeline line event
-        o  Introduce method in creator after finalize activity boxes
-            o  Delegate everything to a dedicated type/module
-        o  start global segment pool
-        o  Iterate over each lane in that method
-            o  start a pool of just full length line y coords
-            o  iterate over all activity box segs for that lane
-                o  chop y coords with chopper
-            o  iterate over interaction line space claims only for
-               lines going from immediate neighbours either side
-                fart.... only neighbours
-                o  iterate over tracked interaction space claims for that lane
-                o  chop y coords with same chopper
-            o  add prims for non silly segments
+            *  timeout improve name for allBoxStates - vars and types
+        o  start again - there is a simpler design
+            o  exo skel
+                o  get to compile by commenting out - leaving list of debt
+                   here
+                o  work through debt with tests bottom up
+            o  may need to merge gaps before sort?
+            o  optimise out silly small bits
     o  sizer.Lanes (and test) modules got left behing in rename
     o  Might be best to hard code and hide the size  - and
        encourage client to scale in context, or to make images big and

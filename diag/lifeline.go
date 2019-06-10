@@ -7,7 +7,7 @@ import (
 /*
 This module contains code that knows how to create lifelines, including
 where to break them in order not to overwrite activity boxes and
-int/eraction lines that they cross.
+interaction lines that they cross.
 */
 
 // Lifelines todo
@@ -15,61 +15,60 @@ type Lifelines struct {
 	creator *Creator
 }
 
-func NewLifelines(c *Creator) *Lifelines {
+func NewLifelines(creator *Creator) *Lifelines {
 	lifelines := Lifelines{}
-	lifelines.creator = c
-
+	lifelines.creator = creator
 	return &lifelines
 }
 
-func (ll *Lifelines) Create() {
+func (ll *Lifelines) ProduceLifelines() {
 	for _, lifelineStatement := range ll.creator.lifelineStatements {
-		ll.createForOneLifeline(lifelineStatement)
+		segs := ll.produceOne(lifelineStatement)
+        for i := 0; i < len(segs); i++ {
+            ll.graphicsModel.Primitives.AddLine(x, seg.topY, x, seg.botY, true)
+        }
 	}
 }
 
-type lineSegment struct {
+// topBot models a pair of Y coordinates (top and bottom) for either
+// a line segment, or a gap.
+type topBot struct {
 	topY        float64
 	botY        float64
-	stillInPlay bool
 }
 
-func (ll *Lifelines) createForOneLifeline(lifeline *dslmodel.Statement) {
-	// Start with a continuous unbroken line from the title box down
-	// to the bottom.
-	top := ll.creator.sizer.DiagramPadT + ll.creator.sizer.Lifelines.TitleBoxHeight
-	bot := ll.creator.tideMark
-	segment := &lineSegment{top, bot, true}
-	segments := []*lineSegment{segment}
+/*
+produceOne works out the set of dashed line segments that are required
+to represent one lifeline - accomodating the gaps needed where
+the lifeline activity boxes live, or interaction lines that cross this
+lifeline.
+*/
+func (ll *Lifelines) produceOne(lifeline *dslmodel.Statement) (
+    segments []*topBot){
 
-	// Cut up the continuous line segment to make room for the lifeline's
-	// activity boxes.
-	segments = ll.makeRoomForActivityBoxes(lifeline, segments)
+    // Acquire and combine the (ordered) gap requirements - between which
+    // line segments should exist.
+    activityBoxGaps := ll.creator.boxStates.activityBoxExtents(lifeline)
+    crossingLifelineGaps := ll.creator.interactionLineSpaceClaims(lifeline)
 
-	// Cut up the segments further to make room for interactions lines,
-	// and their labels that cross this lifeline.
-	segments = ll.makeRoomForCrossingInteractionLines(lifeline, segments)
+    pretendPreGap := &topBot{stuff}
+    pretendPostGap := &topBot{stuff}
 
-	// Post the segments (that remain in play) into the graphics models,
-	// as dashed lines.
+    allGaps := []*topBot{pretendPreGap}
+    allGaps = append(allGaps, activityBoxGaps...)
+    allGaps = append(allGaps, crossingLifelineGaps...)
+    allGaps = append(allGaps, pretendPostGap)
 
-	x := ll.creator.sizer.Lifelines.Individual[lifeline].Centre
-	for _, seg := range segments {
-		if seg.stillInPlay {
-			ll.creator.graphicsModel.Primitives.AddLine(
-				x, seg.topY, x, seg.botY, true)
-		}
-	}
+    sortedGaps := sort(allGaps, pred)
+
+    // Make a segment in between each pair of gaps.
+    
+    segments = []*topBot{}
+    for i := 0; i < len(sortedGaps); i++ {
+        top := sortedGaps[i].botY
+        bot := sortedGaps[i+1].topY
+        segments = append(segments, &topBot{top, bot}
+    }
+    return segments
 }
 
-func (ll *Lifelines) makeRoomForActivityBoxes(
-	lifeline *dslmodel.Statement, segments []*lineSegment) (
-	updatedSegments []*lineSegment) {
-	return nil
-}
-
-func (ll *Lifelines) makeRoomForCrossingInteractionLines(
-	lifeline *dslmodel.Statement, segments []*lineSegment) (
-	updatedSegments []*lineSegment) {
-	return nil
-}
