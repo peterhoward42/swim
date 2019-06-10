@@ -60,3 +60,9 @@ func NewSizer(diagramWidth int, fontHeight float64,
 
 	return sizer
 }
+
+// TitleBoxBottom is a DRY helper that works out the Y coordinate for the
+// bottom of title boxes.
+func (s *Sizer) TitleBoxBottom() float64 {
+	return s.DiagramPadT + s.Lifelines.TitleBoxHeight
+}

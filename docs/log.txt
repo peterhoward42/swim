@@ -9,13 +9,23 @@
         o  tdd from creator according to design below
             *  timeout improve name for allBoxStates - vars and types
         o  start again - there is a simpler design
-            o  exo skel
-                o  get to compile by commenting out - leaving list of debt
-                   here
-                o  work through debt with tests bottom up
+            *  exo skel
+            *  get to compile by commenting out - leaving list of debt
+               here
+              *  provision of TitleBoxBottom in sizer.Lifelines and use by
+                 creation of titleboxes so single source of truth
+                      *  add sizer test
+              o  sortGaps test
+              o  call to activityBoxExtents() from lifeline.go
+              o  call to interactionLineSpaceClaims from lifeline.go
+            o  work through debt with tests bottom up
             o  may need to merge gaps before sort?
             o  optimise out silly small bits
+            o  end of lifelines not quite right wrt end of boxes
+    o  change lifelineTitleBox to use tidemark as top, having advanced 
+       tidemark to diagpadtop before hand,
     o  sizer.Lanes (and test) modules got left behing in rename
+    o  newAllBoxStates got left behind in renaming
     o  Might be best to hard code and hide the size  - and
        encourage client to scale in context, or to make images big and
        then use image lib to scale to suit?

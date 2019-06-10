@@ -149,7 +149,7 @@ func (c *Creator) lifelineTitleBox(
 	left := thisLifeline.TitleBoxLeft
 	right := thisLifeline.TitleBoxRight
 	top := c.sizer.DiagramPadT
-	bot := c.sizer.DiagramPadT + c.sizer.Lifelines.TitleBoxHeight
+	bot := c.sizer.TitleBoxBottom()
 	c.graphicsModel.Primitives.AddRect(left, top, right, bot)
 
 	// Label
@@ -331,7 +331,6 @@ func (c *Creator) finalizeActivityBox(
 
 // todo
 func (c *Creator) finalizeLifelines() {
-    // Quite complex - so delegate.
-    NewLifelines(c).Create()
+	// Quite complex - so delegate.
+	NewLifelines(c).ProduceLifelines()
 }
-
