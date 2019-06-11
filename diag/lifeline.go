@@ -26,7 +26,7 @@ type topBot struct {
 type gap topBot
 type lineSeg topBot
 
-// Lifelines todo
+// Lifelines is the exposes the API for creating lifelines.
 type Lifelines struct {
 	creator *Creator
 }
@@ -43,7 +43,7 @@ func NewLifelines(creator *Creator) *Lifelines {
 // boxes and interaction lines that cross a lifeline.
 func (ll *Lifelines) ProduceLifelines() {
 	for _, lifelineStatement := range ll.creator.lifelineStatements {
-		lineSegments := ll.produceOne(lifelineStatement)
+		lineSegments := ll.produceOneLifeline(lifelineStatement)
 		x := ll.creator.sizer.Lifelines.Individual[lifelineStatement].Centre
 		for i := 0; i < len(lineSegments); i++ {
 			seg := lineSegments[i]
@@ -54,12 +54,12 @@ func (ll *Lifelines) ProduceLifelines() {
 }
 
 /*
-produceOne works out the set of dashed line segments that are required
+produceOneLifeline works out the set of dashed line segments that are required
 to represent one lifeline - accomodating the gaps needed where
 the lifeline activity boxes live, or interaction lines that cross this
 lifeline.
 */
-func (ll *Lifelines) produceOne(lifeline *dslmodel.Statement) (
+func (ll *Lifelines) produceOneLifeline(lifeline *dslmodel.Statement) (
 	segments []*lineSeg) {
 
 	// Acquire and combine the (ordered) gap requirements - between which
@@ -80,7 +80,8 @@ func (ll *Lifelines) produceOne(lifeline *dslmodel.Statement) (
 	allGaps = append(allGaps, crossingLifelineGaps...)
 	allGaps = append(allGaps, pretendPostGap)
 
-	sortGaps(allGaps)
+	ll.sortGaps(allGaps)
+	allGaps = ll.mergeGaps(allGaps)
 
 	// Make a segment in between each pair of gaps.
 
@@ -93,8 +94,23 @@ func (ll *Lifelines) produceOne(lifeline *dslmodel.Statement) (
 	return segments
 }
 
-func sortGaps(segs []*gap) {
-	sort.Slice(segs, func(i, j int) bool {
-		return segs[i].topY < segs[j].topY
+// sortGaps orders a list of gap objects by their topX attribute,
+// least-first.
+func (ll *Lifelines) sortGaps(gaps []*gap) {
+	sort.Slice(gaps, func(i, j int) bool {
+		return gaps[i].topY < gaps[j].topY
 	})
+}
+
+// mergeGaps takes an *ordered* list of gaps and merges any that overlap.
+func (ll *Lifelines) mergeGaps(gaps []*gap) (newGaps []*gap) {
+	newGaps = []*gap{}
+	for i, g := range gaps {
+		if i == 0 || (g.topY > newGaps[i-1].botY) {
+			newGaps = append(newGaps, g)
+		} else {
+			newGaps[i-1].botY = g.botY
+		}
+	}
+	return newGaps
 }

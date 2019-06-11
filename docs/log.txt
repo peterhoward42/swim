@@ -15,9 +15,12 @@
               *  provision of TitleBoxBottom in sizer.Lifelines and use by
                  creation of titleboxes so single source of truth
                       *  add sizer test
-              o  stop testresults/new being committed
-              o  sortGaps test
+              *  stop testresults/new being committed
+              *  sortGaps and mergeGaps test
               o  call to activityBoxExtents() from lifeline.go
+                o  how / who track and store?
+                    o  can box states be upgraded to do this? (Preferably 
+                       without changing API.)
               o  call to interactionLineSpaceClaims from lifeline.go
             o  work through debt with tests bottom up
             o  may need to merge gaps before sort?
