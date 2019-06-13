@@ -19,8 +19,21 @@
               *  sortGaps and mergeGaps test
               o  call to activityBoxExtents() from lifeline.go
                 o  how / who track and store?
+                    *  redefine topbot and make indi
+                    o  move merge/sort into module
+                        *  move code and make non methods
+                        *  update / move tests
+                        *  resurrect use of sort/merge in lifeline, that
+                           will need casting
                     o  can box states be upgraded to do this? (Preferably 
                        without changing API.)
+                        o  safety commit
+                        o  rename boxState to lifelineBoxes
+                        o  define singlebox as a segment plus in progress bool
+                        o  give boxstate a slice of singleboxes
+                        o  regression test
+                        o  now populate end of boxes when known
+                        o  now can service query
               o  call to interactionLineSpaceClaims from lifeline.go
             o  work through debt with tests bottom up
             o  may need to merge gaps before sort?
