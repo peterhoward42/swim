@@ -27,13 +27,18 @@
                            will need casting
                     o  can box states be upgraded to do this? (Preferably 
                        without changing API.)
-                        o  safety commit
-                        o  rename boxState to lifelineBoxes
-                        o  define singlebox as a segment plus in progress bool
-                        o  give boxstate a slice of singleboxes
-                        o  regression test
-                        o  now populate end of boxes when known
-                        o  now can service query
+                        *  safety commit
+                        *  rename boxState to lifelineBoxes
+                        *  define boxExtents as a segment plus in progress bool
+                        *  give boxstate a slice of singleboxes
+                        *  test fix up
+                            *  make sure inProgress init to false
+                            *  provide inProgress() method
+                            *  provide terminate method
+                        *  regression test
+                        *  now populate end of boxes when known
+                        o  now can re-enable, and service query to make
+                           gaps for activy boxes
               o  call to interactionLineSpaceClaims from lifeline.go
             o  work through debt with tests bottom up
             o  may need to merge gaps before sort?

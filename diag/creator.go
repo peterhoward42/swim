@@ -20,8 +20,8 @@ type Creator struct {
 	allStatements []*dslmodel.Statement
 	// The statements representing lifelines - isolated.
 	lifelineStatements []*dslmodel.Statement
-	// Keeps track of activity boxes in progress.
-	boxStates boxStates
+	// Keeps track of activity box top and bottom coordinates.
+	activityBoxes allActivityBoxes
 	// The output.
 	graphicsModel *graphics.Model
 	// Knows how to size everything.
@@ -36,14 +36,14 @@ NewCreator provides a Creator ready to use.
 func NewCreator(width int, fontHeight float64,
 	allStatements []*dslmodel.Statement) *Creator {
 	lifelineStatements := isolateLifelines(allStatements)
-	boxStates := newAllBoxStates(lifelineStatements)
+	activityBoxes := newAllActivityBoxes(lifelineStatements)
 	sizer := sizers.NewSizer(width, fontHeight, lifelineStatements)
 	creator := &Creator{
 		width:              width,
 		fontHeight:         fontHeight,
 		allStatements:      allStatements,
 		lifelineStatements: lifelineStatements,
-		boxStates:          boxStates,
+		activityBoxes:      activityBoxes,
 		sizer:              sizer,
 	}
 	return creator
@@ -275,12 +275,11 @@ func (c *Creator) potentiallyStartFromBox(
 func (c *Creator) potentiallyStartActivityBox(
 	lifeline *dslmodel.Statement, behindTidemarkDelta float64) {
 	// Already a box in progress?
-	if c.boxStates[lifeline].inProgress {
+	if c.activityBoxes[lifeline].inProgress() {
 		return
 	}
 	y := c.tideMark - behindTidemarkDelta
-	c.boxStates[lifeline].inProgress = true
-	c.boxStates[lifeline].topY = y
+	c.activityBoxes[lifeline].startBoxAt(y)
 }
 
 /*
@@ -300,10 +299,7 @@ func (c *Creator) endBox(
 // their size and position can be determined.
 func (c *Creator) finalizeActivityBoxes() {
 	bottom := c.tideMark + c.sizer.ActivityBoxVerticalOverlap
-	for lifeline, boxState := range c.boxStates {
-		if !boxState.inProgress {
-			continue
-		}
+	for lifeline := range c.activityBoxes {
 		c.finalizeActivityBox(lifeline, bottom)
 	}
 }
@@ -315,18 +311,15 @@ coordinate. It then advances the tide mark to the bottom value provided.
 */
 func (c *Creator) finalizeActivityBox(
 	lifeline *dslmodel.Statement, bottom float64) {
-	// Silently ignore this mandate if the lifeline does not have
-	// a box in progress. (The parser cannot trap this because it knows
-	// nothing about activity box inference).
-	if c.boxStates[lifeline].inProgress == false {
+	if !c.activityBoxes[lifeline].inProgress() {
 		return
 	}
-	top := c.boxStates[lifeline].topY
+	top := c.activityBoxes[lifeline].mostRecent().extent.start
 	left := c.sizer.Lifelines.Individual[lifeline].ActivityBoxLeft
 	right := c.sizer.Lifelines.Individual[lifeline].ActivityBoxRight
 	c.graphicsModel.Primitives.AddRect(left, top, right, bottom)
 	c.tideMark = bottom
-	c.boxStates[lifeline].inProgress = false
+	c.activityBoxes[lifeline].terminateInProgressBoxAt(bottom)
 }
 
 // todo

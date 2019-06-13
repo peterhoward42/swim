@@ -4,30 +4,70 @@ import (
 	"github.com/peterhoward42/umli/dslmodel"
 )
 
-// Type boxState keeps track of the in-progress state of a lifeline
-// activity box (for one lifeline) during diagram creation.
-type boxState struct {
+// boxExtent keeps track of the Y coordinates at which a box starts and
+// ends. When a box has been started, but the end coordinate is not yet
+// known - it is said to be inProgress.
+type boxExtent struct {
+	extent     *segment
 	inProgress bool
-	topY       float64
 }
 
-// newBoxStates provides a boxState ready to use.
-func newBoxStates(lifelineStatement *dslmodel.Statement) *boxState {
-	return &boxState{
-		inProgress: false,
+// Type lifelineBoxes keeps track of the activity boxes (for one lifeline)
+// during diagram creation.
+type lifelineBoxes struct {
+	boxes []*boxExtent
+}
+
+// Type allActivityBoxes maps lifeline statements to the corresponding
+// lifelineBoxes for that statement.
+type allActivityBoxes map[*dslmodel.Statement]*lifelineBoxes
+
+// inProgress returns true when the most recently started activity box
+// on the lifeline has not yet been finished.
+func (llb *lifelineBoxes) inProgress() bool {
+	boxExtent := llb.mostRecent()
+	if boxExtent == nil {
+		return false
 	}
+	return boxExtent.inProgress
 }
 
-// Type boxStates maps lifeline statements to a
-// boxState.
-type boxStates map[*dslmodel.Statement]*boxState
+func (llb *lifelineBoxes) terminateInProgressBoxAt(y float64) {
+	boxExtent := llb.mostRecent()
+	if boxExtent == nil {
+		return
+	}
+	boxExtent.extent.end = y
+	boxExtent.inProgress = false
+}
 
-// NewLifelineActivityBoxes creates a lifelineActivityBoxes ready to use.
-func newAllBoxStates(
-	lifelineStatements []*dslmodel.Statement) boxStates {
-	boxes := boxStates{}
+func (llb *lifelineBoxes) startBoxAt(y float64) {
+	segment := &segment{y, -1}
+	boxExtent := &boxExtent{segment, true}
+	llb.boxes = append(llb.boxes, boxExtent)
+}
+
+// mostRecent returns the most recently added boxExtent for this lifeline,
+// (or nil when none have been added.
+func (llb *lifelineBoxes) mostRecent() *boxExtent {
+	i := len(llb.boxes)
+	if i == 0 {
+		return nil
+	}
+	return llb.boxes[i-1]
+}
+
+// newBoxStates provides a lifelineBoxes ready to use.
+func newLifelineBoxes(lifelineStatement *dslmodel.Statement) *lifelineBoxes {
+	return &lifelineBoxes{[]*boxExtent{}}
+}
+
+// newAllActivityBoxes creates a allActivityBoxes ready to use.
+func newAllActivityBoxes(
+	lifelineStatements []*dslmodel.Statement) allActivityBoxes {
+	allBoxes := allActivityBoxes{}
 	for _, lifelineStatement := range lifelineStatements {
-		boxes[lifelineStatement] = newBoxStates(lifelineStatement)
+		allBoxes[lifelineStatement] = newLifelineBoxes(lifelineStatement)
 	}
-	return boxes
+	return allBoxes
 }
