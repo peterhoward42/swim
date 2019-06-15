@@ -57,6 +57,20 @@ func (llb *lifelineBoxes) mostRecent() *boxExtent {
 	return llb.boxes[i-1]
 }
 
+// gaps provides a list of segments that represent the gaps between
+// this lifeline's activity boxes.
+func (llb *lifelineBoxes) gaps() []*segment {
+	gaps := []*segment{}
+	nBoxes := len(llb.boxes)
+	for i := 0; i < nBoxes-1; i++ {
+		before := llb.boxes[i].extent
+		after := llb.boxes[i+1].extent
+		gap := &segment{before.end, after.start}
+		gaps = append(gaps, gap)
+	}
+	return gaps
+}
+
 // newBoxStates provides a lifelineBoxes ready to use.
 func newLifelineBoxes(lifelineStatement *dslmodel.Statement) *lifelineBoxes {
 	return &lifelineBoxes{[]*boxExtent{}}

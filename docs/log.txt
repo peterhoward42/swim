@@ -17,15 +17,15 @@
                       *  add sizer test
               *  stop testresults/new being committed
               *  sortGaps and mergeGaps test
-              o  call to activityBoxExtents() from lifeline.go
-                o  how / who track and store?
+              o  call to fetch activity gox gaps from lifeline.go
+                *  how / who track and store?
                     *  redefine topbot and make indi
-                    o  move merge/sort into module
+                    *  move merge/sort into module
                         *  move code and make non methods
                         *  update / move tests
                         *  resurrect use of sort/merge in lifeline, that
                            will need casting
-                    o  can box states be upgraded to do this? (Preferably 
+                    *  can box states be upgraded to do this? (Preferably 
                        without changing API.)
                         *  safety commit
                         *  rename boxState to lifelineBoxes
@@ -37,8 +37,9 @@
                             *  provide terminate method
                         *  regression test
                         *  now populate end of boxes when known
-                        o  now can re-enable, and service query to make
+                        *  now can re-enable, and service query to make
                            gaps for activy boxes
+                o  something wrong - boxes not being broken
               o  call to interactionLineSpaceClaims from lifeline.go
             o  work through debt with tests bottom up
             o  may need to merge gaps before sort?

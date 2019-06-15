@@ -51,8 +51,7 @@ func (ll *Lifelines) produceOneLifeline(lifeline *dslmodel.Statement) (
 	// Acquire and combine the (ordered) gap requirements - between which
 	// line segments should exist.
 
-	// activityBoxGaps := ll.creator.boxStates.activityBoxExtents(lifeline)
-	activityBoxGaps := []*segment{}
+	activityBoxGaps := ll.creator.activityBoxes[lifeline].gaps()
 
 	//crossingLifelineGaps := ll.creator.interactionLineSpaceClaims(lifeline)
 	crossingLifelineGaps := []*segment{}
