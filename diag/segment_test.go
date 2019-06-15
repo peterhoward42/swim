@@ -55,4 +55,14 @@ func TestMergeSegments(t *testing.T) {
 	segments = []*segment{a, b, c}
 	newSegments = mergeSegments(segments)
 	assert.Len(newSegments, 2)
+
+	// Two reduced to one, when one swamps the other
+	a = &segment{2, 3}
+	b = &segment{1, 4}
+	segments = []*segment{a, b}
+	sortSegments(segments)
+	newSegments = mergeSegments(segments)
+	assert.Len(newSegments, 1)
+	assert.Equal(1.0, segments[0].start)
+	assert.Equal(4.0, segments[0].end)
 }
