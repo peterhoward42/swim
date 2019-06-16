@@ -4,51 +4,17 @@
     *  Anything that can make creator module smaller?
     *  Lane lines -> lifelines
     o  Do lifeline lines
-        *  Design algorithm
-        *  Initiate a sub package under diag - lifeline
-        o  tdd from creator according to design below
-            *  timeout improve name for allBoxStates - vars and types
-        o  start again - there is a simpler design
-            *  exo skel
-            *  get to compile by commenting out - leaving list of debt
-               here
-              *  provision of TitleBoxBottom in sizer.Lifelines and use by
-                 creation of titleboxes so single source of truth
-                      *  add sizer test
-              *  stop testresults/new being committed
-              *  sortGaps and mergeGaps test
-              o  call to fetch activity gox gaps from lifeline.go
-                *  how / who track and store?
-                    *  redefine topbot and make indi
-                    *  move merge/sort into module
-                        *  move code and make non methods
-                        *  update / move tests
-                        *  resurrect use of sort/merge in lifeline, that
-                           will need casting
-                    *  can box states be upgraded to do this? (Preferably 
-                       without changing API.)
-                        *  safety commit
-                        *  rename boxState to lifelineBoxes
-                        *  define boxExtents as a segment plus in progress bool
-                        *  give boxstate a slice of singleboxes
-                        *  test fix up
-                            *  make sure inProgress init to false
-                            *  provide inProgress() method
-                            *  provide terminate method
-                        *  regression test
-                        *  now populate end of boxes when known
-                        *  now can re-enable, and service query to make
-                           gaps for activy boxes
-                o  something wrong - boxes not being broken
-              o  call to interactionLineSpaceClaims from lifeline.go
-            o  work through debt with tests bottom up
-            o  may need to merge gaps before sort?
-            o  optimise out silly small bits
-            o  end of lifelines not quite right wrt end of boxes
+        *  basics
+        o  make lines go beyond bottom of boxes by a margin
+        o  test for case for boxes only - maybe one lifeline
+        o  enable call  to interactionLineSpaceClaims from lifeline.go
+        o  optimise out silly short bits
+        o  end of lifelines not quite right wrt end of boxes
     o  change lifelineTitleBox to use tidemark as top, having advanced 
        tidemark to diagpadtop before hand,
     o  sizer.Lanes (and test) modules got left behing in rename
     o  newAllBoxStates got left behind in renaming
+    o  show lane letters - possibly optionally
     o  Might be best to hard code and hide the size  - and
        encourage client to scale in context, or to make images big and
        then use image lib to scale to suit?

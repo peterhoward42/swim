@@ -57,18 +57,15 @@ func (llb *lifelineBoxes) mostRecent() *boxExtent {
 	return llb.boxes[i-1]
 }
 
-// gaps provides a list of segments that represent the gaps between
-// this lifeline's activity boxes.
-func (llb *lifelineBoxes) gaps() []*segment {
-	gaps := []*segment{}
-	nBoxes := len(llb.boxes)
-	for i := 0; i < nBoxes-1; i++ {
-		before := llb.boxes[i].extent
-		after := llb.boxes[i+1].extent
-		gap := &segment{before.end, after.start}
-		gaps = append(gaps, gap)
+// boxExtentsAsSegments provides a list of segments that represent the vertical
+// space occupied by this lifeline's activity boxes.
+func (llb *lifelineBoxes) boxExtentsAsSegments() []*segment {
+	segs := []*segment{}
+	for _, box := range llb.boxes {
+		seg := box.extent
+		segs = append(segs, seg)
 	}
-	return gaps
+	return segs
 }
 
 // newBoxStates provides a lifelineBoxes ready to use.
