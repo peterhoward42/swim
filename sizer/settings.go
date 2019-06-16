@@ -36,4 +36,5 @@ const (
 	// Lifeline activity boxes
 	activityBoxWidthK           = 1.5
 	activityBoxVerticalOverlapK = 0.5
+    finalizedActivityBoxesPadB = 1.0
 )

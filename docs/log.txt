@@ -5,7 +5,7 @@
     *  Lane lines -> lifelines
     o  Do lifeline lines
         *  basics
-        o  make lines go beyond bottom of boxes by a margin
+        *  make lines go beyond bottom of boxes by a margin
         o  test for case for boxes only - maybe one lifeline
         o  enable call  to interactionLineSpaceClaims from lifeline.go
         o  optimise out silly short bits

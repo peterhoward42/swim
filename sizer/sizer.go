@@ -36,6 +36,7 @@ type Sizer struct {
 	DashLineDashGap            float64
 	SelfLoopHeight             float64
 	ActivityBoxVerticalOverlap float64
+    FinalizedActivityBoxesPadB float64
 }
 
 // NewSizer provides a Sizer structure that has been initialised
@@ -57,6 +58,7 @@ func NewSizer(diagramWidth int, fontHeight float64,
 	sizer.DashLineDashGap = dashLineDashGapK * fontHeight
 	sizer.SelfLoopHeight = sizer.Lifelines.SelfLoopWidth * selfLoopAspectRatio
 	sizer.ActivityBoxVerticalOverlap = activityBoxVerticalOverlapK * fontHeight
+    sizer.FinalizedActivityBoxesPadB = finalizedActivityBoxesPadB * fontHeight
 
 	return sizer
 }

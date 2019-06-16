@@ -302,6 +302,7 @@ func (c *Creator) finalizeActivityBoxes() {
 	for lifeline := range c.activityBoxes {
 		c.finalizeActivityBox(lifeline, bottom)
 	}
+    c.tideMark = bottom + c.sizer.FinalizedActivityBoxesPadB
 }
 
 /*
