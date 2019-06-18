@@ -6,8 +6,21 @@
     o  Do lifeline lines
         *  basics
         *  make lines go beyond bottom of boxes by a margin
-        o  test for case for boxes only - maybe one lifeline
-        o  enable call  to interactionLineSpaceClaims from lifeline.go
+        *  test for case for boxes only - maybe one lifeline (no)
+        o  enable call to interactionLineSpaceClaims from lifeline.go
+            *  design answer intent first
+            *  design how/who will service
+                *  interaction line/label can register their relevant
+                   y coordinates and from to statements as they go - keyed
+                   on the interaction line statement
+                *  a space claim object can own the data and service the
+                   query
+            *  introduce a tracker type and give the creator one
+            *  give the tracker the necessary storage types
+                *  prempt the registration methods in creator and then satisfy
+                *  unit test for claim registration
+            o  create and use the query method from lifelines
+            o  visual test
         o  optimise out silly short bits
         o  end of lifelines not quite right wrt end of boxes
     o  change lifelineTitleBox to use tidemark as top, having advanced 
@@ -23,7 +36,7 @@
        be more computer sciency - plus update readme to suit
     o  Add title keyword which could be "edit me"
     o  Render lifline label letters
-    o  Should private types be lower case?
+    o  Should private types be lower case? bit of muddle
     o  Lifeline should be coarser mark space than response line
     o  Todo resurrect regressions tests for images
     o  benchmarks and tuning
@@ -33,14 +46,14 @@
 
 
 ----------------------------------------------------------------------------
-Lifeline lines algorithm
+Intent for interactionline claims?
 ----------------------------------------------------------------------------
-o  Start with line from bottom of title box to a bit below tidemark
-   made by call to finalize boxes
-o  Add own padB
-o  Init pool of segment = single line
-o  chop out sections where activity boxes live - splintering pool
-o  chop out sections for where interaction lines and labels cross that lane
-o  jettison very short remnants
-o  that's it
+o  When an interaction crosses a lane...
+    o  claim top is... a little above the highest label top
+    o  claim bottom is... a little below the interacation line
+o  Uniform regardless of h-justification?
+    o  yes to start with
+o  What about self loops?
+    o  Not required - will never cross other lanes, and text is inside
+       the loop
 

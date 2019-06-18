@@ -22,6 +22,8 @@ type Creator struct {
 	lifelineStatements []*dslmodel.Statement
 	// Keeps track of activity box top and bottom coordinates.
 	activityBoxes allActivityBoxes
+	// Keeps track of the space taken up by interaction lines.
+	ilZones *InteractionLineZones
 	// The output.
 	graphicsModel *graphics.Model
 	// Knows how to size everything.
@@ -38,12 +40,14 @@ func NewCreator(width int, fontHeight float64,
 	lifelineStatements := isolateLifelines(allStatements)
 	activityBoxes := newAllActivityBoxes(lifelineStatements)
 	sizer := sizers.NewSizer(width, fontHeight, lifelineStatements)
+	ilZones := NewInteractionLineZones()
 	creator := &Creator{
 		width:              width,
 		fontHeight:         fontHeight,
 		allStatements:      allStatements,
 		lifelineStatements: lifelineStatements,
 		activityBoxes:      activityBoxes,
+		ilZones:            ilZones,
 		sizer:              sizer,
 	}
 	return creator
@@ -166,7 +170,8 @@ func (c *Creator) lifelineTitleBox(
 /*
 interactionLabel generates the labels that sit above one of the horizontal
 interaction lines. It then claims the vertical space it has consumed for
-itself by advancing the tide mark.
+itself by advancing the tide mark. And registers this space claim with
+the creator's InteractionLineZones component.
 */
 func (c *Creator) interactionLabel(
 	statement *dslmodel.Statement) {
@@ -178,6 +183,8 @@ func (c *Creator) interactionLabel(
 	c.rowOfLabels(x, firstRowY, horizJustification, statement.LabelSegments)
 	c.tideMark += float64(len(statement.LabelSegments))*
 		c.fontHeight + c.sizer.InteractionLineTextPadB
+    c.ilZones.RegisterSpaceClaim(
+        sourceLifeline, destLifeline, firstRowY, c.tideMark)
 }
 
 /*
@@ -196,7 +203,8 @@ func (c *Creator) rowOfLabels(centreX float64, firstRowY float64,
 
 /*
 interactionLine generates the horizontal line and arrow head.  It then claims
-the vertical space it claims for itself by advancing the tide mark.
+the vertical space it claims for itself by advancing the tide mark.  And 
+registers this space claim with the creator's InteractionLineZones component.
 */
 func (c *Creator) interactionLine(
 	statement *dslmodel.Statement) {
@@ -210,6 +218,8 @@ func (c *Creator) interactionLine(
 		c.sizer.ArrowHeight)
 	c.graphicsModel.Primitives.AddFilledPoly(arrowVertices)
 	c.tideMark += 0.5*c.sizer.ArrowHeight + c.sizer.InteractionLinePadB
+    c.ilZones.RegisterSpaceClaim(
+        sourceLifeline, destLifeline, y, c.tideMark)
 }
 
 /*
@@ -302,7 +312,7 @@ func (c *Creator) finalizeActivityBoxes() {
 	for lifeline := range c.activityBoxes {
 		c.finalizeActivityBox(lifeline, bottom)
 	}
-    c.tideMark = bottom + c.sizer.FinalizedActivityBoxesPadB
+	c.tideMark = bottom + c.sizer.FinalizedActivityBoxesPadB
 }
 
 /*
