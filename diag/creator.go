@@ -40,16 +40,15 @@ func NewCreator(width int, fontHeight float64,
 	lifelineStatements := isolateLifelines(allStatements)
 	activityBoxes := newAllActivityBoxes(lifelineStatements)
 	sizer := sizers.NewSizer(width, fontHeight, lifelineStatements)
-	ilZones := NewInteractionLineZones()
 	creator := &Creator{
 		width:              width,
 		fontHeight:         fontHeight,
 		allStatements:      allStatements,
 		lifelineStatements: lifelineStatements,
 		activityBoxes:      activityBoxes,
-		ilZones:            ilZones,
 		sizer:              sizer,
 	}
+	creator.ilZones = NewInteractionLineZones(creator)
 	return creator
 }
 

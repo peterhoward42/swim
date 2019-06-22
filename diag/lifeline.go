@@ -7,12 +7,12 @@ import (
 /*
 This module contains code that knows how to create lifelines, including
 where to break them in order to avoid activity boxes and
-interaction lines that cross lifelines.
+interaction lines that cross them..
 
 Where things are named *seg* this is short for segment.
 */
 
-// Lifelines is the exposes the API for creating lifelines.
+// Lifelines exposes the API for creating lifelines.
 type Lifelines struct {
 	creator *Creator
 }
@@ -33,8 +33,9 @@ func (ll *Lifelines) ProduceLifelines() {
 		x := ll.creator.sizer.Lifelines.Individual[lifelineStatement].Centre
 		for i := 0; i < len(lineSegments); i++ {
 			seg := lineSegments[i]
+			dashed := true
 			ll.creator.graphicsModel.Primitives.AddLine(
-				x, seg.start, x, seg.end, true)
+				x, seg.start, x, seg.end, dashed)
 		}
 	}
 }
@@ -52,28 +53,25 @@ func (ll *Lifelines) produceOneLifeline(lifeline *dslmodel.Statement) (
 	// line segments should exist.
 
 	activityBoxGaps := ll.creator.activityBoxes[lifeline].boxExtentsAsSegments()
-
-	//crossingLifelineGaps := ll.creator.interactionLineSpaceClaims(lifeline)
-	crossingLifelineGaps := []*segment{}
-
+	crossingInteractionLineGaps := ll.creator.ilZones.GapsFor(lifeline)
 	pretendPreGap := &segment{0, ll.creator.sizer.TitleBoxBottom()}
 	lifelinesBottom := ll.creator.tideMark
 	pretendPostGap := &segment{lifelinesBottom, lifelinesBottom + 1}
 
-	allGaps := []*segment{pretendPreGap}
-	allGaps = append(allGaps, activityBoxGaps...)
-	allGaps = append(allGaps, crossingLifelineGaps...)
-	allGaps = append(allGaps, pretendPostGap)
+	gaps := []*segment{pretendPreGap}
+	gaps = append(gaps, activityBoxGaps...)
+	gaps = append(gaps, crossingInteractionLineGaps...)
+	gaps = append(gaps, pretendPostGap)
 
-	sortSegments(allGaps)
-	allGaps = mergeSegments(allGaps)
+	sortSegments(gaps)
+	gaps = mergeSegments(gaps)
 
 	// Make a line segment in between each pair of gaps.
 
 	lineSegments = []*segment{}
-	for i := 0; i < len(allGaps)-1; i++ {
-		top := allGaps[i].end
-		bot := allGaps[i+1].start
+	for i := 0; i < len(gaps)-1; i++ {
+		top := gaps[i].end
+		bot := gaps[i+1].start
 		lineSegments = append(lineSegments, &segment{top, bot})
 	}
 	return lineSegments

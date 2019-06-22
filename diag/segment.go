@@ -24,19 +24,26 @@ func sortSegments(segs []*segment) {
 
 // mergeGaps takes an *ordered* list of gaps and merges any that overlap.
 func mergeSegments(segs []*segment) (newSegs []*segment) {
+	// NB. this DEPENDS on the segs being ordered by seg.start.
 	// Always keep the first segment.
 	// Preserve a segment that is entirely beyond the previous one.
 	// Throw away a segment that is entirely within the previous one.
 	// Throw away a segment that overlaps with the previous one, but lengthen
 	// the previous one.
 	newSegs = []*segment{}
+	var prev *segment
 	for i, seg := range segs {
-		if i == 0 || (seg.start > newSegs[i-1].end) {
+		if (i == 0) || (seg.start >= prev.end) {
 			newSegs = append(newSegs, seg)
-		} else if seg.start >= newSegs[i-1].start && seg.end <= newSegs[i-1].end {
+			prev = seg
 			continue
-		} else {
-			newSegs[i-1].end = seg.end
+		}
+		if seg.start >= prev.start && seg.end <= prev.end {
+			continue
+		}
+		if seg.start >= prev.start && seg.end >= prev.end {
+			prev.end = seg.end
+			continue
 		}
 	}
 	return newSegs

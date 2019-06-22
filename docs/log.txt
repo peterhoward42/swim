@@ -19,8 +19,9 @@
             *  give the tracker the necessary storage types
                 *  prempt the registration methods in creator and then satisfy
                 *  unit test for claim registration
-            o  create and use the query method from lifelines
-            o  visual test
+            *  create and use the query method from lifelines
+                *  tdd demand
+            *  visual test
         o  optimise out silly short bits
         o  end of lifelines not quite right wrt end of boxes
     o  change lifelineTitleBox to use tidemark as top, having advanced 
@@ -28,6 +29,10 @@
     o  sizer.Lanes (and test) modules got left behing in rename
     o  newAllBoxStates got left behind in renaming
     o  show lane letters - possibly optionally
+    o  many lifelines example suggests self labels might be better off
+       going back above the loop and being allowed to go further right
+    o  experiment also with centre justifying interaction line labels
+        o  will make lifeline breaks look more obviously needed
     o  Might be best to hard code and hide the size  - and
        encourage client to scale in context, or to make images big and
        then use image lib to scale to suit?
