@@ -14,11 +14,12 @@ const (
 	diagramPadTK = 1.0
 	diagramPadBK = 1.0
 
-	// Lifeline title boxes.
-	titleBoxPadRK     = 0.25 // w.r.t title box width
-	titleBoxTextPadTK = 0.25 // Between top of title box and first line txt
-	titleBoxTextPadBK = 0.75 // Between text and the bottom of title box
-	titleBoxPadBK     = 1.5  // Below entire title box
+	// Lifelines
+	titleBoxPadRK         = 0.25 // w.r.t title box width
+	titleBoxTextPadTK     = 0.25 // Between top of title box and first line txt
+	titleBoxTextPadBK     = 0.75 // Between text and the bottom of title box
+	titleBoxPadBK         = 1.5  // Below entire title box
+	minLifelineSegLengthK = 0.5
 
 	// Full and Dashed interaction lines
 	dashLineDashLenK = 0.5
@@ -36,5 +37,5 @@ const (
 	// Lifeline activity boxes
 	activityBoxWidthK           = 1.5
 	activityBoxVerticalOverlapK = 0.5
-    finalizedActivityBoxesPadB = 1.0
+	finalizedActivityBoxesPadB  = 1.0
 )

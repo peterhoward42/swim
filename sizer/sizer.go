@@ -37,6 +37,7 @@ type Sizer struct {
 	SelfLoopHeight             float64
 	ActivityBoxVerticalOverlap float64
     FinalizedActivityBoxesPadB float64
+    MinLifelineSegLength       float64
 }
 
 // NewSizer provides a Sizer structure that has been initialised
@@ -44,21 +45,24 @@ type Sizer struct {
 func NewSizer(diagramWidth int, fontHeight float64,
 	lifelineStatements []*dslmodel.Statement) *Sizer {
 	sizer := &Sizer{}
-	sizer.DiagramPadT = diagramPadTK * fontHeight
-	sizer.DiagramPadB = diagramPadBK * fontHeight
-	sizer.Lifelines = NewLifelines(diagramWidth, fontHeight, lifelineStatements)
+    fh := fontHeight
 
-	sizer.ArrowLen = arrowLenK * fontHeight
+	sizer.DiagramPadT = diagramPadTK * fh
+	sizer.DiagramPadB = diagramPadBK * fh
+	sizer.Lifelines = NewLifelines(diagramWidth, fh, lifelineStatements)
+
+	sizer.ArrowLen = arrowLenK * fh
 	sizer.ArrowHeight = arrowAspectRatio * sizer.ArrowLen
-	sizer.InteractionLinePadB = interactionLinePadBK * fontHeight
-	sizer.InteractionLineTextPadB = interactionLineTextPadBK * fontHeight
+	sizer.InteractionLinePadB = interactionLinePadBK * fh
+	sizer.InteractionLineTextPadB = interactionLineTextPadBK * fh
 	sizer.InteractionLineLabelIndent = sizer.ArrowLen +
-		interactionLineLabelIndent*fontHeight
-	sizer.DashLineDashLen = dashLineDashLenK * fontHeight
-	sizer.DashLineDashGap = dashLineDashGapK * fontHeight
+		interactionLineLabelIndent*fh
+	sizer.DashLineDashLen = dashLineDashLenK * fh
+	sizer.DashLineDashGap = dashLineDashGapK * fh
 	sizer.SelfLoopHeight = sizer.Lifelines.SelfLoopWidth * selfLoopAspectRatio
-	sizer.ActivityBoxVerticalOverlap = activityBoxVerticalOverlapK * fontHeight
-    sizer.FinalizedActivityBoxesPadB = finalizedActivityBoxesPadB * fontHeight
+	sizer.ActivityBoxVerticalOverlap = activityBoxVerticalOverlapK * fh
+    sizer.FinalizedActivityBoxesPadB = finalizedActivityBoxesPadB * fh
+    sizer.MinLifelineSegLength = minLifelineSegLengthK * fh
 
 	return sizer
 }

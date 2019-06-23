@@ -3,27 +3,8 @@
     *  Try out left or right justifying labels near their arrow,
     *  Anything that can make creator module smaller?
     *  Lane lines -> lifelines
-    o  Do lifeline lines
-        *  basics
-        *  make lines go beyond bottom of boxes by a margin
-        *  test for case for boxes only - maybe one lifeline (no)
-        o  enable call to interactionLineSpaceClaims from lifeline.go
-            *  design answer intent first
-            *  design how/who will service
-                *  interaction line/label can register their relevant
-                   y coordinates and from to statements as they go - keyed
-                   on the interaction line statement
-                *  a space claim object can own the data and service the
-                   query
-            *  introduce a tracker type and give the creator one
-            *  give the tracker the necessary storage types
-                *  prempt the registration methods in creator and then satisfy
-                *  unit test for claim registration
-            *  create and use the query method from lifelines
-                *  tdd demand
-            *  visual test
-        o  optimise out silly short bits
-        o  end of lifelines not quite right wrt end of boxes
+    *  Do lifeline lines
+    o  remove images for now from repo
     o  change lifelineTitleBox to use tidemark as top, having advanced 
        tidemark to diagpadtop before hand,
     o  sizer.Lanes (and test) modules got left behing in rename

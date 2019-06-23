@@ -67,11 +67,16 @@ func (ll *Lifelines) produceOneLifeline(lifeline *dslmodel.Statement) (
 	gaps = mergeSegments(gaps)
 
 	// Make a line segment in between each pair of gaps.
+    // (Omitting any that are too small to be sensible to render)
 
 	lineSegments = []*segment{}
 	for i := 0; i < len(gaps)-1; i++ {
 		top := gaps[i].end
 		bot := gaps[i+1].start
+        length := bot - top
+        if length < ll.creator.sizer.MinLifelineSegLength {
+            continue
+        }
 		lineSegments = append(lineSegments, &segment{top, bot})
 	}
 	return lineSegments
