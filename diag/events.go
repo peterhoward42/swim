@@ -18,7 +18,6 @@ const (
 	EndBox EventType = iota + 1
 	InteractionLine
 	InteractionLabel
-	LifelineLine
 	LifelineTitleBox
 	SelfInteractionLines
 	SelfInteractionLabel
@@ -42,7 +41,6 @@ precede the corresponding line events.
 var EventsRequired = map[string][]EventType{
 	umli.Life: {
 		LifelineTitleBox, // advances tidemark
-		LifelineLine,
 	},
 	umli.Dash: {
 		InteractionLabel,      // advances tidemark

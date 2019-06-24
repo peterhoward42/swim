@@ -24,6 +24,8 @@ type Creator struct {
 	activityBoxes allActivityBoxes
 	// Keeps track of the space taken up by interaction lines.
 	ilZones *InteractionLineZones
+	// A delegate to make the lifelines dashed line segments.
+	lifelineMaker *Lifelines
 	// The output.
 	graphicsModel *graphics.Model
 	// Knows how to size everything.
@@ -49,6 +51,7 @@ func NewCreator(width int, fontHeight float64,
 		sizer:              sizer,
 	}
 	creator.ilZones = NewInteractionLineZones(creator)
+	creator.lifelineMaker = NewLifelines(creator)
 	return creator
 }
 
@@ -93,6 +96,7 @@ the activity boxes that sit on lifelines.
 */
 func (c *Creator) createFirstPass() {
 	graphicalEvents := NewScanner().Scan(c.allStatements)
+	c.tideMark = c.sizer.DiagramPadT
 	// Outer loop is per DSL statement
 	for _, statement := range c.allStatements {
 		statementEvents := graphicalEvents[statement]
@@ -128,7 +132,6 @@ func (c *Creator) graphicsForDrawingEvent(evt EventType,
 		c.interactionLine(statement)
 	case InteractionLabel:
 		c.interactionLabel(statement)
-	case LifelineLine:
 	case LifelineTitleBox:
 		c.lifelineTitleBox(statement)
 	case SelfInteractionLines:
@@ -142,28 +145,33 @@ func (c *Creator) graphicsForDrawingEvent(evt EventType,
 
 /*
 lifelineTitleBox generates the lines to represent the rectangular box at the top
-of a lifeline, and calculates the tide mark corresponding to the bottom of these
-boxes.
+of a lifeline, and advances the tide mark corresponding to the depth they
+occupy.
 */
 func (c *Creator) lifelineTitleBox(
 	statement *dslmodel.Statement) {
 	thisLifeline := c.sizer.Lifelines.Individual[statement]
-	// First the rectangular box
+	// First make the rectangular box
 	left := thisLifeline.TitleBoxLeft
 	right := thisLifeline.TitleBoxRight
-	top := c.sizer.DiagramPadT
-	bot := c.sizer.TitleBoxBottom()
+	top := c.tideMark
+	bot := top + c.sizer.Lifelines.TitleBoxHeight
 	c.graphicsModel.Primitives.AddRect(left, top, right, bot)
 
-	// Label
+	// Make the Label
 	n := len(statement.LabelSegments)
 	firstRowY := bot - float64(n)*c.fontHeight - c.sizer.Lifelines.TitleBoxLabelPadB
 	c.rowOfLabels(thisLifeline.Centre, firstRowY, graphics.Centre,
 		statement.LabelSegments)
 
-	// In the particular case of a title box, the tide mark can
-	// be set absolutely rather than advancing it by an increment.
-	c.tideMark = bot + c.sizer.Lifelines.TitleBoxPadB
+	// Update tidemark
+	c.tideMark += c.sizer.Lifelines.TitleBoxHeight
+	c.tideMark += c.sizer.Lifelines.TitleBoxPadB
+
+	// Alert the lifeline maker what the lifeline title boxes bottom
+	// Y coordinate is.
+	c.lifelineMaker.registerBottomOfTitleBoxes(bot)
+
 }
 
 /*
@@ -182,8 +190,8 @@ func (c *Creator) interactionLabel(
 	c.rowOfLabels(x, firstRowY, horizJustification, statement.LabelSegments)
 	c.tideMark += float64(len(statement.LabelSegments))*
 		c.fontHeight + c.sizer.InteractionLineTextPadB
-    c.ilZones.RegisterSpaceClaim(
-        sourceLifeline, destLifeline, firstRowY, c.tideMark)
+	c.ilZones.RegisterSpaceClaim(
+		sourceLifeline, destLifeline, firstRowY, c.tideMark)
 }
 
 /*
@@ -202,7 +210,7 @@ func (c *Creator) rowOfLabels(centreX float64, firstRowY float64,
 
 /*
 interactionLine generates the horizontal line and arrow head.  It then claims
-the vertical space it claims for itself by advancing the tide mark.  And 
+the vertical space it claims for itself by advancing the tide mark.  And
 registers this space claim with the creator's InteractionLineZones component.
 */
 func (c *Creator) interactionLine(
@@ -217,8 +225,8 @@ func (c *Creator) interactionLine(
 		c.sizer.ArrowHeight)
 	c.graphicsModel.Primitives.AddFilledPoly(arrowVertices)
 	c.tideMark += 0.5*c.sizer.ArrowHeight + c.sizer.InteractionLinePadB
-    c.ilZones.RegisterSpaceClaim(
-        sourceLifeline, destLifeline, y, c.tideMark)
+	c.ilZones.RegisterSpaceClaim(
+		sourceLifeline, destLifeline, y, c.tideMark)
 }
 
 /*
@@ -335,5 +343,5 @@ func (c *Creator) finalizeActivityBox(
 // todo
 func (c *Creator) finalizeLifelines() {
 	// Quite complex - so delegate.
-	NewLifelines(c).ProduceLifelines()
+	c.lifelineMaker.ProduceLifelines()
 }

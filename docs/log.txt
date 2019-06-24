@@ -4,9 +4,15 @@
     *  Anything that can make creator module smaller?
     *  Lane lines -> lifelines
     *  Do lifeline lines
-    o  remove images for now from repo
     o  change lifelineTitleBox to use tidemark as top, having advanced 
        tidemark to diagpadtop before hand,
+        o  more generally init tidemark and use rigouressly
+            *  when any title box gets made - then register its bottom with
+               the lifelines object
+            *  then make and prepend this gap in lifeline's calculation of gaps
+               as per how we started
+            o  doh! tidemark being advanced for each title box separately
+    o  add a rectangular border
     o  sizer.Lanes (and test) modules got left behing in rename
     o  newAllBoxStates got left behind in renaming
     o  show lane letters - possibly optionally
@@ -24,22 +30,14 @@
     o  Render lifline label letters
     o  Should private types be lower case? bit of muddle
     o  Lifeline should be coarser mark space than response line
-    o  Todo resurrect regressions tests for images
     o  benchmarks and tuning
     o  godoc example
     o  may need to rebrand as uml **sequence** diagram
     o  cf creately and sequencediag.com differentiate
+    o  Todo resurrect regressions tests for images
 
 
 ----------------------------------------------------------------------------
 Intent for interactionline claims?
 ----------------------------------------------------------------------------
-o  When an interaction crosses a lane...
-    o  claim top is... a little above the highest label top
-    o  claim bottom is... a little below the interacation line
-o  Uniform regardless of h-justification?
-    o  yes to start with
-o  What about self loops?
-    o  Not required - will never cross other lanes, and text is inside
-       the loop
 
