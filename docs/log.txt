@@ -4,22 +4,17 @@
     *  Anything that can make creator module smaller?
     *  Lane lines -> lifelines
     *  Do lifeline lines
-    o  change lifelineTitleBox to use tidemark as top, having advanced 
-       tidemark to diagpadtop before hand,
-        o  more generally init tidemark and use rigouressly
-            *  when any title box gets made - then register its bottom with
-               the lifelines object
-            *  then make and prepend this gap in lifeline's calculation of gaps
-               as per how we started
-            o  doh! tidemark being advanced for each title box separately
-    o  add a rectangular border
+    *  change lifelineTitleBox to use tidemark as top, having advanced 
+    o  experiment also with centre justifying interaction line labels
+        o  will make lifeline breaks look more obviously needed
+    o  add a rectangular border with letter markers in view also
     o  sizer.Lanes (and test) modules got left behing in rename
     o  newAllBoxStates got left behind in renaming
     o  show lane letters - possibly optionally
+    o  consider if image regression tests needed - or maybe only canonical?
+    o  what happens if you introduce a lifeline late in the script?
     o  many lifelines example suggests self labels might be better off
        going back above the loop and being allowed to go further right
-    o  experiment also with centre justifying interaction line labels
-        o  will make lifeline breaks look more obviously needed
     o  Might be best to hard code and hide the size  - and
        encourage client to scale in context, or to make images big and
        then use image lib to scale to suit?

@@ -154,8 +154,22 @@ func (c *Creator) lifelineTitleBox(
 	// First make the rectangular box
 	left := thisLifeline.TitleBoxLeft
 	right := thisLifeline.TitleBoxRight
-	top := c.tideMark
-	bot := top + c.sizer.Lifelines.TitleBoxHeight
+	var top float64
+	var bot float64
+	// For the first title box we encounter, we evaluate the top and bottom
+	// coordinate for it and all other title boxes based on the tidemark.
+	// And remember these coordinates, and advance the tidemark. For all the
+	// the others, we use the saved coordinates and leave the tidemark alone.
+	if c.lifelineMaker.titleBoxTopAndBottom == nil {
+		top = c.tideMark
+		bot = top + c.sizer.Lifelines.TitleBoxHeight
+		c.lifelineMaker.titleBoxTopAndBottom = &segment{top, bot}
+		c.tideMark += c.sizer.Lifelines.TitleBoxHeight
+		c.tideMark += c.sizer.Lifelines.TitleBoxPadB
+	} else {
+		top = c.lifelineMaker.titleBoxTopAndBottom.start
+		bot = c.lifelineMaker.titleBoxTopAndBottom.end
+	}
 	c.graphicsModel.Primitives.AddRect(left, top, right, bot)
 
 	// Make the Label
@@ -163,15 +177,6 @@ func (c *Creator) lifelineTitleBox(
 	firstRowY := bot - float64(n)*c.fontHeight - c.sizer.Lifelines.TitleBoxLabelPadB
 	c.rowOfLabels(thisLifeline.Centre, firstRowY, graphics.Centre,
 		statement.LabelSegments)
-
-	// Update tidemark
-	c.tideMark += c.sizer.Lifelines.TitleBoxHeight
-	c.tideMark += c.sizer.Lifelines.TitleBoxPadB
-
-	// Alert the lifeline maker what the lifeline title boxes bottom
-	// Y coordinate is.
-	c.lifelineMaker.registerBottomOfTitleBoxes(bot)
-
 }
 
 /*

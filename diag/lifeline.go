@@ -14,8 +14,8 @@ Where things are named *seg* this is short for segment.
 
 // Lifelines exposes the API for creating lifelines.
 type Lifelines struct {
-	creator *Creator
-	bottomOfTitleBoxes float64
+	creator              *Creator
+	titleBoxTopAndBottom *segment // Set once known
 }
 
 // NewLifelines creates a Lifelines, ready to use.
@@ -23,14 +23,6 @@ func NewLifelines(creator *Creator) *Lifelines {
 	lifelines := Lifelines{}
 	lifelines.creator = creator
 	return &lifelines
-}
-
-/*
-registerBottomOfTitleBoxes captures the y coordinate for the bottom of
-title boxes - which it uses later on.
-*/
-func (ll *Lifelines) registerBottomOfTitleBoxes(bottom float64) {
-	ll.bottomOfTitleBoxes = bottom
 }
 
 // ProduceLifelines works out the dashed line segments that should be created
@@ -61,7 +53,7 @@ func (ll *Lifelines) produceOneLifeline(lifeline *dslmodel.Statement) (
 	// Acquire and combine the (ordered) gap requirements - between which
 	// line segments should exist.
 
-	pretendPreGap := &segment{-1, ll.bottomOfTitleBoxes}
+	pretendPreGap := &segment{-1, ll.titleBoxTopAndBottom.end}
 	activityBoxGaps := ll.creator.activityBoxes[lifeline].boxExtentsAsSegments()
 	crossingInteractionLineGaps := ll.creator.ilZones.GapsFor(lifeline)
 	lifelinesBottom := ll.creator.tideMark
@@ -76,16 +68,16 @@ func (ll *Lifelines) produceOneLifeline(lifeline *dslmodel.Statement) (
 	gaps = mergeSegments(gaps)
 
 	// Make a line segment in between each pair of gaps.
-    // (Omitting any that are too small to be sensible to render)
+	// (Omitting any that are too small to be sensible to render)
 
 	lineSegments = []*segment{}
 	for i := 0; i < len(gaps)-1; i++ {
 		top := gaps[i].end
 		bot := gaps[i+1].start
-        length := bot - top
-        if length < ll.creator.sizer.MinLifelineSegLength {
-            continue
-        }
+		length := bot - top
+		if length < ll.creator.sizer.MinLifelineSegLength {
+			continue
+		}
 		lineSegments = append(lineSegments, &segment{top, bot})
 	}
 	return lineSegments

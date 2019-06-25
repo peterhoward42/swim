@@ -34,11 +34,3 @@ func TestNewSizerComposesItsDelegatesProperly(t *testing.T) {
 	// installed?
 	assert.Equal(1, len(sizer.Lifelines.Individual), "Should be one Lifeline")
 }
-
-func TestTitleBoxBottomMethod(t *testing.T) {
-	assert := assert.New(t)
-	statements := parser.MustCompileParse("life A foo")
-	sizer := NewSizer(2000, 20.0, statements)
-	bot := sizer.TitleBoxBottom()
-	assert.InDelta(60, bot, 0.1)
-}
