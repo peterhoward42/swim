@@ -86,13 +86,8 @@ func (lifelines *Lifelines) InteractionLabelPosition(
 	x float64, horizJustification graphics.Justification) {
 	sourceLifelineSiz := lifelines.Individual[sourceLifeline]
 	destLifelineSiz := lifelines.Individual[destLifeline]
-	if destLifelineSiz.Centre > sourceLifelineSiz.Centre {
-		x = destLifelineSiz.ActivityBoxLeft - padding
-		horizJustification = graphics.Right
-	} else {
-		x = destLifelineSiz.ActivityBoxRight + padding
-		horizJustification = graphics.Left
-	}
+	x = 0.5 * (sourceLifelineSiz.Centre + destLifelineSiz.Centre)
+	horizJustification = graphics.Centre
 	return
 }
 

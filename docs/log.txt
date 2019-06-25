@@ -5,8 +5,7 @@
     *  Lane lines -> lifelines
     *  Do lifeline lines
     *  change lifelineTitleBox to use tidemark as top, having advanced 
-    o  experiment also with centre justifying interaction line labels
-        o  will make lifeline breaks look more obviously needed
+    *  experiment also with centre justifying interaction line labels
     o  add a rectangular border with letter markers in view also
     o  sizer.Lanes (and test) modules got left behing in rename
     o  newAllBoxStates got left behind in renaming
@@ -24,8 +23,9 @@
     o  Add title keyword which could be "edit me"
     o  Render lifline label letters
     o  Should private types be lower case? bit of muddle
-    o  Lifeline should be coarser mark space than response line
+    o  Lifeline should be different mark space than response line
     o  benchmarks and tuning
+    o  update readme
     o  godoc example
     o  may need to rebrand as uml **sequence** diagram
     o  cf creately and sequencediag.com differentiate
