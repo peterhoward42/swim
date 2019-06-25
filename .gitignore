@@ -15,4 +15,4 @@
 .DS_Store
 
 # .png images created by visual tests
-testresults/new/
+/diag/testresults/new/
