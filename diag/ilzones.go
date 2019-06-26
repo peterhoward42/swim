@@ -10,7 +10,7 @@ import (
 Claim models a vertical space claimed by an interaction line or its
 label.
 */
-type Claim struct {
+type claim struct {
 	sourceLifeline *dslmodel.Statement
 	destLifeline   *dslmodel.Statement
 	extent         *segment
@@ -23,7 +23,7 @@ where to make breaks in lifelines, so as not to clash with them.
 */
 type InteractionLineZones struct {
 	creator *Creator
-	claims  []*Claim
+	claims  []*claim
 }
 
 // NewInteractionLineZones provides a new InteractionLineZones
@@ -31,7 +31,7 @@ type InteractionLineZones struct {
 func NewInteractionLineZones(creator *Creator) *InteractionLineZones {
 	ilZones := &InteractionLineZones{
 		creator: creator,
-		claims:  []*Claim{},
+		claims:  []*claim{},
 	}
 	return ilZones
 }
@@ -46,7 +46,7 @@ func (ilz *InteractionLineZones) RegisterSpaceClaim(
 	startY float64,
 	endY float64) {
 	seg := &segment{startY, endY}
-	claim := &Claim{sourceLifeline, destLifeline, seg}
+	claim := &claim{sourceLifeline, destLifeline, seg}
 	ilz.claims = append(ilz.claims, claim)
 }
 

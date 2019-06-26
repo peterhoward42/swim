@@ -13,14 +13,14 @@ Where things are named *seg* this is short for segment.
 */
 
 // Lifelines exposes the API for creating lifelines.
-type Lifelines struct {
+type lifelines struct {
 	creator              *Creator
 	titleBoxTopAndBottom *segment // Set once known
 }
 
 // NewLifelines creates a Lifelines, ready to use.
-func NewLifelines(creator *Creator) *Lifelines {
-	lifelines := Lifelines{}
+func newLifelines(creator *Creator) *lifelines {
+	lifelines := lifelines{}
 	lifelines.creator = creator
 	return &lifelines
 }
@@ -28,7 +28,7 @@ func NewLifelines(creator *Creator) *Lifelines {
 // ProduceLifelines works out the dashed line segments that should be created
 // to render all the lifelines, including leaving gaps where there are activity
 // boxes and interaction lines that cross a lifeline.
-func (ll *Lifelines) ProduceLifelines() {
+func (ll *lifelines) produceLifelines() {
 	for _, lifelineStatement := range ll.creator.lifelineStatements {
 		lineSegments := ll.produceOneLifeline(lifelineStatement)
 		x := ll.creator.sizer.Lifelines.Individual[lifelineStatement].Centre
@@ -47,7 +47,7 @@ to represent one lifeline - accomodating the gaps needed where
 the lifeline activity boxes live, or interaction lines that cross this
 lifeline.
 */
-func (ll *Lifelines) produceOneLifeline(lifeline *dslmodel.Statement) (
+func (ll *lifelines) produceOneLifeline(lifeline *dslmodel.Statement) (
 	lineSegments []*segment) {
 
 	// Acquire and combine the (ordered) gap requirements - between which

@@ -6,12 +6,13 @@
     *  Do lifeline lines
     *  change lifelineTitleBox to use tidemark as top, having advanced 
     *  experiment also with centre justifying interaction line labels
-
     *  sizer.Lanes (and test) modules got left behing in rename
     *  allboxstates is horrid name
     *  newAllBoxStates got left behind in renaming
-
     o  Should private types be lower case? bit of muddle
+        o  try grepping for type in main packages, and then
+           seeing if it is imported elsewhere
+            o  diag
         o  ditch current warning first
     o  more module level comments
     o  any potential for make diag package smaller?

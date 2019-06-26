@@ -25,7 +25,7 @@ type Creator struct {
 	// Keeps track of the space taken up by interaction lines.
 	ilZones *InteractionLineZones
 	// A delegate to make the lifelines dashed line segments.
-	lifelineMaker *Lifelines
+	lifelineMaker *lifelines
 	// The output.
 	graphicsModel *graphics.Model
 	// Knows how to size everything.
@@ -54,7 +54,7 @@ func NewCreator(width int, fontHeight float64,
 		sizer:              sizer,
 	}
 	creator.ilZones = NewInteractionLineZones(creator)
-	creator.lifelineMaker = NewLifelines(creator)
+	creator.lifelineMaker = newLifelines(creator)
 	return creator
 }
 
@@ -125,7 +125,7 @@ graphicsForDrawingEvent synthesizes the lines and label strings primititives
 required to render a single diagram element drawing event. It also advances
 c.tideMark, to accomodate the space taken up by what it generated.
 */
-func (c *Creator) graphicsForDrawingEvent(evt EventType,
+func (c *Creator) graphicsForDrawingEvent(evt eventType,
 	statement *dslmodel.Statement) {
 
 	switch evt {
@@ -353,5 +353,5 @@ func (c *Creator) finalizeActivityBox(
 // todo
 func (c *Creator) finalizeLifelines() {
 	// Quite complex - so delegate.
-	c.lifelineMaker.ProduceLifelines()
+	c.lifelineMaker.produceLifelines()
 }

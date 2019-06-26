@@ -9,13 +9,13 @@ import (
 	"github.com/peterhoward42/umli"
 )
 
-// EventType is the enumerated-type for the constants such as EndBox or
+// eventType is the enumerated-type for the constants such as EndBox or
 // LifelineLine below.
-type EventType int
+type eventType int
 
 // These constants comprise the set of values for EventType.
 const (
-	EndBox EventType = iota + 1
+	EndBox eventType = iota + 1
 	InteractionLine
 	InteractionLabel
 	LifelineTitleBox
@@ -38,7 +38,7 @@ In this context, the labels for interaction lines and for self interaction
 lines, will be drawn above the lines to which they refer, and therefore must
 precede the corresponding line events.
 */
-var EventsRequired = map[string][]EventType{
+var EventsRequired = map[string][]eventType{
 	umli.Life: {
 		LifelineTitleBox, // advances tidemark
 	},
