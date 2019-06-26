@@ -55,7 +55,7 @@ func (ll *lifelines) produceOneLifeline(lifeline *dslmodel.Statement) (
 
 	pretendPreGap := &segment{-1, ll.titleBoxTopAndBottom.end}
 	activityBoxGaps := ll.creator.activityBoxes[lifeline].boxExtentsAsSegments()
-	crossingInteractionLineGaps := ll.creator.ilZones.GapsFor(lifeline)
+	crossingInteractionLineGaps := ll.creator.ilZones.gapsFor(lifeline)
 	lifelinesBottom := ll.creator.tideMark
 	pretendPostGap := &segment{lifelinesBottom, lifelinesBottom + 1}
 

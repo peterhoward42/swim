@@ -13,8 +13,8 @@ type eventsForStatements = map[*dslmodel.Statement][]eventType
 type scanner struct {
 }
 
-// NewScanner produces a Scanner ready to use.
-func NewScanner() *scanner {
+// newScanner produces a Scanner ready to use.
+func newScanner() *scanner {
 	return &scanner{}
 }
 

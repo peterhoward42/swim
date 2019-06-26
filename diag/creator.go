@@ -42,7 +42,7 @@ func NewCreator(width int, fontHeight float64,
 	lifelineStatements := isolateLifelines(allStatements)
 	activityBoxes := map[*dslmodel.Statement]*lifelineBoxes{}
 	for _, s := range lifelineStatements {
-		activityBoxes[s] = NewLifelineBoxes()
+		activityBoxes[s] = newlifelineBoxes()
 	}
 	sizer := sizers.NewSizer(width, fontHeight, lifelineStatements)
 	creator := &Creator{
@@ -98,7 +98,7 @@ dimensioned once the interaction line Y coordinates are known; for example
 the activity boxes that sit on lifelines.
 */
 func (c *Creator) createFirstPass() {
-	graphicalEvents := NewScanner().Scan(c.allStatements)
+	graphicalEvents := newScanner().Scan(c.allStatements)
 	c.tideMark = c.sizer.DiagramPadT
 	// Outer loop is per DSL statement
 	for _, statement := range c.allStatements {

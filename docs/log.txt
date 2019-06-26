@@ -9,11 +9,8 @@
     *  sizer.Lanes (and test) modules got left behing in rename
     *  allboxstates is horrid name
     *  newAllBoxStates got left behind in renaming
-    o  Should private types be lower case? bit of muddle
-        o  try grepping for type in main packages, and then
-           seeing if it is imported elsewhere
-            o  diag
-        o  ditch current warning first
+    *  Should private types be lower case? bit of muddle
+    *  How stimulate go lint and go vet from command line
     o  more module level comments
     o  any potential for make diag package smaller?
     o  add a rectangular border with letter markers in view also

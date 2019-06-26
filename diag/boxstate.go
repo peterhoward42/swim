@@ -18,8 +18,8 @@ type lifelineBoxes struct {
 	boxes []*boxExtent
 }
 
-// NewLifelineBoxes provides a lifelineBoxes ready to use.
-func NewLifelineBoxes() *lifelineBoxes {
+// newlifelineBoxes provides a lifelineBoxes ready to use.
+func newlifelineBoxes() *lifelineBoxes {
 	return &lifelineBoxes{[]*boxExtent{}}
 }
 

@@ -51,11 +51,11 @@ func (ilz *InteractionLineZones) RegisterSpaceClaim(
 }
 
 /*
-GapsFor provides a list of Segment(s) that represent the gaps
+gapsFor provides a list of Segment(s) that represent the gaps
 that should be left in in a lifeline so as not to interfere with the
 interaction lines that cross it.
 */
-func (ilz *InteractionLineZones) GapsFor(lifeline *dslmodel.Statement) []*segment {
+func (ilz *InteractionLineZones) gapsFor(lifeline *dslmodel.Statement) []*segment {
 	gaps := []*segment{}
 	for _, claim := range ilz.claims {
 		if ilz.crosses(lifeline, claim.sourceLifeline, claim.destLifeline) {
