@@ -21,7 +21,7 @@ type Creator struct {
 	// The statements representing lifelines - isolated.
 	lifelineStatements []*dslmodel.Statement
 	// Keeps track of activity box top and bottom coordinates.
-	activityBoxes allActivityBoxes
+	activityBoxes map[*dslmodel.Statement]*lifelineBoxes
 	// Keeps track of the space taken up by interaction lines.
 	ilZones *InteractionLineZones
 	// A delegate to make the lifelines dashed line segments.
@@ -40,7 +40,10 @@ NewCreator provides a Creator ready to use.
 func NewCreator(width int, fontHeight float64,
 	allStatements []*dslmodel.Statement) *Creator {
 	lifelineStatements := isolateLifelines(allStatements)
-	activityBoxes := newAllActivityBoxes(lifelineStatements)
+	activityBoxes := map[*dslmodel.Statement]*lifelineBoxes{}
+	for _, s := range lifelineStatements {
+		activityBoxes[s] = NewLifelineBoxes()
+	}
 	sizer := sizers.NewSizer(width, fontHeight, lifelineStatements)
 	creator := &Creator{
 		width:              width,
@@ -293,7 +296,7 @@ func (c *Creator) potentiallyStartFromBox(
 }
 
 // potentiallyStartActivityBox is a DRY helper to (potentially) note the
-// top edge of a lifeline's activity box in c.allBoxStates.
+// top edge of a lifeline's activity box in c.activityBoxes.
 func (c *Creator) potentiallyStartActivityBox(
 	lifeline *dslmodel.Statement, behindTidemarkDelta float64) {
 	// Already a box in progress?
@@ -329,11 +332,13 @@ func (c *Creator) finalizeActivityBoxes() {
 
 /*
 finalizeActivityBox is a DRY helper that draws a single lifeline activity box -
-based on the top Y coordinate stored in c.allBoxStates and the given bottom Y
+based on the top Y coordinate stored in c.activityBoxes and the given bottom Y
 coordinate. It then advances the tide mark to the bottom value provided.
 */
 func (c *Creator) finalizeActivityBox(
 	lifeline *dslmodel.Statement, bottom float64) {
+	// Skip those that have been stopped earlier explicitly with a *stop*
+	// statement.
 	if !c.activityBoxes[lifeline].inProgress() {
 		return
 	}

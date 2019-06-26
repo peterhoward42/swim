@@ -18,9 +18,10 @@ type lifelineBoxes struct {
 	boxes []*boxExtent
 }
 
-// Type allActivityBoxes maps lifeline statements to the corresponding
-// lifelineBoxes for that statement.
-type allActivityBoxes map[*dslmodel.Statement]*lifelineBoxes
+// NewLifelineBoxes provides a lifelineBoxes ready to use.
+func NewLifelineBoxes() *lifelineBoxes {
+	return &lifelineBoxes{[]*boxExtent{}}
+}
 
 // inProgress returns true when the most recently started activity box
 // on the lifeline has not yet been finished.
@@ -71,14 +72,4 @@ func (llb *lifelineBoxes) boxExtentsAsSegments() []*segment {
 // newBoxStates provides a lifelineBoxes ready to use.
 func newLifelineBoxes(lifelineStatement *dslmodel.Statement) *lifelineBoxes {
 	return &lifelineBoxes{[]*boxExtent{}}
-}
-
-// newAllActivityBoxes creates a allActivityBoxes ready to use.
-func newAllActivityBoxes(
-	lifelineStatements []*dslmodel.Statement) allActivityBoxes {
-	allBoxes := allActivityBoxes{}
-	for _, lifelineStatement := range lifelineStatements {
-		allBoxes[lifelineStatement] = newLifelineBoxes(lifelineStatement)
-	}
-	return allBoxes
 }

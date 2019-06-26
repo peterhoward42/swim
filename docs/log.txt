@@ -6,9 +6,16 @@
     *  Do lifeline lines
     *  change lifelineTitleBox to use tidemark as top, having advanced 
     *  experiment also with centre justifying interaction line labels
+
+    *  sizer.Lanes (and test) modules got left behing in rename
+    *  allboxstates is horrid name
+    *  newAllBoxStates got left behind in renaming
+
+    o  Should private types be lower case? bit of muddle
+        o  ditch current warning first
+    o  more module level comments
+    o  any potential for make diag package smaller?
     o  add a rectangular border with letter markers in view also
-    o  sizer.Lanes (and test) modules got left behing in rename
-    o  newAllBoxStates got left behind in renaming
     o  show lane letters - possibly optionally
     o  consider if image regression tests needed - or maybe only canonical?
     o  what happens if you introduce a lifeline late in the script?
@@ -21,8 +28,6 @@
     o  Change reference model to make label not too long, and maybe
        be more computer sciency - plus update readme to suit
     o  Add title keyword which could be "edit me"
-    o  Render lifline label letters
-    o  Should private types be lower case? bit of muddle
     o  Lifeline should be different mark space than response line
     o  benchmarks and tuning
     o  update readme
@@ -35,4 +40,4 @@
 ----------------------------------------------------------------------------
 Intent for interactionline claims?
 ----------------------------------------------------------------------------
-
+map[*dslmodel.Statement]*lifelineBoxes
