@@ -1,6 +1,6 @@
 package graphics
 
-// Model is the topl-level model.
+// Model is the topl-level graphics model.
 type Model struct {
 	Width           int
 	Height          int

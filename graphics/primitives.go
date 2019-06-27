@@ -1,5 +1,12 @@
 package graphics
 
+/*
+This module provides graphics primitive types like Point and Line etc, along
+with a container (Primitives) that can hold a list of each primitive type.
+
+It also provides convenience functions to add primitives to a container.
+*/
+
 // Point represents one point (X,Y)
 type Point struct {
 	X float64

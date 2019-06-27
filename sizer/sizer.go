@@ -1,6 +1,9 @@
 /*
 Package sizers is the single source of truth for sizing all the elements
-that make up the diagram. E.g. the coordinates for each lifeline title box,
+that make up the diagram. Not only how big things are, but also how far
+apart they should be.
+
+E.g. the coordinates for each lifeline title box,
 the mark-space settings for dashed lines, arrow sizing, the margins or
 padding required for each thing etc.
 
@@ -26,6 +29,7 @@ import (
 type Sizer struct {
 	DiagramPadT                float64
 	DiagramPadB                float64
+    // Delegate for sizing of things to do with lifelines
 	Lifelines                  *Lifelines
 	InteractionLinePadB        float64
 	InteractionLineTextPadB    float64
@@ -45,6 +49,14 @@ type Sizer struct {
 func NewSizer(diagramWidth int, fontHeight float64,
 	lifelineStatements []*dslmodel.Statement) *Sizer {
 	sizer := &Sizer{}
+
+    // The requested font height is used as a datum reference,
+    // and nearly everything is sized in proportion to this, using
+    // settings from settings.go.
+
+    // These settings values typically end with the letter 
+    // K (e.g. diagramPadTK) to indicate they are proportion coefficients.
+
     fh := fontHeight
 
 	sizer.DiagramPadT = diagramPadTK * fh

@@ -5,7 +5,7 @@ import (
 )
 
 // FilledPoly represents a filled polygon.
-// Intended to be used for an arrow head.
+// Which can be used for an arrow head.
 type FilledPoly struct {
 	Vertices []*Point // Do not repeat first point as last point.
 }

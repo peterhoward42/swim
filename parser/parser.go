@@ -71,6 +71,7 @@ func parseLine(line string, knownLifelines lifelineStatementsByName) (
 	// Isolate label text by stripping what we have already consumed.
 	labelText := strings.Replace(line, keyWord, "", 1)
 	labelText = strings.Replace(labelText, words[1], "", 1)
+    // Interpret pipes (|) as line breaks.
 	labelIndividualLines := isolateLabelConstituentLines(labelText)
 
 	// Make sure labels are present on statement for which they are

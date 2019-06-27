@@ -7,7 +7,7 @@ package umli
 
 // These constants represent the keywords in the DSL language.
 // They are in the top level package so that they can be used
-// in both the parser and the dslmodel respecably.
+// in both the parser and the dslmodel.
 const (
 	Life = "life"
 	Dash = "dash"

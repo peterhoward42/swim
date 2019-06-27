@@ -1,5 +1,15 @@
 package diag
 
+/*
+This module contains code that owns state and processing logic in relation
+to drawing activity boxes on lifelines. There are no statements in the DSL
+to draw boxes as such. Instead the initiation of each one is inferred from
+an interaction line statement (full or dash). However a box cannot be
+drawn until it is known how far down the diagram it finishes. A box is
+either terminated by an explicit *stop* statement, or implicitly at the
+bottom of the diagram.
+*/
+
 import (
 	"github.com/peterhoward42/umli/dslmodel"
 )

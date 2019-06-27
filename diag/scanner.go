@@ -1,5 +1,13 @@
 package diag
 
+/*
+This module contains code that is capable of consuming an ordered list
+of DSL statements - and producing the required sequence of drawing events (or
+mandates) to make the diagram. It's called a scanner, because the process is
+conceptually concerned with working it way down the page incrementally as it 
+produces things - according to the space taken up by each graphics event.
+*/
+
 import (
 	"github.com/peterhoward42/umli/dslmodel"
 )

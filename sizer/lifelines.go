@@ -1,7 +1,7 @@
 package sizers
 
 // This module provides the *Lifeline* and *LifelineInfo* types, which
-// encapsulatesizing data for lifelines.
+// encapsulate sizing data for lifelines.
 
 import (
 	"github.com/peterhoward42/umli/dslmodel"

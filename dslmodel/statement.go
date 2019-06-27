@@ -1,5 +1,5 @@
 // Package dslmodel provides the Statement type, which makes it possible
-// to compose a structured representation of a DSL script by using a list
+// to compose a **structured** representation of a DSL script by using a list
 // of Statement(s). It aims to decouple the downstream diagram building
 // system from the Parser and to provide it with a clean and fully
 // validated input model.

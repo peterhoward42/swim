@@ -1,5 +1,12 @@
 package diag
 
+/*
+This module contains code that keeps track of how much vertical space
+each interaction line (and its label) has taken up  as it is drawn. It is
+consulted later by the code that draws the lifelines, so that it can make
+gaps in them to avoid overwriting (crossing) the interaction lines.
+*/
+
 import (
 	"math"
 

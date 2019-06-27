@@ -1,6 +1,6 @@
 package sizers
 
-// This module defines (package private) constants that govern
+// This module defines constants that govern
 // sizing decisions. They are all ratios (mostly) w.r.t. font height.
 
 // Naming conventions:
@@ -11,6 +11,11 @@ package sizers
 const (
 
 	// Diagram as a whole.
+
+    // To explain the first one as an example...
+    // the padding at top of the entire diagram should be the same as
+    // one rendered string. I.e. 1.0 font height.
+
 	diagramPadTK = 1.0
 	diagramPadBK = 1.0
 

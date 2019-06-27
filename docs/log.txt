@@ -11,8 +11,11 @@
     *  newAllBoxStates got left behind in renaming
     *  Should private types be lower case? bit of muddle
     *  How stimulate go lint and go vet from command line
+
     o  more module level comments
+
     o  any potential for make diag package smaller?
+        o  pure graphics like segment
     o  add a rectangular border with letter markers in view also
     o  show lane letters - possibly optionally
     o  consider if image regression tests needed - or maybe only canonical?

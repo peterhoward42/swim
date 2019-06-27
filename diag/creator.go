@@ -1,5 +1,15 @@
 package diag
 
+/*
+This module contains the *Creator* type which provides the public interface
+to clients of the *diag* package. Clients should construct a Creator with
+NewCreator() and then call its Create() method.
+
+The module then provides the high-level implementation for Create() and
+expresses the essential creation algorith - delegating much of its work to 
+code in other modules in the package.
+*/
+
 import (
 	"github.com/peterhoward42/umli"
 	"github.com/peterhoward42/umli/dslmodel"
