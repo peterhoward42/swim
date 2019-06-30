@@ -49,7 +49,7 @@ var twoUCLetters = re.MustCompile(`^[A-Z][A-Z]$`)
 // the fields expected, validates them, and packages the result into a
 // dslmodel.Statement.
 func parseLine(line string, knownLifelines lifelineStatementsByName) (
-	*dslmodel.Statement, error) {
+	s *dslmodel.Statement, err error) {
 	// Fail fast when < 2 words.
 	words := strings.Split(line, " ")
 	if len(words) < 2 {
@@ -61,17 +61,20 @@ func parseLine(line string, knownLifelines lifelineStatementsByName) (
 		return nil, fmt.Errorf("unrecognized keyword: %s", keyWord)
 	}
 	// Validate and reconcile the lifelines referenced in the second word.
-	lifelineNamesOperand := words[1]
-	lifelinesReferenced, err := parseLifelinesOperand(
-		lifelineNamesOperand, keyWord, knownLifelines)
-	if err != nil {
-		return nil, err
+	var lifelineNamesOperand string
+	var lifelinesReferenced []*dslmodel.Statement
+	if keyWord != umli.Title {
+		lifelineNamesOperand = words[1]
+		if lifelinesReferenced, err = parseLifelinesOperand(
+			lifelineNamesOperand, keyWord, knownLifelines); err != nil {
+			return nil, err
+		}
 	}
 
 	// Isolate label text by stripping what we have already consumed.
 	labelText := strings.Replace(line, keyWord, "", 1)
 	labelText = strings.Replace(labelText, words[1], "", 1)
-    // Interpret pipes (|) as line breaks.
+	// Interpret pipes (|) as line breaks.
 	labelIndividualLines := isolateLabelConstituentLines(labelText)
 
 	// Make sure labels are present on statement for which they are

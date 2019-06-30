@@ -9,12 +9,13 @@ package umli
 // They are in the top level package so that they can be used
 // in both the parser and the dslmodel.
 const (
-	Life = "life"
-	Dash = "dash"
-	Full = "full"
-	Self = "self"
-	Stop = "stop"
+	Title = "title"
+	Life  = "life"
+	Dash  = "dash"
+	Full  = "full"
+	Self  = "self"
+	Stop  = "stop"
 )
 
 // AllKeywords provides the keywords as a list.
-var AllKeywords = []string{Life, Full, Dash, Self, Stop}
+var AllKeywords = []string{Title, Life, Full, Dash, Self, Stop}

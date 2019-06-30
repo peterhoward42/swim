@@ -20,10 +20,8 @@
                label in enclosed box
             *  dsl?
                 *  title foo | bar
-        o  branch titlebox
-        o  parser system
-            o  change reference model and regression up
-            o  add tests for statement model building
+        *  branch title
+        *  parser system
         o  render and layout
         o  merge title box into main
     o  show lane letters - possibly optionally
