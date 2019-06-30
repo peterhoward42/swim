@@ -11,15 +11,25 @@
     *  newAllBoxStates got left behind in renaming
     *  Should private types be lower case? bit of muddle
     *  How stimulate go lint and go vet from command line
+    *  more module level comments
+    *  any potential for make diag package smaller? (no)
 
-    o  more module level comments
-
-    o  any potential for make diag package smaller?
-        o  pure graphics like segment
     o  add a rectangular border with letter markers in view also
+        *  analysis
+            *  plain rect border with tlh corner containing title
+               label in enclosed box
+            *  dsl?
+                *  title foo | bar
+        o  branch titlebox
+        o  parser system
+            o  change reference model and regression up
+            o  add tests for statement model building
+        o  render and layout
+        o  merge title box into main
     o  show lane letters - possibly optionally
     o  consider if image regression tests needed - or maybe only canonical?
     o  what happens if you introduce a lifeline late in the script?
+    o  what happens if you put title in too late?
     o  many lifelines example suggests self labels might be better off
        going back above the loop and being allowed to go further right
     o  Might be best to hard code and hide the size  - and
