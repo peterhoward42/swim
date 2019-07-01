@@ -22,8 +22,12 @@
                 *  title foo | bar
         *  branch title
         *  parser system
-        o  render and layout
-        o  merge title box into main
+        *  render and layout
+            *  design algo
+        o  do
+            o  frameMaker.produceFrameAndTitleBox
+            o  frameMaker.finalizeFrame
+        o  merge title box branch into main
     o  show lane letters - possibly optionally
     o  consider if image regression tests needed - or maybe only canonical?
     o  what happens if you introduce a lifeline late in the script?
@@ -47,6 +51,14 @@
 
 
 ----------------------------------------------------------------------------
-Intent for interactionline claims?
+Algo for title box
 ----------------------------------------------------------------------------
-map[*dslmodel.Statement]*lifelineBoxes
+o  Treat as one thing
+o  Dedicated module
+o  Diag borders remain outermost
+o  Will need to inform lifeline pitch and spacing - reduced margins
+o  title frame will need to claim space for itself and render itself
+o  the rest has to be produced in register/finalize way
+o  handling of final advance of tidemark will have to be moved from
+   finalize lifelines to this
+

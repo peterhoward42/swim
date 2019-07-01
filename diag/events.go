@@ -16,6 +16,7 @@ type eventType int
 // These constants comprise the set of values for EventType.
 const (
 	EndBox eventType = iota + 1
+	Frame
 	InteractionLine
 	InteractionLabel
 	LifelineTitleBox
@@ -38,6 +39,9 @@ lines, will be drawn above the lines to which they refer, and therefore must
 precede the corresponding line events.
 */
 var EventsRequired = map[string][]eventType{
+	umli.Title: {
+		Frame, // advances tidemark
+	},
 	umli.Life: {
 		LifelineTitleBox, // advances tidemark
 	},

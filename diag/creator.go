@@ -6,7 +6,7 @@ to clients of the *diag* package. Clients should construct a Creator with
 NewCreator() and then call its Create() method.
 
 The module then provides the high-level implementation for Create() and
-expresses the essential creation algorith - delegating much of its work to 
+expresses the essential creation algorith - delegating much of its work to
 code in other modules in the package.
 */
 
@@ -30,6 +30,8 @@ type Creator struct {
 	allStatements []*dslmodel.Statement
 	// The statements representing lifelines - isolated.
 	lifelineStatements []*dslmodel.Statement
+	// In charge of making the outer frame and title.
+	frameMaker *frameMaker
 	// Keeps track of activity box top and bottom coordinates.
 	activityBoxes map[*dslmodel.Statement]*lifelineBoxes
 	// Keeps track of the space taken up by interaction lines.
@@ -63,6 +65,7 @@ func NewCreator(width int, fontHeight float64,
 		activityBoxes:      activityBoxes,
 		sizer:              sizer,
 	}
+	creator.frameMaker = newFrameMaker(creator)
 	creator.ilZones = NewInteractionLineZones(creator)
 	creator.lifelineMaker = newLifelines(creator)
 	return creator
@@ -153,7 +156,14 @@ func (c *Creator) graphicsForDrawingEvent(evt eventType,
 		c.potentiallyStartFromBox(statement)
 	case PotentiallyStartToBox:
 		c.potentiallyStartToBox(statement)
+	case Frame:
+		c.frame(statement)
 	}
+}
+
+func (c *Creator) frame(statement *dslmodel.Statement) {
+	// Quite complex - so delegate.
+	c.frameMaker.produceFrameAndTitleBox(statement)
 }
 
 /*
