@@ -10,14 +10,19 @@ package sizers
 
 const (
 
-	// Diagram as a whole.
-
-    // To explain the first one as an example...
-    // the padding at top of the entire diagram should be the same as
-    // one rendered string. I.e. 1.0 font height.
-
+	// To explain the first one as an example...
+	// the padding at top of the entire diagram should be the same as
+	// one rendered string. I.e. 1.0 font height.
 	diagramPadTK = 1.0
 	diagramPadBK = 1.0
+	diagPadLK    = 1.0
+
+	// Frame and diagram title
+	frameTitleTextPadTK = 0.25
+	frameTitleTextPadBK = 0.25
+	frameTitleBoxWidthK = 0.25 // Of diagram width
+	frameTitleRectPadBK = 1.0
+	frameTitleTextPadLK = 1.0
 
 	// Lifelines
 	titleBoxPadRK         = 0.25 // w.r.t title box width

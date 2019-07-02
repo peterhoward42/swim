@@ -29,8 +29,13 @@ import (
 type Sizer struct {
 	DiagramPadT                float64
 	DiagramPadB                float64
-    // Delegate for sizing of things to do with lifelines
-	Lifelines                  *Lifelines
+	DiagPadL                   float64
+	FrameTitleTextPadT         float64
+	FrameTitleTextPadB         float64
+	FrameTitleTextPadL         float64
+	FrameTitleBoxWidth         float64
+	FrameTitleRectPadB         float64
+	Lifelines                  *Lifelines // Delegated sizing
 	InteractionLinePadB        float64
 	InteractionLineTextPadB    float64
 	InteractionLineLabelIndent float64
@@ -40,8 +45,8 @@ type Sizer struct {
 	DashLineDashGap            float64
 	SelfLoopHeight             float64
 	ActivityBoxVerticalOverlap float64
-    FinalizedActivityBoxesPadB float64
-    MinLifelineSegLength       float64
+	FinalizedActivityBoxesPadB float64
+	MinLifelineSegLength       float64
 }
 
 // NewSizer provides a Sizer structure that has been initialised
@@ -50,17 +55,25 @@ func NewSizer(diagramWidth int, fontHeight float64,
 	lifelineStatements []*dslmodel.Statement) *Sizer {
 	sizer := &Sizer{}
 
-    // The requested font height is used as a datum reference,
-    // and nearly everything is sized in proportion to this, using
-    // settings from settings.go.
+	// The requested font height is used as a datum reference,
+	// and nearly everything is sized in proportion to this, using
+	// settings from settings.go.
 
-    // These settings values typically end with the letter 
-    // K (e.g. diagramPadTK) to indicate they are proportion coefficients.
+	// These settings values typically end with the letter
+	// K (e.g. diagramPadTK) to indicate they are proportion coefficients.
 
-    fh := fontHeight
+	fh := fontHeight
 
 	sizer.DiagramPadT = diagramPadTK * fh
 	sizer.DiagramPadB = diagramPadBK * fh
+	sizer.DiagPadL = diagPadLK * fh
+
+	sizer.FrameTitleTextPadT = frameTitleTextPadTK * fh
+	sizer.FrameTitleTextPadT = frameTitleTextPadBK * fh
+	sizer.FrameTitleBoxWidth = frameTitleBoxWidthK * float64(diagramWidth)
+	sizer.FrameTitleRectPadB = frameTitleRectPadBK * fh
+	sizer.FrameTitleTextPadL = frameTitleTextPadLK * fh
+
 	sizer.Lifelines = NewLifelines(diagramWidth, fh, lifelineStatements)
 
 	sizer.ArrowLen = arrowLenK * fh
@@ -73,8 +86,8 @@ func NewSizer(diagramWidth int, fontHeight float64,
 	sizer.DashLineDashGap = dashLineDashGapK * fh
 	sizer.SelfLoopHeight = sizer.Lifelines.SelfLoopWidth * selfLoopAspectRatio
 	sizer.ActivityBoxVerticalOverlap = activityBoxVerticalOverlapK * fh
-    sizer.FinalizedActivityBoxesPadB = finalizedActivityBoxesPadB * fh
-    sizer.MinLifelineSegLength = minLifelineSegLengthK * fh
+	sizer.FinalizedActivityBoxesPadB = finalizedActivityBoxesPadB * fh
+	sizer.MinLifelineSegLength = minLifelineSegLengthK * fh
 
 	return sizer
 }

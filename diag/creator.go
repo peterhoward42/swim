@@ -163,7 +163,7 @@ func (c *Creator) graphicsForDrawingEvent(evt eventType,
 
 func (c *Creator) frame(statement *dslmodel.Statement) {
 	// Quite complex - so delegate.
-	c.frameMaker.produceFrameAndTitleBox(statement)
+	c.frameMaker.initFrameAndMakeTitleBox(statement)
 }
 
 /*
@@ -225,14 +225,14 @@ func (c *Creator) interactionLabel(
 /*
 rowOfLabels is a (DRY) helper function to make the graphics.Primitives
 objects for the set of strings in a label. It hard-codes top vertical
-justification.
+justification. It does not advance the tideMark.
 */
-func (c *Creator) rowOfLabels(centreX float64, firstRowY float64,
+func (c *Creator) rowOfLabels(x float64, firstRowY float64,
 	horizJustification graphics.Justification, labelSegments []string) {
 	for i, labelSeg := range labelSegments {
 		y := firstRowY + float64(i)*c.fontHeight
 		c.graphicsModel.Primitives.AddLabel(labelSeg, c.fontHeight,
-			centreX, y, horizJustification, graphics.Top)
+			x, y, horizJustification, graphics.Top)
 	}
 }
 

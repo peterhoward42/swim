@@ -25,9 +25,16 @@
         *  render and layout
             *  design algo
         o  do
-            o  frameMaker.produceFrameAndTitleBox
+            *  frameMaker.produceFrameAndTitleBox
+                o  get visually ok
+                    *  box shallow and text below
+                    o  some padding/posn wrong
+                o  add unit tests if poss
             o  frameMaker.finalizeFrame
+        o  take into account diag padding left and right in lifeline pitch
+           calcs
         o  merge title box branch into main
+    o  first parameter name of Creator.rowOfLabels should not be centre
     o  show lane letters - possibly optionally
     o  consider if image regression tests needed - or maybe only canonical?
     o  what happens if you introduce a lifeline late in the script?

@@ -2,6 +2,7 @@ package diag
 
 import (
 	"github.com/peterhoward42/umli/dslmodel"
+	"github.com/peterhoward42/umli/graphics"
 )
 
 /*
@@ -16,16 +17,25 @@ type frameMaker struct {
 
 // newlifelineBoxes provides a lifelineBoxes ready to use.
 func newFrameMaker(creator *Creator) *frameMaker {
-	return &frameMaker{creator}
+	return &frameMaker{creator: creator}
 }
 
-func (fm *frameMaker) produceFrameAndTitleBox(statement *dslmodel.Statement) {
-	fm.frameTop = fm.creator.tideMark
-	// advance tidemark to give title headroom inside box
-	// make text
-	// advance tidemark to give space twixt title text and title box
-	// note bottom of box
-	// capture frameleft and titlebox right from sizer
-	// draw rect between frame top and bottom of box
-	// advance tidemark to give title box some space below
+/*
+initFrameAndMakeTitleBox is responsible capturing the Y coordinate at which
+the diagram's frame rectangle should start, and then drawing the diagram title
+in an enclosing rectangle just below it. Then advancing the tidemark
+accordingly.
+*/
+func (fm *frameMaker) initFrameAndMakeTitleBox(statement *dslmodel.Statement) {
+	c := fm.creator
+	fm.frameTop = c.tideMark
+	c.tideMark += c.sizer.FrameTitleTextPadT
+	topOfTitleTextY := c.tideMark
+	leftOfText := c.sizer.DiagPadL + c.sizer.FrameTitleTextPadB
+	fm.creator.rowOfLabels(leftOfText, topOfTitleTextY, graphics.Left, statement.LabelSegments)
+	c.tideMark += float64(len(statement.LabelSegments)) * c.fontHeight
+	c.tideMark += c.sizer.FrameTitleTextPadB
+	rightOfFrameTitleBox := c.sizer.FrameTitleBoxWidth
+	c.graphicsModel.Primitives.AddRect(c.sizer.DiagPadL, fm.frameTop, rightOfFrameTitleBox, c.tideMark)
+	c.tideMark += c.sizer.FrameTitleRectPadB
 }
