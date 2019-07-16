@@ -18,11 +18,13 @@ const (
 	diagPadLK    = 1.0
 
 	// Frame and diagram title
-	frameTitleTextPadTK = 0.25
-	frameTitleTextPadBK = 0.25
-	frameTitleBoxWidthK = 0.25 // Of diagram width
-	frameTitleRectPadBK = 1.0
+	frameInternalPadBK  = 1.0
+	frameTitleTextPadTK = 0.5
+	frameTitleTextPadBK = 1.0
 	frameTitleTextPadLK = 1.0
+
+	frameTitleBoxWidthK = 0.25 // Of diagram width
+	frameTitleRectPadBK = 3.0
 
 	// Lifelines
 	titleBoxPadRK         = 0.25 // w.r.t title box width

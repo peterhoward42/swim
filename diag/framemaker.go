@@ -31,11 +31,24 @@ func (fm *frameMaker) initFrameAndMakeTitleBox(statement *dslmodel.Statement) {
 	fm.frameTop = c.tideMark
 	c.tideMark += c.sizer.FrameTitleTextPadT
 	topOfTitleTextY := c.tideMark
-	leftOfText := c.sizer.DiagPadL + c.sizer.FrameTitleTextPadB
+	leftOfText := c.sizer.DiagPadL + c.sizer.FrameTitleTextPadL
 	fm.creator.rowOfLabels(leftOfText, topOfTitleTextY, graphics.Left, statement.LabelSegments)
 	c.tideMark += float64(len(statement.LabelSegments)) * c.fontHeight
 	c.tideMark += c.sizer.FrameTitleTextPadB
 	rightOfFrameTitleBox := c.sizer.FrameTitleBoxWidth
 	c.graphicsModel.Primitives.AddRect(c.sizer.DiagPadL, fm.frameTop, rightOfFrameTitleBox, c.tideMark)
 	c.tideMark += c.sizer.FrameTitleRectPadB
+}
+
+/*
+finalizeFrame claims a little space below the diagram vertical extent so far,
+and draws the enclosing frame.
+*/
+func (fm *frameMaker) finalizeFrame() {
+	c := fm.creator
+	c.tideMark += c.sizer.FrameInternalPadB
+	frameBottom := c.tideMark
+	left := c.sizer.DiagPadL
+	right := float64(c.width) - c.sizer.DiagPadL
+	c.graphicsModel.Primitives.AddRect(left, fm.frameTop, right, frameBottom)
 }

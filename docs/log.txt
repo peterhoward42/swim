@@ -14,7 +14,7 @@
     *  more module level comments
     *  any potential for make diag package smaller? (no)
 
-    o  add a rectangular border with letter markers in view also
+    o  add a rectangular border with title box
         *  analysis
             *  plain rect border with tlh corner containing title
                label in enclosed box
@@ -26,19 +26,28 @@
             *  design algo
         o  do
             *  frameMaker.produceFrameAndTitleBox
-                o  get visually ok
+                *  get visually ok
                     *  box shallow and text below
-                    o  some padding/posn wrong
-                o  add unit tests if poss
-            o  frameMaker.finalizeFrame
+                    *  text padding left wrong
+                    *  text padding bottom wrong
+                *  add unit tests if poss? - don't earn their keep
+            *  frameMaker.finalizeFrame
+            o  should the frame title text be bigger?
+            o  and/or should the frame title be centred in full width?
         o  take into account diag padding left and right in lifeline pitch
            calcs
         o  merge title box branch into main
+    o  do as go module
+    o  all one repo
     o  first parameter name of Creator.rowOfLabels should not be centre
+    o  lifeline title boxes are too fat on canoncial example
+    o  combine sizer and settings
+    o  take away choice of font size?
     o  show lane letters - possibly optionally
     o  consider if image regression tests needed - or maybe only canonical?
     o  what happens if you introduce a lifeline late in the script?
     o  what happens if you put title in too late?
+    o  question merit of sizer unit test given visual test efficiency
     o  many lifelines example suggests self labels might be better off
        going back above the loop and being allowed to go further right
     o  Might be best to hard code and hide the size  - and
@@ -49,12 +58,16 @@
        be more computer sciency - plus update readme to suit
     o  Add title keyword which could be "edit me"
     o  Lifeline should be different mark space than response line
+    o  Convenient save / load and view local directory
+    o  Web assembly
     o  benchmarks and tuning
     o  update readme
+    o  design docco
     o  godoc example
     o  may need to rebrand as uml **sequence** diagram
     o  cf creately and sequencediag.com differentiate
     o  Todo resurrect regressions tests for images
+        o  include tinternet examples?
 
 
 ----------------------------------------------------------------------------

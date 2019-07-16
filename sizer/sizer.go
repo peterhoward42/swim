@@ -30,6 +30,7 @@ type Sizer struct {
 	DiagramPadT                float64
 	DiagramPadB                float64
 	DiagPadL                   float64
+	FrameInternalPadB          float64
 	FrameTitleTextPadT         float64
 	FrameTitleTextPadB         float64
 	FrameTitleTextPadL         float64
@@ -68,11 +69,13 @@ func NewSizer(diagramWidth int, fontHeight float64,
 	sizer.DiagramPadB = diagramPadBK * fh
 	sizer.DiagPadL = diagPadLK * fh
 
+	sizer.FrameInternalPadB = frameInternalPadBK * fh
 	sizer.FrameTitleTextPadT = frameTitleTextPadTK * fh
-	sizer.FrameTitleTextPadT = frameTitleTextPadBK * fh
+	sizer.FrameTitleTextPadB = frameTitleTextPadBK * fh
+	sizer.FrameTitleTextPadL = frameTitleTextPadLK * fh
+
 	sizer.FrameTitleBoxWidth = frameTitleBoxWidthK * float64(diagramWidth)
 	sizer.FrameTitleRectPadB = frameTitleRectPadBK * fh
-	sizer.FrameTitleTextPadL = frameTitleTextPadLK * fh
 
 	sizer.Lifelines = NewLifelines(diagramWidth, fh, lifelineStatements)
 

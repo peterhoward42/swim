@@ -85,6 +85,7 @@ func (c *Creator) Create() *graphics.Model {
 	c.createFirstPass()
 	c.finalizeActivityBoxes()
 	c.finalizeLifelines()
+	c.frameMaker.finalizeFrame()
 	c.finalizeDiagramHeight()
 	return c.graphicsModel
 }

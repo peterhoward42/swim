@@ -54,13 +54,6 @@ func TestScratch(t *testing.T) {
 	genericCreateHelper(t, script, width, fontHeight, "scratch.png")
 }
 
-/*
-self E retry
-		full EF Deserialize
-		dash FE count json
-		stop F
-*/
-
 // TestReferenceModel uses the reference DSL script and a typical
 // diagram size and font size.
 func TestReferenceModel(t *testing.T) {

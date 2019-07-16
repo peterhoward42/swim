@@ -22,7 +22,8 @@ func TestNewSizerSetsItsScalarAttributesCorrectlyWhenOneLifelineOnly(
 	assert.InDelta(50, sizer.InteractionLineLabelIndent, 0.1)
 	assert.InDelta(10, sizer.DashLineDashLen, 0.1)
 	assert.InDelta(5, sizer.DashLineDashGap, 0.1)
-	assert.InDelta(400, sizer.SelfLoopHeight, 0.1)
+	
+	assert.L
 
 }
 
