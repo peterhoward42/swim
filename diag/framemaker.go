@@ -6,8 +6,7 @@ import (
 )
 
 /*
-This module contains code that owns state and processing logic in relation
-to drawing the diagram outer frame and title box.
+This module knows how to draw the diagram outer frame and title box.
 */
 
 type frameMaker struct {

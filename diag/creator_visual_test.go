@@ -121,6 +121,7 @@ func TestLargeNumberOfLifelines(t *testing.T) {
 	width := 2000
 	fontHeight := 20.0
 	script := `
+		title This Is The | Title
 		life A two word | title
 		life B two word | title
 		life C two word | title

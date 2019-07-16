@@ -32,10 +32,12 @@
                     *  text padding bottom wrong
                 *  add unit tests if poss? - don't earn their keep
             *  frameMaker.finalizeFrame
-            o  should the frame title text be bigger?
-            o  and/or should the frame title be centred in full width?
-        o  take into account diag padding left and right in lifeline pitch
+            *  should the frame title text be bigger? = no
+            *  and/or should the frame title be centred in full width? = no
+        *  take into account diag padding left and right in lifeline pitch
            calcs
+           *  add title to many lanes test to see what looks like
+        o  add/commit/push
         o  merge title box branch into main
     o  do as go module
     o  all one repo
@@ -43,6 +45,7 @@
     o  lifeline title boxes are too fat on canoncial example
     o  combine sizer and settings
     o  take away choice of font size?
+    o  make title compulsory
     o  show lane letters - possibly optionally
     o  consider if image regression tests needed - or maybe only canonical?
     o  what happens if you introduce a lifeline late in the script?
