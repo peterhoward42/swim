@@ -13,33 +13,11 @@
     *  How stimulate go lint and go vet from command line
     *  more module level comments
     *  any potential for make diag package smaller? (no)
-
-    o  add a rectangular border with title box
-        *  analysis
-            *  plain rect border with tlh corner containing title
-               label in enclosed box
-            *  dsl?
-                *  title foo | bar
-        *  branch title
-        *  parser system
-        *  render and layout
-            *  design algo
-        o  do
-            *  frameMaker.produceFrameAndTitleBox
-                *  get visually ok
-                    *  box shallow and text below
-                    *  text padding left wrong
-                    *  text padding bottom wrong
-                *  add unit tests if poss? - don't earn their keep
-            *  frameMaker.finalizeFrame
-            *  should the frame title text be bigger? = no
-            *  and/or should the frame title be centred in full width? = no
-        *  take into account diag padding left and right in lifeline pitch
-           calcs
-           *  add title to many lanes test to see what looks like
-        o  add/commit/push
-        o  merge title box branch into main
+    *  add a rectangular border with title box
     o  do as go module
+        *  design approach
+        o  branch for
+        o  do it
     o  all one repo
     o  first parameter name of Creator.rowOfLabels should not be centre
     o  lifeline title boxes are too fat on canoncial example
@@ -74,14 +52,13 @@
 
 
 ----------------------------------------------------------------------------
-Algo for title box
+Approach to make umlim a go module
 ----------------------------------------------------------------------------
-o  Treat as one thing
-o  Dedicated module
-o  Diag borders remain outermost
-o  Will need to inform lifeline pitch and spacing - reduced margins
-o  title frame will need to claim space for itself and render itself
-o  the rest has to be produced in register/finalize way
-o  handling of final advance of tidemark will have to be moved from
-   finalize lifelines to this
+o  Make a branch for this: gomod
+o  Checkout umlim to a new non-gopath project dir
+o  Do a go mod init
+o  Do a build to download and compile dependencies
+o  Do a test to augment the dependencies
+o  Add / commit / push
+o  Merge to main
 
