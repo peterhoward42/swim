@@ -18,6 +18,9 @@
         *  design approach
         o  branch for
         o  do it
+    o  had to remove jpeg from export
+    o  virgin clone of umli fails create tests because no directory
+       to save in
     o  all one repo
     o  first parameter name of Creator.rowOfLabels should not be centre
     o  lifeline title boxes are too fat on canoncial example
