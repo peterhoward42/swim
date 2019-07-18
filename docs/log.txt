@@ -14,11 +14,13 @@
     *  more module level comments
     *  any potential for make diag package smaller? (no)
     *  add a rectangular border with title box
-    o  do as go module
-        *  design approach
-        o  branch for
-        o  do it
+    *  do as go module
     o  had to remove jpeg from export
+        *  latest tagged version 1.3.0 omitted context.SaveJPG
+            *  depend instead on latest which as it
+                *  what commit ID?: f194ddec6f45226fc9e1b4a61b7237f186edd543
+        *  commit umliexport
+        o  now update dependency in umlim
     o  virgin clone of umli fails create tests because no directory
        to save in
     o  all one repo
