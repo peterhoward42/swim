@@ -16,15 +16,9 @@
     *  add a rectangular border with title box
     *  do as go module
     *  reinstate jpeg to export
-    o  all one repo?
-        *  get it working
-        *  clean go.mod
-        *  get docco good enough
-        *  update readme
-        *  ditch umlie locally to finish porting tests in umlim
-        o  commit/push
-        o  once umli is fit for purpose, ditch umlie locally and on github
-    o  first parameter name of Creator.rowOfLabels should not be centre
+    *  all one repo?
+    *  first parameter name of Creator.rowOfLabels should not be centre
+
     o  lifeline title boxes are too fat on canoncial example
     o  combine sizer and settings
     o  move package docco into go.doc files
@@ -60,13 +54,5 @@
 
 
 ----------------------------------------------------------------------------
-Approach to make umlim a go module
 ----------------------------------------------------------------------------
-o  Make a branch for this: gomod
-o  Checkout umlim to a new non-gopath project dir
-o  Do a go mod init
-o  Do a build to download and compile dependencies
-o  Do a test to augment the dependencies
-o  Add / commit / push
-o  Merge to main
 
