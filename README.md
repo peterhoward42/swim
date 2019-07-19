@@ -1,16 +1,16 @@
 # umli - UML Interaction (diagram)
 
 This repository contains code that auto-generates a UML interaction
-diagram from a simple text script.
+diagram from a very simple text script.
 
 It is intended to create a fast and iterative thinking and creation process
-for for the people creating them.
+for the people creating them.
 
 For example making this diagram:
 
 <https://www.tutorialspoint.com/uml/images/uml_sequence_diagram.jpg>
 
-From this script:
+The script is written in a Domain-Specific-Language (DSL) like this:
 
     life A  SL App
     life B  Core Permissions API
@@ -27,13 +27,19 @@ From this script:
 
 > todo: change the diagram example to be one that matches the script.
 
-The output is a very simple graphics model (**umli/graphics/model.Model**) which
-is little more than a list of lines, strings and arrow heads, along with the
-coordinates at which they should be rendered to produce the diagram.
+Creating the diagram has two conceptual phases. The first being to parse
+the DSL and build a `graphics.Model` that is little more than a list of lines, 
+strings and arrow heads, along with their coordinates, which when rendered, 
+will  produce the diagram.
 
-A separate repository provides renderers for the graphics model into
-a variety of image and serialization formats. See:
-<https://github.com/peterhoward42/umli-export>
+The second phase is to render this model. The `render` package provides
+renderes for:
+
+- .png image file
+- .jpg image file
+- a JSON representation
+- a YAML representation
+- an HTML canvas (See Note ***)
 
 The code aims to be consumable in several different ways:
 

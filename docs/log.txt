@@ -15,18 +15,19 @@
     *  any potential for make diag package smaller? (no)
     *  add a rectangular border with title box
     *  do as go module
-    o  had to remove jpeg from export
-        *  latest tagged version 1.3.0 omitted context.SaveJPG
-            *  depend instead on latest which as it
-                *  what commit ID?: f194ddec6f45226fc9e1b4a61b7237f186edd543
-        *  commit umliexport
-        o  now update dependency in umlim
-    o  virgin clone of umli fails create tests because no directory
-       to save in
-    o  all one repo
+    *  reinstate jpeg to export
+    o  all one repo?
+        *  get it working
+        *  clean go.mod
+        *  get docco good enough
+        *  update readme
+        *  ditch umlie locally to finish porting tests in umlim
+        o  commit/push
+        o  once umli is fit for purpose, ditch umlie locally and on github
     o  first parameter name of Creator.rowOfLabels should not be centre
     o  lifeline title boxes are too fat on canoncial example
     o  combine sizer and settings
+    o  move package docco into go.doc files
     o  take away choice of font size?
     o  make title compulsory
     o  show lane letters - possibly optionally
@@ -43,6 +44,8 @@
     o  Change reference model to make label not too long, and maybe
        be more computer sciency - plus update readme to suit
     o  Add title keyword which could be "edit me"
+    o  virgin clone of umli fails create tests because no directory
+       to save in - fix when decide on visual image difference testing
     o  Lifeline should be different mark space than response line
     o  Convenient save / load and view local directory
     o  Web assembly

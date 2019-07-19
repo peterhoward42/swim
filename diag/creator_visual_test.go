@@ -18,7 +18,7 @@ import (
 	"github.com/golang/freetype/truetype"
 	"golang.org/x/image/font/gofont/goregular"
 
-	"github.com/peterhoward42/umli-export/imagefile"
+	"github.com/peterhoward42/umli/render"
 
 	"github.com/peterhoward42/umli/parser"
 	"github.com/stretchr/testify/assert"
@@ -216,7 +216,7 @@ func genericCreateHelper(t *testing.T, script string, width int,
 	creator := NewCreator(width, fontHeight, statements)
 	graphicsModel := creator.Create()
 	fPath := filepath.Join(testResultsDir, imageBaseName)
-	err = imagefile.NewCreator(font).Create(
-		fPath, imagefile.PNG, graphicsModel)
+	err = render.NewImageFileCreator(font).Create(
+		fPath, render.PNG, graphicsModel)
 	assert.NoError(err)
 }
