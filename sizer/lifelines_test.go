@@ -1,4 +1,4 @@
-package sizers
+package sizer
 
 import (
 	"testing"

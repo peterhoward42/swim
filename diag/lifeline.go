@@ -2,6 +2,7 @@ package diag
 
 import (
 	"github.com/peterhoward42/umli/dslmodel"
+	"github.com/peterhoward42/umli/sizer"
 )
 
 /*
@@ -23,6 +24,22 @@ func newLifelines(creator *Creator) *lifelines {
 	lifelines := lifelines{}
 	lifelines.creator = creator
 	return &lifelines
+}
+
+// titleBoxHeight calculates the height based on sufficient room for the
+// title box with the most label lines.
+func (ll *lifelines) titleBoxHeight() float64 {
+	maxNLabelLines := 0
+	for _, s := range ll.creator.lifelineStatements {
+		n := len(s.LabelSegments)
+		if n > maxNLabelLines {
+			maxNLabelLines = n
+		}
+	}
+	topMargin := sizers.titleBoxTextPadTK * ll.creator.fontHeight
+	botMargin := sizers.titleBoxTextPadBK * ll.creator.fontHeight
+	ht := topMargin + botMargin + float64(maxNLabelLines)*ll.creator.fontHeight
+	return ht
 }
 
 // ProduceLifelines works out the dashed line segments that should be created

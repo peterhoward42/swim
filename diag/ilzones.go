@@ -78,9 +78,9 @@ crosses lifeline.
 */
 func (ilz *InteractionLineZones) crosses(lifeline, source,
 	dest *dslmodel.Statement) bool {
-	x1 := ilz.creator.sizer.Lifelines.Individual[source].Centre
-	x2 := ilz.creator.sizer.Lifelines.Individual[dest].Centre
-	target := ilz.creator.sizer.Lifelines.Individual[lifeline].Centre
+	x1 := ilz.creator.lifelineSpacing.CentreLine(source)
+	x2 := ilz.creator.lifelineSpacing.CentreLine(dest)
+	target := ilz.creator.lifelineSpacing.CentreLine(lifeline)
 	left := math.Min(x1, x2)
 	right := math.Max(x1, x2)
 	return (left < target) && (right > target)

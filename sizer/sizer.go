@@ -1,5 +1,5 @@
 /*
-Package sizers is the single source of truth for sizing all the elements
+Package sizer is the single source of truth for sizing all the elements
 that make up the diagram. Not only how big things are, but also how far
 apart they should be.
 
@@ -14,7 +14,7 @@ algorithmic part of diagram creation.
 It provides the top level *Sizer* type, along with some subordinate types
 it delegates to. For example: sizing.Lifelines.
 */
-package sizers
+package sizer
 
 import (
 	"github.com/peterhoward42/umli/dslmodel"
@@ -27,16 +27,21 @@ import (
 
 // Sizer is the top level sizing component.
 type Sizer struct {
-	DiagramPadT                float64
-	DiagramPadB                float64
-	DiagPadL                   float64
-	FrameInternalPadB          float64
-	FrameTitleTextPadT         float64
-	FrameTitleTextPadB         float64
-	FrameTitleTextPadL         float64
-	FrameTitleBoxWidth         float64
-	FrameTitleRectPadB         float64
-	Lifelines                  *Lifelines // Delegated sizing
+	DiagramPadT        float64
+	DiagramPadB        float64
+	DiagPadL           float64
+	FrameInternalPadB  float64
+	FrameTitleTextPadT float64
+	FrameTitleTextPadB float64
+	FrameTitleTextPadL float64
+	FrameTitleBoxWidth float64
+	FrameTitleRectPadB float64
+
+	LifelineTitleBoxWidth float64
+	TitleBoxHeight        float64
+	TitleBoxPadB          float64
+	TitleBoxLabelPadB     float64
+
 	InteractionLinePadB        float64
 	InteractionLineTextPadB    float64
 	InteractionLineLabelIndent float64
@@ -77,7 +82,9 @@ func NewSizer(diagramWidth int, fontHeight float64,
 	sizer.FrameTitleBoxWidth = frameTitleBoxWidthK * float64(diagramWidth)
 	sizer.FrameTitleRectPadB = frameTitleRectPadBK * fh
 
-	sizer.Lifelines = NewLifelines(diagramWidth, fh, lifelineStatements)
+	sizer.LifelineTitleBoxWidth = lifelineTitleBoxWidthK * fh
+	sizer.TitleBoxPadB = titleBoxPadBK * fh
+	sizer.TitleBoxLabelPadB = titleBoxTextPadBK * fh
 
 	sizer.ArrowLen = arrowLenK * fh
 	sizer.ArrowHeight = arrowAspectRatio * sizer.ArrowLen

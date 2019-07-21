@@ -1,4 +1,4 @@
-package sizers
+package sizer
 
 // This module defines constants that govern
 // sizing decisions. They are all ratios (mostly) w.r.t. font height.
@@ -27,11 +27,12 @@ const (
 	frameTitleRectPadBK = 3.0
 
 	// Lifelines
-	titleBoxPadRK         = 0.25 // w.r.t title box width
-	titleBoxTextPadTK     = 0.25 // Between top of title box and first line txt
-	titleBoxTextPadBK     = 0.75 // Between text and the bottom of title box
-	titleBoxPadBK         = 1.5  // Below entire title box
-	minLifelineSegLengthK = 0.5
+	lifelineTitleBoxWidthK = 15.0
+	titleBoxPadRK          = 0.25 // w.r.t title box width
+	titleBoxTextPadTK      = 0.25 // Between top of title box and first line txt
+	titleBoxTextPadBK      = 0.75 // Between text and the bottom of title box
+	titleBoxPadBK          = 1.5  // Below entire title box
+	minLifelineSegLengthK  = 0.5
 
 	// Full and Dashed interaction lines
 	dashLineDashLenK = 0.5

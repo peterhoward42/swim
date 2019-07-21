@@ -1,4 +1,4 @@
-package sizers
+package sizer
 
 // This module provides the *Lifeline* and *LifelineInfo* types, which
 // encapsulate sizing data for lifelines.

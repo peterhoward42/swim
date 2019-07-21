@@ -1,16 +1,16 @@
 package diag
 
 /*
-This module contains code that is capable of modelling a one dimensional  
-extent in terms of a start and end coordinate. I.e. a *segment*. 
-They are used elsewhere in the package to represent lifeline segments, or a 
-gap in a lifeline. These only need a one dimensional extent because we know
-they are vertical.
+This module contains code that is capable of modelling a one dimensional
+extent in terms of a start and end coordinate. I.e. a *segment*.
+They are used elsewhere in the package to represent lifeline segments, or a
+gap in a lifeline.
 
 It additionally offers *sort* and *merge* services on a lists of segments.
 */
 
 import (
+	"math"
 	"sort"
 )
 
@@ -24,7 +24,11 @@ type segment struct {
 	end   float64
 }
 
-// sortSegments orders (in-situ) a list of segment objects by their start 
+func (s *segment) Length() float64 {
+	return math.Abs(s.start - s.end)
+}
+
+// sortSegments orders (in-situ) a list of segment objects by their start
 // attribute, smallest-first.
 func sortSegments(segs []*segment) {
 	sort.Slice(segs, func(i, j int) bool {
@@ -36,7 +40,7 @@ func sortSegments(segs []*segment) {
 func mergeSegments(segs []*segment) (newSegs []*segment) {
 	// NB. this DEPENDS on the segs being ordered by seg.start.
 
-    // The process is:
+	// The process is:
 
 	// Always keep the first segment.
 	// Preserve a segment that is entirely beyond the previous one.

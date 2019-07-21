@@ -20,6 +20,35 @@
     *  first parameter name of Creator.rowOfLabels should not be centre
 
     o  lifeline title boxes are too fat on canoncial example
+        *  make helper class
+        *  make skel tests
+        o  try in the wild 
+            *  deprive sizer access to existing Lifelines type
+            o  get to work using new class
+                *  give creator one,
+                    *  shift to being in diag package
+                o  work through compiler demands
+                    o  move vertical bits of sizer.lifelines into 
+                       diag.lifelines
+                    o  make sure have used new spacing method for left and right
+                       rather than 0.5 based calcs
+                    o  names like this in sizer: TitleBoxHeight, should
+                       be prefixed with lifeline
+                    o  add Length() unit test on segment
+                    o  give sizer attribs currently in lifelines like:
+                        o  TitleBoxWidth
+                    o  put methods like InteractionLineEndPoints into an
+                       interaction class
+                    o  move vertical sizing into main sizer
+                    o  review names of lifeline types across sizer and diag
+                    o  update module /type doc strings
+        o  once old Lifeline type no longer used - ditch it and Inddividual
+           lifelines type
+        o  LifelineSpacing should be unexported
+        o  LifelineSpacing should be renamed LifelineHorizGeom
+        o  go back to do proper tests
+        o  commit/push
+
     o  combine sizer and settings
     o  move package docco into go.doc files
     o  take away choice of font size?
