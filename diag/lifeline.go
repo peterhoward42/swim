@@ -2,7 +2,6 @@ package diag
 
 import (
 	"github.com/peterhoward42/umli/dslmodel"
-	"github.com/peterhoward42/umli/sizer"
 )
 
 /*
@@ -36,8 +35,8 @@ func (ll *lifelines) titleBoxHeight() float64 {
 			maxNLabelLines = n
 		}
 	}
-	topMargin := sizers.titleBoxTextPadTK * ll.creator.fontHeight
-	botMargin := sizers.titleBoxTextPadBK * ll.creator.fontHeight
+	topMargin := ll.creator.sizer.TitleBoxLabelPadT
+	botMargin := ll.creator.sizer.TitleBoxLabelPadB
 	ht := topMargin + botMargin + float64(maxNLabelLines)*ll.creator.fontHeight
 	return ht
 }
@@ -48,7 +47,7 @@ func (ll *lifelines) titleBoxHeight() float64 {
 func (ll *lifelines) produceLifelines() {
 	for _, lifelineStatement := range ll.creator.lifelineStatements {
 		lineSegments := ll.produceOneLifeline(lifelineStatement)
-		x := ll.creator.sizer.Lifelines.Individual[lifelineStatement].Centre
+		x := ll.creator.lifelineSpacing.CentreLine(lifelineStatement)
 		for i := 0; i < len(lineSegments); i++ {
 			seg := lineSegments[i]
 			dashed := true

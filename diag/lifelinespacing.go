@@ -25,7 +25,7 @@ type LifelineSpacing struct {
 
 // NewLifelineSpacing provides a LifelineSpacing ready to use.
 func NewLifelineSpacing(diagWidth int, fontHt float64,
-	lifelines []*dslmodel.Statement) *LifelineSpacing {
+	lifelines []*dslmodel.Statement, idealLifelineTitleBoxWidth float64) *LifelineSpacing {
 
 	sp := &LifelineSpacing{}
 	sp.lifelineIndices = map[*dslmodel.Statement]int{}
@@ -39,7 +39,7 @@ func NewLifelineSpacing(diagWidth int, fontHt float64,
 	// Start with idealised title box width.
 	// I.e big enough to fit circa 3 short title words across.
 	n := float64(len(lifelines))
-	sp.BoxWidth = fontHt * sizers.LifelineTitleBoxWidthK
+	sp.BoxWidth = idealLifelineTitleBoxWidth
 	spaceAvail := float64(diagWidth) - sp.BoxWidth*n
 	nGuttersRequired := n + 1
 	sp.Gutter = spaceAvail / nGuttersRequired
@@ -69,11 +69,10 @@ func (sp *LifelineSpacing) CentreLine(lifeline *dslmodel.Statement) float64 {
 ActivityBoxXCoords provides the X coordinates for an activity box on a lifeline
 */
 func (sp *LifelineSpacing) ActivityBoxXCoords(lifeline *dslmodel.Statement,
-	sizer *sizers.Sizer) (left, centre, right float64) {
-	n := float64(sp.lifelineIndices[lifeline])
-	centre := sp.CentreLine(lifeline)
-	left := centre - 0.5*sizer.ActivityBoxWidth
-	right := centre + 0.5*sizer.ActivityBoxWidth
+	sizer *sizer.Sizer) (left, centre, right float64) {
+	centre = sp.CentreLine(lifeline)
+	left = centre - 0.5*sp.BoxWidth
+	right = centre + 0.5*sp.BoxWidth
 	return left, centre, right
 }
 
@@ -81,15 +80,15 @@ func (sp *LifelineSpacing) ActivityBoxXCoords(lifeline *dslmodel.Statement,
 // line between two given lifelines.
 func (sp *LifelineSpacing) InteractionLineEndPoints(
 	sourceLifeline, destLifeline *dslmodel.Statement,
-	sizer *sizers.Sizer) (x1, x2 float64) {
+	sizer *sizer.Sizer) (x1, x2 float64) {
 	sourceC := sp.CentreLine(sourceLifeline)
 	destC := sp.CentreLine(destLifeline)
 	if sourceC > destC {
-		x1 = sourceC - 0.5*sizer.ActivityBoxWidth
-		x2 = destC + 0.5*sizer.ActivityBoxWidth
+		x1 = sourceC - 0.5*sp.BoxWidth
+		x2 = destC + 0.5*sp.BoxWidth
 	} else {
-		x1 = sourceC + 0.5*sizer.ActivityBoxWidth
-		x2 = destC - 0.5*sizer.ActivityBoxWidth
+		x1 = sourceC + 0.5*sp.BoxWidth
+		x2 = destC - 0.5*sp.BoxWidth
 	}
 	return
 }

@@ -22,8 +22,22 @@
     o  lifeline title boxes are too fat on canoncial example
         *  make helper class
         *  make skel tests
+        o  types:
+            o  diag.lifelines  // making lifelines dynamic behaviour 
+            o  diag.lifelineSpacing // owns all horiz judgements 
+            o  sizer.Sizer // static sizing
+            o  sizer.settings.go // private static coefficients
+            o  DEPRECATED sizer.Lifelines
+
+
         o  try in the wild 
             *  deprive sizer access to existing Lifelines type
+            o  CDD - returning each iteration to diag.creator
+            o  rename some sizing that is missing lifeline or frame prefix
+
+
+
+
             o  get to work using new class
                 *  give creator one,
                     *  shift to being in diag package

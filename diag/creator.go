@@ -54,12 +54,14 @@ NewCreator provides a Creator ready to use.
 func NewCreator(width int, fontHeight float64,
 	allStatements []*dslmodel.Statement) *Creator {
 	lifelineStatements := isolateLifelines(allStatements)
-	lifelineSpacing := NewLifelineSpacing(width, fontHeight, lifelineStatements)
 	activityBoxes := map[*dslmodel.Statement]*lifelineBoxes{}
 	for _, s := range lifelineStatements {
 		activityBoxes[s] = newlifelineBoxes()
 	}
 	sizer := sizer.NewSizer(width, fontHeight, lifelineStatements)
+	lifelineSpacing := NewLifelineSpacing(width, fontHeight,
+		lifelineStatements, sizer.IdealLifelineTitleBoxWidth)
+
 	creator := &Creator{
 		width:              width,
 		fontHeight:         fontHeight,
@@ -179,8 +181,8 @@ occupy.
 func (c *Creator) lifelineTitleBox(statement *dslmodel.Statement) {
 	// First make the rectangular box
 	centre := c.lifelineSpacing.CentreLine(statement)
-	left := centre - 0.5*c.sizer.LifelineTitleBoxWidth
-	right := centre + 0.5*c.sizer.LifelineTitleBoxWidth
+	left := centre - 0.5*c.lifelineSpacing.BoxWidth
+	right := centre + 0.5*c.lifelineSpacing.BoxWidth
 	var top float64
 	var bot float64
 	// For the first title box we encounter, we evaluate the top and bottom

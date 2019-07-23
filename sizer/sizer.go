@@ -27,9 +27,12 @@ import (
 
 // Sizer is the top level sizing component.
 type Sizer struct {
-	DiagramPadT        float64
-	DiagramPadB        float64
-	DiagPadL           float64
+	// Whole diagram scope
+	DiagramPadT float64
+	DiagramPadB float64
+	DiagPadL    float64
+
+	// Outer frame and diagram title
 	FrameInternalPadB  float64
 	FrameTitleTextPadT float64
 	FrameTitleTextPadB float64
@@ -37,19 +40,26 @@ type Sizer struct {
 	FrameTitleBoxWidth float64
 	FrameTitleRectPadB float64
 
-	LifelineTitleBoxWidth float64
-	TitleBoxHeight        float64
-	TitleBoxPadB          float64
-	TitleBoxLabelPadB     float64
+	// Lifeline titles boxes
+	IdealLifelineTitleBoxWidth float64
+	TitleBoxHeight             float64
+	TitleBoxPadB               float64
+	TitleBoxLabelPadB          float64
+	TitleBoxLabelPadT          float64
 
+	// Interaction lines
 	InteractionLinePadB        float64
 	InteractionLineTextPadB    float64
 	InteractionLineLabelIndent float64
-	ArrowLen                   float64
-	ArrowHeight                float64
-	DashLineDashLen            float64
-	DashLineDashGap            float64
 	SelfLoopHeight             float64
+
+	// Arrows and dashes
+	ArrowLen        float64
+	ArrowHeight     float64
+	DashLineDashLen float64
+	DashLineDashGap float64
+
+	// Activity boxes
 	ActivityBoxVerticalOverlap float64
 	FinalizedActivityBoxesPadB float64
 	MinLifelineSegLength       float64
@@ -70,33 +80,43 @@ func NewSizer(diagramWidth int, fontHeight float64,
 
 	fh := fontHeight
 
+	// Whole diagram scope
 	sizer.DiagramPadT = diagramPadTK * fh
 	sizer.DiagramPadB = diagramPadBK * fh
 	sizer.DiagPadL = diagPadLK * fh
 
+	// Outer frame and diagram title
 	sizer.FrameInternalPadB = frameInternalPadBK * fh
 	sizer.FrameTitleTextPadT = frameTitleTextPadTK * fh
 	sizer.FrameTitleTextPadB = frameTitleTextPadBK * fh
 	sizer.FrameTitleTextPadL = frameTitleTextPadLK * fh
-
 	sizer.FrameTitleBoxWidth = frameTitleBoxWidthK * float64(diagramWidth)
 	sizer.FrameTitleRectPadB = frameTitleRectPadBK * fh
 
-	sizer.LifelineTitleBoxWidth = lifelineTitleBoxWidthK * fh
-	sizer.TitleBoxPadB = titleBoxPadBK * fh
+	// Lifeline title boxes
+	sizer.TitleBoxLabelPadT = titleBoxTextPadTK * fh
 	sizer.TitleBoxLabelPadB = titleBoxTextPadBK * fh
+	sizer.IdealLifelineTitleBoxWidth = ideallifelineTitleBoxWidthK * fh
+	sizer.TitleBoxPadB = titleBoxPadBK * fh
 
+	// Interaction lines
 	sizer.ArrowLen = arrowLenK * fh
 	sizer.ArrowHeight = arrowAspectRatio * sizer.ArrowLen
 	sizer.InteractionLinePadB = interactionLinePadBK * fh
 	sizer.InteractionLineTextPadB = interactionLineTextPadBK * fh
 	sizer.InteractionLineLabelIndent = sizer.ArrowLen +
 		interactionLineLabelIndent*fh
+	sizer.SelfLoopHeight = selfLoopHeightK * fh
+
+	// Dashes
 	sizer.DashLineDashLen = dashLineDashLenK * fh
 	sizer.DashLineDashGap = dashLineDashGapK * fh
-	sizer.SelfLoopHeight = sizer.Lifelines.SelfLoopWidth * selfLoopAspectRatio
+
+	// Activity boxes
 	sizer.ActivityBoxVerticalOverlap = activityBoxVerticalOverlapK * fh
 	sizer.FinalizedActivityBoxesPadB = finalizedActivityBoxesPadB * fh
+
+	// Lifelines
 	sizer.MinLifelineSegLength = minLifelineSegLengthK * fh
 
 	return sizer
