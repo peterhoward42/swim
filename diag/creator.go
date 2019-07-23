@@ -60,7 +60,8 @@ func NewCreator(width int, fontHeight float64,
 	}
 	sizer := sizer.NewSizer(width, fontHeight, lifelineStatements)
 	lifelineSpacing := NewLifelineSpacing(width, fontHeight,
-		lifelineStatements, sizer.IdealLifelineTitleBoxWidth)
+		lifelineStatements, sizer.IdealLifelineTitleBoxWidth,
+		sizer.ActivityBoxWidth)
 
 	creator := &Creator{
 		width:              width,
@@ -181,8 +182,8 @@ occupy.
 func (c *Creator) lifelineTitleBox(statement *dslmodel.Statement) {
 	// First make the rectangular box
 	centre := c.lifelineSpacing.CentreLine(statement)
-	left := centre - 0.5*c.lifelineSpacing.BoxWidth
-	right := centre + 0.5*c.lifelineSpacing.BoxWidth
+	left := centre - 0.5*c.lifelineSpacing.TitleBoxWidth
+	right := centre + 0.5*c.lifelineSpacing.TitleBoxWidth
 	var top float64
 	var bot float64
 	// For the first title box we encounter, we evaluate the top and bottom

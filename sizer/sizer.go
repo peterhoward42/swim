@@ -60,6 +60,7 @@ type Sizer struct {
 	DashLineDashGap float64
 
 	// Activity boxes
+	ActivityBoxWidth           float64
 	ActivityBoxVerticalOverlap float64
 	FinalizedActivityBoxesPadB float64
 	MinLifelineSegLength       float64
@@ -113,6 +114,7 @@ func NewSizer(diagramWidth int, fontHeight float64,
 	sizer.DashLineDashGap = dashLineDashGapK * fh
 
 	// Activity boxes
+	sizer.ActivityBoxWidth = activityBoxWidthK * fh
 	sizer.ActivityBoxVerticalOverlap = activityBoxVerticalOverlapK * fh
 	sizer.FinalizedActivityBoxesPadB = finalizedActivityBoxesPadB * fh
 

@@ -18,16 +18,19 @@ across the width of the diagram. It uses the same gap (gutter) between these
 boxes and as margins at the left and right edge of the diagram.
 */
 type LifelineSpacing struct {
-	lifelineIndices map[*dslmodel.Statement]int
-	BoxWidth        float64
-	Gutter          float64
+	lifelineIndices  map[*dslmodel.Statement]int
+	TitleBoxWidth    float64
+	TitleBoxGutter   float64
+	activityBoxWidth float64
 }
 
 // NewLifelineSpacing provides a LifelineSpacing ready to use.
 func NewLifelineSpacing(diagWidth int, fontHt float64,
-	lifelines []*dslmodel.Statement, idealLifelineTitleBoxWidth float64) *LifelineSpacing {
+	lifelines []*dslmodel.Statement, idealLifelineTitleBoxWidth float64,
+	activityBoxWidth float64) *LifelineSpacing {
 
 	sp := &LifelineSpacing{}
+	sp.activityBoxWidth = activityBoxWidth
 	sp.lifelineIndices = map[*dslmodel.Statement]int{}
 	for i, lifeline := range lifelines {
 		sp.lifelineIndices[lifeline] = i
@@ -39,19 +42,19 @@ func NewLifelineSpacing(diagWidth int, fontHt float64,
 	// Start with idealised title box width.
 	// I.e big enough to fit circa 3 short title words across.
 	n := float64(len(lifelines))
-	sp.BoxWidth = idealLifelineTitleBoxWidth
-	spaceAvail := float64(diagWidth) - sp.BoxWidth*n
+	sp.TitleBoxWidth = idealLifelineTitleBoxWidth
+	spaceAvail := float64(diagWidth) - sp.TitleBoxWidth*n
 	nGuttersRequired := n + 1
-	sp.Gutter = spaceAvail / nGuttersRequired
+	sp.TitleBoxGutter = spaceAvail / nGuttersRequired
 
-	fmt.Printf("Ideal: %v, %v\n", sp.BoxWidth, sp.Gutter)
+	fmt.Printf("Ideal: %v, %v\n", sp.TitleBoxWidth, sp.TitleBoxGutter)
 
 	// But if that has that made the gutter too small, or even negative,
 	// make the boxes less wide to preserve a minimum gutter equal to
 	// one font height.
-	if sp.Gutter < fontHt {
-		sp.Gutter = fontHt
-		sp.BoxWidth = (float64(diagWidth) - ((n + 1) * sp.Gutter)) / n
+	if sp.TitleBoxGutter < fontHt {
+		sp.TitleBoxGutter = fontHt
+		sp.TitleBoxWidth = (float64(diagWidth) - ((n + 1) * sp.TitleBoxGutter)) / n
 	}
 	return sp
 }
@@ -62,7 +65,7 @@ Zero-based index.
 */
 func (sp *LifelineSpacing) CentreLine(lifeline *dslmodel.Statement) float64 {
 	n := float64(sp.lifelineIndices[lifeline])
-	return (n+1)*sp.Gutter + (n+0.5)*sp.BoxWidth
+	return (n+1)*sp.TitleBoxGutter + (n+0.5)*sp.TitleBoxWidth
 }
 
 /*
@@ -71,8 +74,8 @@ ActivityBoxXCoords provides the X coordinates for an activity box on a lifeline
 func (sp *LifelineSpacing) ActivityBoxXCoords(lifeline *dslmodel.Statement,
 	sizer *sizer.Sizer) (left, centre, right float64) {
 	centre = sp.CentreLine(lifeline)
-	left = centre - 0.5*sp.BoxWidth
-	right = centre + 0.5*sp.BoxWidth
+	left = centre - 0.5*sp.activityBoxWidth
+	right = centre + 0.5*sp.activityBoxWidth
 	return left, centre, right
 }
 
@@ -84,11 +87,11 @@ func (sp *LifelineSpacing) InteractionLineEndPoints(
 	sourceC := sp.CentreLine(sourceLifeline)
 	destC := sp.CentreLine(destLifeline)
 	if sourceC > destC {
-		x1 = sourceC - 0.5*sp.BoxWidth
-		x2 = destC + 0.5*sp.BoxWidth
+		x1 = sourceC - 0.5*sp.activityBoxWidth
+		x2 = destC + 0.5*sp.activityBoxWidth
 	} else {
-		x1 = sourceC + 0.5*sp.BoxWidth
-		x2 = destC - 0.5*sp.BoxWidth
+		x1 = sourceC + 0.5*sp.activityBoxWidth
+		x2 = destC - 0.5*sp.activityBoxWidth
 	}
 	return
 }
@@ -98,7 +101,7 @@ func (sp *LifelineSpacing) InteractionLineEndPoints(
 func (sp *LifelineSpacing) InteractionLabelPosition(
 	sourceLifeline, destLifeline *dslmodel.Statement) (
 	x float64, horizJustification graphics.Justification) {
-	x = 0.5 * (sp.CentreLine(sourceLifeline) + sp.CentreLine(sourceLifeline))
+	x = 0.5 * (sp.CentreLine(sourceLifeline) + sp.CentreLine(destLifeline))
 	horizJustification = graphics.Centre
 	return
 }

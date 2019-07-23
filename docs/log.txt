@@ -22,45 +22,30 @@
     o  lifeline title boxes are too fat on canoncial example
         *  make helper class
         *  make skel tests
-        o  types:
-            o  diag.lifelines  // making lifelines dynamic behaviour 
-            o  diag.lifelineSpacing // owns all horiz judgements 
-            o  sizer.Sizer // static sizing
-            o  sizer.settings.go // private static coefficients
-            o  DEPRECATED sizer.Lifelines
-
+        *  types:
+            *  diag.lifelines  // making lifelines dynamic behaviour 
+            *  diag.lifelineSpacing // owns all horiz judgements 
+            *  sizer.Sizer // static sizing
+            *  sizer.settings.go // private static coefficients
+            *  DEPRECATED sizer.Lifelines
 
         o  try in the wild 
             *  deprive sizer access to existing Lifelines type
-            o  CDD - returning each iteration to diag.creator
-            o  rename some sizing that is missing lifeline or frame prefix
-
-
-
-
-            o  get to work using new class
-                *  give creator one,
-                    *  shift to being in diag package
-                o  work through compiler demands
-                    o  move vertical bits of sizer.lifelines into 
-                       diag.lifelines
-                    o  make sure have used new spacing method for left and right
-                       rather than 0.5 based calcs
-                    o  names like this in sizer: TitleBoxHeight, should
-                       be prefixed with lifeline
-                    o  add Length() unit test on segment
-                    o  give sizer attribs currently in lifelines like:
-                        o  TitleBoxWidth
-                    o  put methods like InteractionLineEndPoints into an
-                       interaction class
-                    o  move vertical sizing into main sizer
-                    o  review names of lifeline types across sizer and diag
-                    o  update module /type doc strings
+            *  CDD - returning each iteration to diag.creator
+            o  get visual tests to work
+                *  various fixes
+                o  self interaction has no apparent width
+                    o  think have attrib - should prob be
+                       dynamic fn of lifeline spacing type
+            o  get all tests to work
+            o  add Length() unit test on segment
+            o  review names of lifeline types across sizer and diag
+            o  update module /type doc strings
+            o  add unit tests for new scope in sizer and lifeline spacing and lifeline
         o  once old Lifeline type no longer used - ditch it and Inddividual
            lifelines type
         o  LifelineSpacing should be unexported
         o  LifelineSpacing should be renamed LifelineHorizGeom
-        o  go back to do proper tests
         o  commit/push
 
     o  combine sizer and settings
