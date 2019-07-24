@@ -1,8 +1,6 @@
 package diag
 
 import (
-	"fmt"
-
 	"github.com/peterhoward42/umli/dslmodel"
 	"github.com/peterhoward42/umli/graphics"
 	"github.com/peterhoward42/umli/sizer"
@@ -47,8 +45,6 @@ func NewLifelineSpacing(diagWidth int, fontHt float64,
 	nGuttersRequired := n + 1
 	sp.TitleBoxGutter = spaceAvail / nGuttersRequired
 
-	fmt.Printf("Ideal: %v, %v\n", sp.TitleBoxWidth, sp.TitleBoxGutter)
-
 	// But if that has that made the gutter too small, or even negative,
 	// make the boxes less wide to preserve a minimum gutter equal to
 	// one font height.
@@ -77,6 +73,18 @@ func (sp *LifelineSpacing) ActivityBoxXCoords(lifeline *dslmodel.Statement,
 	left = centre - 0.5*sp.activityBoxWidth
 	right = centre + 0.5*sp.activityBoxWidth
 	return left, centre, right
+}
+
+/*
+SelfInteractionLineXCoords provides the left and right coordinates for a *self*
+interaction line.
+*/
+func (sp *LifelineSpacing) SelfInteractionLineXCoords(lifeline *dslmodel.Statement,
+	sizer *sizer.Sizer) (left, right float64) {
+	_, abc, abr := sp.ActivityBoxXCoords(lifeline, sizer)
+	left = abr
+	right = abc + 0.5*sp.TitleBoxWidth
+	return left, right
 }
 
 // InteractionLineEndPoints works out the x coordinates for an interaction

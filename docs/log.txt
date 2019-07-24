@@ -32,18 +32,16 @@
         o  try in the wild 
             *  deprive sizer access to existing Lifelines type
             *  CDD - returning each iteration to diag.creator
-            o  get visual tests to work
-                *  various fixes
-                o  self interaction has no apparent width
-                    o  think have attrib - should prob be
-                       dynamic fn of lifeline spacing type
-            o  get all tests to work
+            *  get visual tests to work
+            o  get all diag tests to work
+            o  get all umli tests to work
+            o  once old Lifeline type no longer used - ditch it and Inddividual
+               lifelines type
             o  add Length() unit test on segment
             o  review names of lifeline types across sizer and diag
             o  update module /type doc strings
             o  add unit tests for new scope in sizer and lifeline spacing and lifeline
-        o  once old Lifeline type no longer used - ditch it and Inddividual
-           lifelines type
+        o  diagram margin should be half of title box gutter
         o  LifelineSpacing should be unexported
         o  LifelineSpacing should be renamed LifelineHorizGeom
         o  commit/push

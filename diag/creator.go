@@ -273,7 +273,8 @@ has occupied by advancing the tide mark.
 func (c *Creator) selfInteractionLines(
 	statement *dslmodel.Statement) {
 	theLifeline := statement.ReferencedLifelines[0]
-	left, _, right := c.lifelineSpacing.ActivityBoxXCoords(theLifeline, c.sizer)
+	left, right := c.lifelineSpacing.SelfInteractionLineXCoords(
+		theLifeline, c.sizer)
 	top := c.tideMark
 	bot := c.tideMark + c.sizer.SelfLoopHeight
 

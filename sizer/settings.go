@@ -35,15 +35,16 @@ const (
 	minLifelineSegLengthK       = 0.5
 
 	// Full and Dashed interaction lines
-	dashLineDashLenK = 0.5
-	dashLineDashGapK = 0.25
-	selfLoopHeightK  = 3.0
-
+	dashLineDashLenK           = 0.5
+	dashLineDashGapK           = 0.25
+	selfLoopHeightK            = 3.0
 	interactionLinePadBK       = 0.5 // Allows for half arrow height!
 	interactionLineTextPadBK   = 0.5 // Between the text and its line
 	interactionLineLabelIndent = 1.0 // Offset from arrow
-	arrowLenK                  = 1.5
-	arrowAspectRatio           = 0.4 // Width of arrow head w.r.t. length
+
+	// Arrows
+	arrowLenK        = 1.5
+	arrowAspectRatio = 0.4 // Width of arrow head w.r.t. length
 
 	// Lifeline activity boxes
 	activityBoxWidthK           = 1.5
