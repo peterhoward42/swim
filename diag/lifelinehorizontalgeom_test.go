@@ -7,5 +7,5 @@ import (
 )
 
 func TestCanConstruct(t *testing.T) {
-	NewLifelineSpacing(2000, 20, []*dslmodel.Statement{}, 100, 40)
+	NewLifelineHorizontalGeometry(2000, 20, []*dslmodel.Statement{}, 100, 40)
 }

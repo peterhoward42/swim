@@ -31,7 +31,7 @@ type Creator struct {
 	// The statements representing lifelines - isolated.
 	lifelineStatements []*dslmodel.Statement
 	// Owns the horizontal sizing and layout for lifelines
-	lifelineSpacing *LifelineSpacing
+	lifelineSpacing *LifelineHorizontalGeometry
 	// In charge of making the outer frame and title.
 	frameMaker *frameMaker
 	// Keeps track of activity box top and bottom coordinates.
@@ -39,7 +39,7 @@ type Creator struct {
 	// Keeps track of the space taken up by interaction lines.
 	ilZones *InteractionLineZones
 	// A delegate to make the lifelines dashed line segments.
-	lifelineMaker *lifelines
+	lifelineMaker *lifelineMaker
 	// The output.
 	graphicsModel *graphics.Model
 	// Knows how to size everything.
@@ -59,7 +59,7 @@ func NewCreator(width int, fontHeight float64,
 		activityBoxes[s] = newlifelineBoxes()
 	}
 	sizer := sizer.NewSizer(width, fontHeight, lifelineStatements)
-	lifelineSpacing := NewLifelineSpacing(width, fontHeight,
+	lifelineSpacing := NewLifelineHorizontalGeometry(width, fontHeight,
 		lifelineStatements, sizer.IdealLifelineTitleBoxWidth,
 		sizer.ActivityBoxWidth)
 
@@ -74,7 +74,7 @@ func NewCreator(width int, fontHeight float64,
 	}
 	creator.frameMaker = newFrameMaker(creator)
 	creator.ilZones = NewInteractionLineZones(creator)
-	creator.lifelineMaker = newLifelines(creator)
+	creator.lifelineMaker = newLifelineMaker(creator)
 	return creator
 }
 

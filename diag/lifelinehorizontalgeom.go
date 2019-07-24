@@ -7,7 +7,7 @@ import (
 )
 
 /*
-LifelineSpacing holds the knowledge about the horizontal geometry of lifelines.
+LifelineHorizontalGeometry holds the knowledge about the horizontal geometry of lifelines.
 For example, how to space them out across the page, and providing the left
 and right edge coordinates for the activity boxes on each etc.
 
@@ -15,19 +15,19 @@ It makes all the title boxes the same width, and distributes these equally
 across the width of the diagram. It uses the same gap (gutter) between these
 boxes and as margins at the left and right edge of the diagram.
 */
-type LifelineSpacing struct {
+type LifelineHorizontalGeometry struct {
 	lifelineIndices  map[*dslmodel.Statement]int
 	TitleBoxWidth    float64
 	TitleBoxGutter   float64
 	activityBoxWidth float64
 }
 
-// NewLifelineSpacing provides a LifelineSpacing ready to use.
-func NewLifelineSpacing(diagWidth int, fontHt float64,
+// NewLifelineHorizontalGeometry provides a LifelineSpacing ready to use.
+func NewLifelineHorizontalGeometry(diagWidth int, fontHt float64,
 	lifelines []*dslmodel.Statement, idealLifelineTitleBoxWidth float64,
-	activityBoxWidth float64) *LifelineSpacing {
+	activityBoxWidth float64) *LifelineHorizontalGeometry {
 
-	sp := &LifelineSpacing{}
+	sp := &LifelineHorizontalGeometry{}
 	sp.activityBoxWidth = activityBoxWidth
 	sp.lifelineIndices = map[*dslmodel.Statement]int{}
 	for i, lifeline := range lifelines {
@@ -59,7 +59,7 @@ func NewLifelineSpacing(diagWidth int, fontHt float64,
 CentreLine provides the X coordinate for the centreline of the Nth lifeline.
 Zero-based index.
 */
-func (sp *LifelineSpacing) CentreLine(lifeline *dslmodel.Statement) float64 {
+func (sp *LifelineHorizontalGeometry) CentreLine(lifeline *dslmodel.Statement) float64 {
 	n := float64(sp.lifelineIndices[lifeline])
 	return (n+1)*sp.TitleBoxGutter + (n+0.5)*sp.TitleBoxWidth
 }
@@ -67,7 +67,7 @@ func (sp *LifelineSpacing) CentreLine(lifeline *dslmodel.Statement) float64 {
 /*
 ActivityBoxXCoords provides the X coordinates for an activity box on a lifeline
 */
-func (sp *LifelineSpacing) ActivityBoxXCoords(lifeline *dslmodel.Statement,
+func (sp *LifelineHorizontalGeometry) ActivityBoxXCoords(lifeline *dslmodel.Statement,
 	sizer *sizer.Sizer) (left, centre, right float64) {
 	centre = sp.CentreLine(lifeline)
 	left = centre - 0.5*sp.activityBoxWidth
@@ -79,7 +79,7 @@ func (sp *LifelineSpacing) ActivityBoxXCoords(lifeline *dslmodel.Statement,
 SelfInteractionLineXCoords provides the left and right coordinates for a *self*
 interaction line.
 */
-func (sp *LifelineSpacing) SelfInteractionLineXCoords(lifeline *dslmodel.Statement,
+func (sp *LifelineHorizontalGeometry) SelfInteractionLineXCoords(lifeline *dslmodel.Statement,
 	sizer *sizer.Sizer) (left, right float64) {
 	_, abc, abr := sp.ActivityBoxXCoords(lifeline, sizer)
 	left = abr
@@ -89,7 +89,7 @@ func (sp *LifelineSpacing) SelfInteractionLineXCoords(lifeline *dslmodel.Stateme
 
 // InteractionLineEndPoints works out the x coordinates for an interaction
 // line between two given lifelines.
-func (sp *LifelineSpacing) InteractionLineEndPoints(
+func (sp *LifelineHorizontalGeometry) InteractionLineEndPoints(
 	sourceLifeline, destLifeline *dslmodel.Statement,
 	sizer *sizer.Sizer) (x1, x2 float64) {
 	sourceC := sp.CentreLine(sourceLifeline)
@@ -106,7 +106,7 @@ func (sp *LifelineSpacing) InteractionLineEndPoints(
 
 // InteractionLabelPosition works out the position and justification
 // that should be used for an interaction line's label.
-func (sp *LifelineSpacing) InteractionLabelPosition(
+func (sp *LifelineHorizontalGeometry) InteractionLabelPosition(
 	sourceLifeline, destLifeline *dslmodel.Statement) (
 	x float64, horizJustification graphics.Justification) {
 	x = 0.5 * (sp.CentreLine(sourceLifeline) + sp.CentreLine(destLifeline))

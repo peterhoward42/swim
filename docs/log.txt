@@ -37,7 +37,7 @@
             *  get all umli tests to work
             *  once old Lifeline type no longer used - ditch it and Inddividual
                lifelines type
-            o  add Length() unit test on segment
+            *  add Length() unit test on segment
             o  review names of lifeline types across sizer and diag
             o  update module /type doc strings
             o  add unit tests for new scope in sizer and lifeline spacing and lifeline

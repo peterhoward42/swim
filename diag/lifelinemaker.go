@@ -12,22 +12,22 @@ interaction lines that cross them..
 Where things are named *seg* this is short for segment.
 */
 
-// Lifelines exposes the API for creating lifelines.
-type lifelines struct {
+// Lifelines exposes the API for creating lifelineMaker.
+type lifelineMaker struct {
 	creator              *Creator
 	titleBoxTopAndBottom *segment // Set once known
 }
 
 // NewLifelines creates a Lifelines, ready to use.
-func newLifelines(creator *Creator) *lifelines {
-	lifelines := lifelines{}
+func newLifelineMaker(creator *Creator) *lifelineMaker {
+	lifelines := lifelineMaker{}
 	lifelines.creator = creator
 	return &lifelines
 }
 
 // titleBoxHeight calculates the height based on sufficient room for the
 // title box with the most label lines.
-func (ll *lifelines) titleBoxHeight() float64 {
+func (ll *lifelineMaker) titleBoxHeight() float64 {
 	maxNLabelLines := 0
 	for _, s := range ll.creator.lifelineStatements {
 		n := len(s.LabelSegments)
@@ -44,7 +44,7 @@ func (ll *lifelines) titleBoxHeight() float64 {
 // ProduceLifelines works out the dashed line segments that should be created
 // to render all the lifelines, including leaving gaps where there are activity
 // boxes and interaction lines that cross a lifeline.
-func (ll *lifelines) produceLifelines() {
+func (ll *lifelineMaker) produceLifelines() {
 	for _, lifelineStatement := range ll.creator.lifelineStatements {
 		lineSegments := ll.produceOneLifeline(lifelineStatement)
 		x := ll.creator.lifelineSpacing.CentreLine(lifelineStatement)
@@ -63,7 +63,7 @@ to represent one lifeline - accomodating the gaps needed where
 the lifeline activity boxes live, or interaction lines that cross this
 lifeline.
 */
-func (ll *lifelines) produceOneLifeline(lifeline *dslmodel.Statement) (
+func (ll *lifelineMaker) produceOneLifeline(lifeline *dslmodel.Statement) (
 	lineSegments []*segment) {
 
 	// Acquire and combine the (ordered) gap requirements - between which
