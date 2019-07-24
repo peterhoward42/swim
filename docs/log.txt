@@ -33,7 +33,7 @@
             *  deprive sizer access to existing Lifelines type
             *  CDD - returning each iteration to diag.creator
             *  get visual tests to work
-            o  get all diag tests to work
+            *  get all diag tests to work
             o  get all umli tests to work
             o  once old Lifeline type no longer used - ditch it and Inddividual
                lifelines type
