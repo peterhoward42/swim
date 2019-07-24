@@ -66,3 +66,13 @@ func TestMergeSegments(t *testing.T) {
 	assert.Equal(1.0, segments[0].start)
 	assert.Equal(4.0, segments[0].end)
 }
+
+func TestLength(t *testing.T) {
+	assert := assert.New(t)
+	a := &segment{1, 4}
+	assert.InDelta(3.0, a.Length(), 0.0001)
+	a = &segment{4, 1}
+	assert.InDelta(3.0, a.Length(), 0.0001)
+	a = &segment{1, 1}
+	assert.InDelta(0.0, a.Length(), 0.0001)
+}

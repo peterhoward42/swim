@@ -34,8 +34,8 @@
             *  CDD - returning each iteration to diag.creator
             *  get visual tests to work
             *  get all diag tests to work
-            o  get all umli tests to work
-            o  once old Lifeline type no longer used - ditch it and Inddividual
+            *  get all umli tests to work
+            *  once old Lifeline type no longer used - ditch it and Inddividual
                lifelines type
             o  add Length() unit test on segment
             o  review names of lifeline types across sizer and diag
