@@ -31,7 +31,7 @@ type Creator struct {
 	// The statements representing lifelines - isolated.
 	lifelineStatements []*dslmodel.Statement
 	// Owns the horizontal sizing and layout for lifelines
-	lifelineSpacing *LifelineHorizontalGeometry
+	lifelineGeomH *lifelineGeomH
 	// In charge of making the outer frame and title.
 	frameMaker *frameMaker
 	// Keeps track of activity box top and bottom coordinates.
@@ -59,16 +59,15 @@ func NewCreator(width int, fontHeight float64,
 		activityBoxes[s] = newlifelineBoxes()
 	}
 	sizer := sizer.NewSizer(width, fontHeight, lifelineStatements)
-	lifelineSpacing := NewLifelineHorizontalGeometry(width, fontHeight,
-		lifelineStatements, sizer.IdealLifelineTitleBoxWidth,
-		sizer.ActivityBoxWidth)
+	lifelineGeomH := newLifelineGeomH(width, fontHeight, sizer,
+		lifelineStatements)
 
 	creator := &Creator{
 		width:              width,
 		fontHeight:         fontHeight,
 		allStatements:      allStatements,
 		lifelineStatements: lifelineStatements,
-		lifelineSpacing:    lifelineSpacing,
+		lifelineGeomH:      lifelineGeomH,
 		activityBoxes:      activityBoxes,
 		sizer:              sizer,
 	}
@@ -181,9 +180,9 @@ occupy.
 */
 func (c *Creator) lifelineTitleBox(statement *dslmodel.Statement) {
 	// First make the rectangular box
-	centre := c.lifelineSpacing.CentreLine(statement)
-	left := centre - 0.5*c.lifelineSpacing.TitleBoxWidth
-	right := centre + 0.5*c.lifelineSpacing.TitleBoxWidth
+	centre := c.lifelineGeomH.CentreLine(statement)
+	left := centre - 0.5*c.lifelineGeomH.TitleBoxWidth
+	right := centre + 0.5*c.lifelineGeomH.TitleBoxWidth
 	var top float64
 	var bot float64
 	// For the first title box we encounter, we evaluate the top and bottom
@@ -218,7 +217,7 @@ func (c *Creator) interactionLabel(
 	statement *dslmodel.Statement) {
 	sourceLifeline := statement.ReferencedLifelines[0]
 	destLifeline := statement.ReferencedLifelines[1]
-	x, horizJustification := c.lifelineSpacing.InteractionLabelPosition(
+	x, horizJustification := c.lifelineGeomH.InteractionLabelPosition(
 		sourceLifeline, destLifeline)
 	firstRowY := c.tideMark
 	c.rowOfLabels(x, firstRowY, horizJustification, statement.LabelSegments)
@@ -252,8 +251,8 @@ func (c *Creator) interactionLine(
 	statement *dslmodel.Statement) {
 	sourceLifeline := statement.ReferencedLifelines[0]
 	destLifeline := statement.ReferencedLifelines[1]
-	x1, x2 := c.lifelineSpacing.InteractionLineEndPoints(
-		sourceLifeline, destLifeline, c.sizer)
+	x1, x2 := c.lifelineGeomH.InteractionLineEndPoints(
+		sourceLifeline, destLifeline)
 	y := c.tideMark
 	c.graphicsModel.Primitives.AddLine(x1, y, x2, y,
 		statement.Keyword == umli.Dash)
@@ -273,8 +272,7 @@ has occupied by advancing the tide mark.
 func (c *Creator) selfInteractionLines(
 	statement *dslmodel.Statement) {
 	theLifeline := statement.ReferencedLifelines[0]
-	left, right := c.lifelineSpacing.SelfInteractionLineXCoords(
-		theLifeline, c.sizer)
+	left, right := c.lifelineGeomH.SelfInteractionLineXCoords(theLifeline)
 	top := c.tideMark
 	bot := c.tideMark + c.sizer.SelfLoopHeight
 
@@ -371,7 +369,7 @@ func (c *Creator) finalizeActivityBox(
 		return
 	}
 	top := c.activityBoxes[lifeline].mostRecent().extent.start
-	left, _, right := c.lifelineSpacing.ActivityBoxXCoords(lifeline, c.sizer)
+	left, _, right := c.lifelineGeomH.ActivityBoxXCoords(lifeline)
 	c.graphicsModel.Primitives.AddRect(left, top, right, bottom)
 	c.tideMark = bottom
 	c.activityBoxes[lifeline].terminateInProgressBoxAt(bottom)

@@ -18,6 +18,7 @@ const (
 	diagPadLK    = 1.0
 
 	// Frame and diagram title
+	framePadLRK         = 0.5
 	frameInternalPadBK  = 1.0
 	frameTitleTextPadTK = 0.5
 	frameTitleTextPadBK = 1.0

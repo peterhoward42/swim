@@ -28,12 +28,12 @@ import (
 // Sizer is the top level sizing component.
 type Sizer struct {
 	// Whole diagram scope
-	DiagramPadT float64
-	DiagramPadB float64
-	DiagPadL    float64
+	DiagramPadT float64 // Margin above frame rectangle.
+	DiagramPadB float64 // Margin below frame rectangle.
 
 	// Outer frame and diagram title
-	FrameInternalPadB  float64
+	FramePadLR         float64 // Pushes frame slighly inside from edge of diagram.
+	FrameInternalPadB  float64 // Pushes frame bottom below ends of lifelines.
 	FrameTitleTextPadT float64
 	FrameTitleTextPadB float64
 	FrameTitleTextPadL float64
@@ -84,9 +84,9 @@ func NewSizer(diagramWidth int, fontHeight float64,
 	// Whole diagram scope
 	sizer.DiagramPadT = diagramPadTK * fh
 	sizer.DiagramPadB = diagramPadBK * fh
-	sizer.DiagPadL = diagPadLK * fh
 
 	// Outer frame and diagram title
+	sizer.FramePadLR = framePadLRK * fh
 	sizer.FrameInternalPadB = frameInternalPadBK * fh
 	sizer.FrameTitleTextPadT = frameTitleTextPadTK * fh
 	sizer.FrameTitleTextPadB = frameTitleTextPadBK * fh

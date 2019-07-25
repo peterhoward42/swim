@@ -47,7 +47,7 @@ func (ll *lifelineMaker) titleBoxHeight() float64 {
 func (ll *lifelineMaker) produceLifelines() {
 	for _, lifelineStatement := range ll.creator.lifelineStatements {
 		lineSegments := ll.produceOneLifeline(lifelineStatement)
-		x := ll.creator.lifelineSpacing.CentreLine(lifelineStatement)
+		x := ll.creator.lifelineGeomH.CentreLine(lifelineStatement)
 		for i := 0; i < len(lineSegments); i++ {
 			seg := lineSegments[i]
 			dashed := true

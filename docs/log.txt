@@ -18,38 +18,16 @@
     *  reinstate jpeg to export
     *  all one repo?
     *  first parameter name of Creator.rowOfLabels should not be centre
-
-    o  lifeline title boxes are too fat on canoncial example
-        *  make helper class
-        *  make skel tests
-        *  types:
-            *  diag.lifelines  // making lifelines dynamic behaviour 
-            *  diag.lifelineSpacing // owns all horiz judgements 
-            *  sizer.Sizer // static sizing
-            *  sizer.settings.go // private static coefficients
-            *  DEPRECATED sizer.Lifelines
-
-        o  try in the wild 
-            *  deprive sizer access to existing Lifelines type
-            *  CDD - returning each iteration to diag.creator
-            *  get visual tests to work
-            *  get all diag tests to work
-            *  get all umli tests to work
-            *  once old Lifeline type no longer used - ditch it and Inddividual
-               lifelines type
-            *  add Length() unit test on segment
-            o  review names of lifeline types across sizer and diag
-            o  update module /type doc strings
-            o  add unit tests for new scope in sizer and lifeline spacing and lifeline
-        o  diagram margin should be half of title box gutter
-        o  LifelineSpacing should be unexported
-        o  LifelineSpacing should be renamed LifelineHorizGeom
-        o  commit/push
+    *  lifeline title boxes are too fat on canoncial example
+    *  frame margin should be half of title box gutter
+    *  LifelineSpacing should be unexported
 
     o  combine sizer and settings
+    o  comment all sizer variables
     o  move package docco into go.doc files
     o  take away choice of font size?
     o  make title compulsory
+    o  careful think tests
     o  show lane letters - possibly optionally
     o  consider if image regression tests needed - or maybe only canonical?
     o  what happens if you introduce a lifeline late in the script?
