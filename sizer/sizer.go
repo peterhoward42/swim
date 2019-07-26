@@ -8,11 +8,9 @@ the mark-space settings for dashed lines, arrow sizing, the margins or
 padding required for each thing etc.
 
 It is encapsulated in this dedicated package, to remove this responsibility
-from the umli.diag package, so that umli.diag can deal only with the
+from the umli.diag package, so that umli.diag need only deal with the
 algorithmic part of diagram creation.
 
-It provides the top level *Sizer* type, along with some subordinate types
-it delegates to. For example: sizing.Lifelines.
 */
 package sizer
 
@@ -34,14 +32,14 @@ type Sizer struct {
 	// Outer frame and diagram title
 	FramePadLR         float64 // Pushes frame slighly inside from edge of diagram.
 	FrameInternalPadB  float64 // Pushes frame bottom below ends of lifelines.
-	FrameTitleTextPadT float64
+	FrameTitleTextPadT float64 // Gives frame title text headroom.
 	FrameTitleTextPadB float64
 	FrameTitleTextPadL float64
 	FrameTitleBoxWidth float64
-	FrameTitleRectPadB float64
+	FrameTitleRectPadB float64 // Creates space below the frame title box.
 
 	// Lifeline titles boxes
-	IdealLifelineTitleBoxWidth float64
+	IdealLifelineTitleBoxWidth float64 // Potentially moderated later.
 	TitleBoxHeight             float64
 	TitleBoxPadB               float64
 	TitleBoxLabelPadB          float64
@@ -50,8 +48,8 @@ type Sizer struct {
 	// Interaction lines
 	InteractionLinePadB        float64
 	InteractionLineTextPadB    float64
-	InteractionLineLabelIndent float64
 	SelfLoopHeight             float64
+	InteractionLineLabelIndent float64
 
 	// Arrows and dashes
 	ArrowLen        float64
@@ -73,53 +71,48 @@ func NewSizer(diagramWidth int, fontHeight float64,
 	sizer := &Sizer{}
 
 	// The requested font height is used as a datum reference,
-	// and nearly everything is sized in proportion to this, using
-	// settings from settings.go.
-
-	// These settings values typically end with the letter
-	// K (e.g. diagramPadTK) to indicate they are proportion coefficients.
+	// and nearly everything is sized in proportion to this.
 
 	fh := fontHeight
 
 	// Whole diagram scope
-	sizer.DiagramPadT = diagramPadTK * fh
-	sizer.DiagramPadB = diagramPadBK * fh
+	sizer.DiagramPadT = 1.0 * fh
+	sizer.DiagramPadB = 1.0 * fh
 
 	// Outer frame and diagram title
-	sizer.FramePadLR = framePadLRK * fh
-	sizer.FrameInternalPadB = frameInternalPadBK * fh
-	sizer.FrameTitleTextPadT = frameTitleTextPadTK * fh
-	sizer.FrameTitleTextPadB = frameTitleTextPadBK * fh
-	sizer.FrameTitleTextPadL = frameTitleTextPadLK * fh
-	sizer.FrameTitleBoxWidth = frameTitleBoxWidthK * float64(diagramWidth)
-	sizer.FrameTitleRectPadB = frameTitleRectPadBK * fh
+	sizer.FramePadLR = 0.5 * fh
+	sizer.FrameInternalPadB = 1.0 * fh
+	sizer.FrameTitleTextPadT = 0.5 * fh
+	sizer.FrameTitleTextPadB = 1.0 * fh
+	sizer.FrameTitleTextPadL = 1.0 * fh
+	sizer.FrameTitleBoxWidth = 0.25 * float64(diagramWidth)
+	sizer.FrameTitleRectPadB = 1.0 * fh
 
 	// Lifeline title boxes
-	sizer.TitleBoxLabelPadT = titleBoxTextPadTK * fh
-	sizer.TitleBoxLabelPadB = titleBoxTextPadBK * fh
-	sizer.IdealLifelineTitleBoxWidth = ideallifelineTitleBoxWidthK * fh
-	sizer.TitleBoxPadB = titleBoxPadBK * fh
+	sizer.TitleBoxLabelPadT = 0.25 * fh
+	sizer.TitleBoxLabelPadB = 1.0 * fh
+	sizer.IdealLifelineTitleBoxWidth = 15.0 * fh
+	sizer.TitleBoxPadB = 1.5 * fh
 
 	// Interaction lines
-	sizer.ArrowLen = arrowLenK * fh
-	sizer.ArrowHeight = arrowAspectRatio * sizer.ArrowLen
-	sizer.InteractionLinePadB = interactionLinePadBK * fh
-	sizer.InteractionLineTextPadB = interactionLineTextPadBK * fh
-	sizer.InteractionLineLabelIndent = sizer.ArrowLen +
-		interactionLineLabelIndent*fh
-	sizer.SelfLoopHeight = selfLoopHeightK * fh
+	sizer.ArrowLen = 1.5 * fh
+	sizer.ArrowHeight = 0.4 * sizer.ArrowLen
+	sizer.InteractionLinePadB = 0.5 * fh
+	sizer.InteractionLineTextPadB = 0.5 * fh
+	sizer.InteractionLineLabelIndent = sizer.ArrowLen + 1.0*fh
+	sizer.SelfLoopHeight = 3.0 * fh
 
 	// Dashes
-	sizer.DashLineDashLen = dashLineDashLenK * fh
-	sizer.DashLineDashGap = dashLineDashGapK * fh
+	sizer.DashLineDashLen = 0.5 * fh
+	sizer.DashLineDashGap = 0.25 * fh
 
 	// Activity boxes
-	sizer.ActivityBoxWidth = activityBoxWidthK * fh
-	sizer.ActivityBoxVerticalOverlap = activityBoxVerticalOverlapK * fh
-	sizer.FinalizedActivityBoxesPadB = finalizedActivityBoxesPadB * fh
+	sizer.ActivityBoxWidth = 1.5 * fh
+	sizer.ActivityBoxVerticalOverlap = 0.5 * fh
+	sizer.FinalizedActivityBoxesPadB = 1.0 * fh
 
 	// Lifelines
-	sizer.MinLifelineSegLength = minLifelineSegLengthK * fh
+	sizer.MinLifelineSegLength = 0.5 * fh
 
 	return sizer
 }

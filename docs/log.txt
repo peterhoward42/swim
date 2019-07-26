@@ -21,8 +21,9 @@
     *  lifeline title boxes are too fat on canoncial example
     *  frame margin should be half of title box gutter
     *  LifelineSpacing should be unexported
+    *  combine sizer and settings
 
-    o  combine sizer and settings
+
     o  comment all sizer variables
     o  move package docco into go.doc files
     o  take away choice of font size?
