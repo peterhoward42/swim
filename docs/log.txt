@@ -22,10 +22,8 @@
     *  frame margin should be half of title box gutter
     *  LifelineSpacing should be unexported
     *  combine sizer and settings
+    *  move package docco into go.doc files
 
-
-    o  comment all sizer variables
-    o  move package docco into go.doc files
     o  take away choice of font size?
     o  make title compulsory
     o  careful think tests

@@ -1,9 +1,9 @@
 /*
 Package graphics encapsulates the types that are needed to capture a diagram
-in terms of low level primites (like Lines and Labels).
+in terms of low level primites (like lines, arrow heads,  and strings).
 
-The aim is that these be easily renderable into diverse graphics
-formats, or serialized into JSON or YAML.
+The aim is that these be kept very simple, so that they are easily 
+renderable into diverse graphics formats, or serialized into JSON or YAML.
 
 The origin is top left.
 Positive is right and down.
