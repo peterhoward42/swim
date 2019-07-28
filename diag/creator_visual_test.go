@@ -58,7 +58,7 @@ func TestScratch(t *testing.T) {
 // diagram size and font size.
 func TestReferenceModel(t *testing.T) {
 	width := 2000
-	fontHeight := 20.0
+	fontHeight := 40.0
 	script := parser.ReferenceInput
 	genericCreateHelper(t, script, width, fontHeight, "canonical.png")
 }

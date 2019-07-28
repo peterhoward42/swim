@@ -1,30 +1,16 @@
-    *  Activity boxes
-    *  Why creator referring to left and right things?
-    *  Try out left or right justifying labels near their arrow,
-    *  Anything that can make creator module smaller?
-    *  Lane lines -> lifelines
-    *  Do lifeline lines
-    *  change lifelineTitleBox to use tidemark as top, having advanced 
-    *  experiment also with centre justifying interaction line labels
-    *  sizer.Lanes (and test) modules got left behing in rename
-    *  allboxstates is horrid name
-    *  newAllBoxStates got left behind in renaming
-    *  Should private types be lower case? bit of muddle
-    *  How stimulate go lint and go vet from command line
-    *  more module level comments
-    *  any potential for make diag package smaller? (no)
-    *  add a rectangular border with title box
-    *  do as go module
-    *  reinstate jpeg to export
-    *  all one repo?
-    *  first parameter name of Creator.rowOfLabels should not be centre
-    *  lifeline title boxes are too fat on canoncial example
-    *  frame margin should be half of title box gutter
-    *  LifelineSpacing should be unexported
-    *  combine sizer and settings
-    *  move package docco into go.doc files
+    o  improve uxp / behaviour w.r.t. text size
+        *  analysis
+        *  decision log
+        o  finalize dsl
+        o  dedicated branch
+        o  step one privatise the diag with 
+        o  min viable image file render solution
+        o  add dsl control and tests
+        o  upgrade image file renderer to scale
+        o  explore quality attainable
+        o  make sure properly tested
+        o  merge to master
 
-    o  take away choice of font size?
     o  make title compulsory
     o  careful think tests
     o  show lane letters - possibly optionally
@@ -58,4 +44,3 @@
 
 ----------------------------------------------------------------------------
 ----------------------------------------------------------------------------
-
