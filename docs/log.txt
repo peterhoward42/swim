@@ -1,7 +1,7 @@
     o  improve uxp / behaviour w.r.t. text size
         *  analysis
         *  decision log
-        o  finalize dsl
+        *  finalize dsl
         o  dedicated branch
         o  step one privatise the diag with 
         o  min viable image file render solution

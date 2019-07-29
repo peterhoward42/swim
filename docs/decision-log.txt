@@ -5,25 +5,25 @@ This records the reasoning behind changes made, after the point at which
 the features and functions and the code design had more or less stabilised.
 
 It aims to inform longer term decision making about further changes, when
-the full reasoning will have been likely forgotten.
+the full reasoning behind changes of mind will have been likely forgotten.
 
 
 1.0  DIAGRAM WIDTH AND TEXT SIZE CHOICES
 
   1.1  The As-Is Design
 
-The current design takes no responsibility for the diagram width and text size,
-and instead requires these to be specified by the caller of the API at diagram
-build time (not at render time). The diagram synthesis logic treats the text
-height as the fundamental sizing unit. All other sizing and spacing decisions
-are derived from the text height as a proportion. For example the width of an
-ativity box is something like 2 times the font height. Note that the diagram 
-aspect ratio cannot be controlled at all because it is determined by the space
-consumed vertically by the diagram synthesis process.
+The current design requires the diagram width and text height to be specified
+by the caller of the API at diagram build time (not at render time). It then
+uses the text height as the fundamental sizing unit. All other sizing and
+spacing decisions are defined as proportions of the text height.  For example
+the width of an ativity box is something like 2 times the font height. Note
+that the fundamental premis is that the diagram aspect ratio cannot be
+controlled at all - because it is determined by the space consumed vertically
+by the diagram synthesis process.
 
 The diagram synthesis process produces an in-memory graphics model, it is only
 later that this is rendered into one form or another, and only then is the
-coordinate space necessarily determined. The synthesis process and the graphics
+coordinate-space necessarily determined. The synthesis process and the graphics
 model produced is done entirely with floating-point arithmetic, and therefore
 need not be concerned with the diagram size from a fidelity point of view. It
 is deterministic (semantically) solely from the ratio of text height to diagram
@@ -50,17 +50,24 @@ practical limit of making text smaller is something like 1:200 before it
 becomes too small to read. In the opposite case, for a very simple diagram, the
 text can be made a bit larger without making it too difficult to choose the
 text for labels that fit. And this would be useful if the diagram was being
-projected.
+projected. The practical limit at this end of the spectrum is around 1:50.
 
   1.2  Improvement
 
 Choosing relative text size is something the diagram creator will find
-useful to tweak as they evolve a diagram, and therefore the DSL should be
-expanded to have a text size control of some kind.
+useful to tweak as they evolve a diagram, and therefore the DSL will be
+expanded with a statement like this:
 
-The user should be protected from themselves by only allowing them to set it
-between the known practical limits. It could be tee-shirt sizing S/M/L. Or it
-could be a number defining the ratio discussed above.
+    textsize 10
+
+The number is the reciprocal of the ratio * 100, thus:
+
+    5  = 1:200
+    10 = 1:100
+    20 = 1:50
+
+The user should be protected from themselves by constraining the input
+value between 5 and 20.
 
 From an architectural point of view, the diagram synthesis part of the software
 (i.e. the **diag** package) should not expose a diagram width control in their
