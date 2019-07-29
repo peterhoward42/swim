@@ -4,7 +4,6 @@ package render
 This module provides the ImageFileCreator type and its methods.
 */
 
-
 import (
 	"fmt"
 
@@ -45,7 +44,7 @@ func (cr *ImageFileCreator) Create(
 	filePath string, encoding Encoding, mdl *graphics.Model) error {
 	// Initialise the Creator's state.
 	cr.mdl = mdl
-	cr.dc = gg.NewContext(mdl.Width, mdl.Height)
+	cr.dc = gg.NewContext(int(mdl.Width), int(mdl.Height))
 
 	// Now do the rendering and saving.
 	cr.paintBackground()

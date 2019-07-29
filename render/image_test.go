@@ -16,8 +16,8 @@ var testResultsDir = filepath.Join(".", "testresults", "new")
 // fullCoverageModel is a DRY test helper that makes a graphics model
 // with one example of every graphics primitive in.
 func fullCoverageModel() *graphics.Model {
-	width := 2000
-	height := 1000
+	width := 2000.0
+	height := 1000.0
 	fh := 45.0
 	dashLineDashLen := 45.0
 	dashLineGapLen := 20.0
@@ -35,7 +35,7 @@ func fullCoverageModel() *graphics.Model {
 	// Each uses a different vertical justification (and anchor) which should
 	// leave them all ostensibly fitting snugly between the lines.
 
-	// Notably they are identically positioned in Y in the output, 
+	// Notably they are identically positioned in Y in the output,
 	// and all look identically biased towards the bottom line. Suggesting a
 	// font height (by definition) includes some padding above the glyphs.
 	// Note also some characters like 'p' have descenders below the bottom line.

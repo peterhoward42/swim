@@ -66,14 +66,14 @@ type Sizer struct {
 
 // NewSizer provides a Sizer structure that has been initialised
 // as is ready for use.
-func NewSizer(diagramWidth int, fontHeight float64,
+func NewSizer(diagramWidth float64, fontHeight float64,
 	lifelineStatements []*dslmodel.Statement) *Sizer {
 	sizer := &Sizer{}
 
 	// The requested font height is used as a datum reference,
 	// and nearly everything is sized in proportion to this.
 
-	fh := fontHeight
+	fh := fontHeight	
 
 	// Whole diagram scope
 	sizer.DiagramPadT = 1.0 * fh

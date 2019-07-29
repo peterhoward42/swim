@@ -28,8 +28,6 @@ var testResultsDir = filepath.Join(".", "testresults", "new")
 
 // TestScratch is a wip test to isolate something during dev
 func TestScratch(t *testing.T) {
-	width := 3000
-	fontHeight := 30.0
 	script := `
 		life A hbuild | store
 		life B dp_graph | neptune | hierarchy
@@ -51,16 +49,14 @@ func TestScratch(t *testing.T) {
 		stop G
 		
 	`
-	genericCreateHelper(t, script, width, fontHeight, "scratch.png")
+	genericCreateHelper(t, script, 1.0/100.0, "scratch.png")
 }
 
 // TestReferenceModel uses the reference DSL script and a typical
 // diagram size and font size.
 func TestReferenceModel(t *testing.T) {
-	width := 2000
-	fontHeight := 40.0
 	script := parser.ReferenceInput
-	genericCreateHelper(t, script, width, fontHeight, "canonical.png")
+	genericCreateHelper(t, script, 1.0/100.0, "canonical.png")
 }
 
 /*
@@ -69,8 +65,6 @@ a *stop* line in the DSL, and then sends a message to that lifeline
 later in the script, to check that a new activity box gets started.
 */
 func TestStopStartBox(t *testing.T) {
-	width := 2000
-	fontHeight := 20.0
 	script := `
         life A foo
         life B bar
@@ -79,7 +73,7 @@ func TestStopStartBox(t *testing.T) {
         stop B
         full AB banana
     `
-	genericCreateHelper(t, script, width, fontHeight, "stopstartbox.png")
+	genericCreateHelper(t, script, 1.0/100.0, "stopstartbox.png")
 }
 
 /*
@@ -88,8 +82,6 @@ activity box, when that lifeline doesn't have a box in progress. It provides
 visual confirmation that the statement is silently ignored.
 */
 func TestIgnoresRedundantStop(t *testing.T) {
-	width := 2000
-	fontHeight := 20.0
 	script := `
 		life A foo
 		life B bar
@@ -98,28 +90,24 @@ func TestIgnoresRedundantStop(t *testing.T) {
 		self A henrietta:w
         stop B
 	`
-	genericCreateHelper(t, script, width, fontHeight, "redundantstop.png")
+	genericCreateHelper(t, script, 1.0/100.0, "redundantstop.png")
 }
 
 // TestOneLifeline makes a diagram with just one lifeline - to help reveal
 // corner cases.
 func TestOneLifeline(t *testing.T) {
-	width := 2000
-	fontHeight := 20.0
 	script := `
 		life A Foo
 		self A Bar
 		self A Baz
 		self A A long | label over | multiple lines
 	`
-	genericCreateHelper(t, script, width, fontHeight, "onelifeline.png")
+	genericCreateHelper(t, script, 1.0/100.0, "onelifeline.png")
 }
 
 // TestLargeNumberOfLifelines illustrates the sizing and composition logic
 // when there are a large number of Lifelines.
 func TestLargeNumberOfLifelines(t *testing.T) {
-	width := 2000
-	fontHeight := 20.0
 	script := `
 		title This Is The | Title
 		life A two word | title
@@ -142,14 +130,12 @@ func TestLargeNumberOfLifelines(t *testing.T) {
         self I three word | message
         self I three word | message
 	`
-	genericCreateHelper(t, script, width, fontHeight, "manylifelines.png")
+	genericCreateHelper(t, script, 1.0/100.0, "manylifelines.png")
 }
 
 // TestLargeNumberOfInteractions illustrates the sizing and composition
 // logic when there are a large number of interactions.
 func TestLargeNumberOfInteraction(t *testing.T) {
-	width := 2000
-	fontHeight := 20.0
 	script := `
 		life A two word | title
 		life B two word | title
@@ -172,48 +158,34 @@ func TestLargeNumberOfInteraction(t *testing.T) {
         full CA three word | message
         full AB three word | message
 	`
-	genericCreateHelper(t, script, width, fontHeight, "manyinteractions.png")
+	genericCreateHelper(t, script, 1.0/100.0, "manyinteractions.png")
 }
 
 // TestLargeFont illustrates the sizing and composition
 // logic when font is relatively large.
 func TestLargeFont(t *testing.T) {
-	width := 2000
-	fontHeight := 40.0
 	script := parser.ReferenceInput
-	genericCreateHelper(t, script, width, fontHeight, "largfont.png")
+	genericCreateHelper(t, script, 2.0/100.0, "largfont.png")
 }
 
 // TestSmallFont illustrates the sizing and composition
 // logic when font is relatively small.
 func TestSmallFont(t *testing.T) {
-	width := 2000
-	fontHeight := 10.0
 	script := parser.ReferenceInput
-	genericCreateHelper(t, script, width, fontHeight, "smallfont.png")
-}
-
-// TestSmallDiagram illustrates the sizing and composition
-// logic when the diagram size (width) is specified to be rather
-// small.
-func TestSmallDiagram(t *testing.T) {
-	width := 1000
-	fontHeight := 10.0
-	script := parser.ReferenceInput
-	genericCreateHelper(t, script, width, fontHeight, "smalldiag.png")
+	genericCreateHelper(t, script, 1.0/200.0, "smallfont.png")
 }
 
 // Helper functions (DRY)
 
 // genericCreateHelper makes a diagram from the given DSL script and
 // saves it in the ./testresults/new directory.
-func genericCreateHelper(t *testing.T, script string, width int,
-	fontHeight float64, imageBaseName string) {
+func genericCreateHelper(t *testing.T, script string, textSizeRatio float64,
+	imageBaseName string) {
 	assert := assert.New(t)
 	font, err := truetype.Parse(goregular.TTF)
 	assert.NoError(err)
 	statements := parser.MustCompileParse(script)
-	creator := NewCreator(width, fontHeight, statements)
+	creator := NewCreator(textSizeRatio, statements)
 	graphicsModel := creator.Create()
 	fPath := filepath.Join(testResultsDir, imageBaseName)
 	err = render.NewImageFileCreator(font).Create(

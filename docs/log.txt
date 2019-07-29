@@ -2,8 +2,13 @@
         *  analysis
         *  decision log
         *  finalize dsl
-        o  dedicated branch
+        *  dedicated branch: textsize
         o  step one privatise the diag with 
+            *  change type of width to float64,
+            *  remove it from constructor and set it to a package constant
+            *  change argument of constructor to take text size ratio argument,
+               and set fontHeight attribute accordingly
+            *  remove unneccessary casts
         o  min viable image file render solution
         o  add dsl control and tests
         o  upgrade image file renderer to scale
@@ -11,6 +16,7 @@
         o  make sure properly tested
         o  merge to master
 
+    o  document the diagram creation algorithm
     o  make title compulsory
     o  careful think tests
     o  show lane letters - possibly optionally

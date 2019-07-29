@@ -6,7 +6,7 @@ to clients of the *diag* package. Clients should construct a Creator with
 NewCreator() and then call its Create() method.
 
 The module then provides the high-level implementation for Create() and
-expresses the essential creation algorith - delegating much of its work to
+expresses the essential creation algorithm - delegating much of its work to
 code in other modules in the package.
 */
 
@@ -22,8 +22,13 @@ Creator is the top level type for the diag package and provides the API
 to create diagrams.
 */
 type Creator struct {
-	// Width of the diagram required - in virtual pixels.
-	width int
+    /*
+    Modelled width of the diagram. This is a, private and arbitrary, working
+    width that serves only to provide us with a coordinate system to build the
+    model in. It is expected that model renderers will need / want to scale it
+    to a coordinate system that suits them at render time.
+    */
+	width float64
 	// Font height is used as the root for all sizing decisions.
 	fontHeight float64
 	// Parsed DSL script.
@@ -49,15 +54,22 @@ type Creator struct {
 }
 
 /*
-NewCreator provides a Creator ready to use.
+NewCreator provides a Creator ready to use. The textSizeRatio parameter defines
+the height of the text for labels and titles, as a proportion of the diagram
+width. A good default is 1/100 and suggested limits are 1/200 and 1/50.
 */
-func NewCreator(width int, fontHeight float64,
-	allStatements []*dslmodel.Statement) *Creator {
+func NewCreator(textSizeRatio float64, 
+    allStatements []*dslmodel.Statement) *Creator {
 	lifelineStatements := isolateLifelines(allStatements)
 	activityBoxes := map[*dslmodel.Statement]*lifelineBoxes{}
 	for _, s := range lifelineStatements {
 		activityBoxes[s] = newlifelineBoxes()
 	}
+    // We use an arbitrary working width to give the diagram under 
+    // construction a human-relatable size to aid development and 
+    // debugging, and then calculate the font size as a proportion of that.
+    width := 2000.0
+    fontHeight := width * textSizeRatio
 	sizer := sizer.NewSizer(width, fontHeight, lifelineStatements)
 	lifelineGeomH := newLifelineGeomH(width, fontHeight, sizer,
 		lifelineStatements)
@@ -84,7 +96,7 @@ the graphics primitives required in its graphicsModel attribute and then
 returns that model.
 */
 func (c *Creator) Create() *graphics.Model {
-	diagHeight := 0 // Set later to accomodate contents once known.
+	diagHeight := 0.0 // Set later to accomodate contents once known.
 	c.graphicsModel = graphics.NewModel(
 		c.width, diagHeight, c.fontHeight,
 		c.sizer.DashLineDashLen, c.sizer.DashLineDashGap)
@@ -137,7 +149,7 @@ finalizeDiagramHeight sets the graphics model's Height attribute to just
 large enough to accomodate the final tide mark.
 */
 func (c *Creator) finalizeDiagramHeight() {
-	c.graphicsModel.Height = int(c.tideMark + c.sizer.DiagramPadB)
+	c.graphicsModel.Height = c.tideMark + c.sizer.DiagramPadB
 }
 
 /*

@@ -19,13 +19,13 @@ boxes and as margins at the left and right edge of the diagram.
 type lifelineGeomH struct {
 	sizer           *sizer.Sizer
 	lifelineIndices map[*dslmodel.Statement]int
-	diagWidth       int
+	diagWidth       float64
 	TitleBoxWidth   float64
 	TitleBoxGutter  float64
 }
 
 // NewLifelineGeomH provides a lifelineGeomH ready to use.
-func newLifelineGeomH(diagWidth int, fontHt float64, sizer *sizer.Sizer,
+func newLifelineGeomH(diagWidth float64, fontHt float64, sizer *sizer.Sizer,
 	lifelines []*dslmodel.Statement) *lifelineGeomH {
 
 	g := &lifelineGeomH{

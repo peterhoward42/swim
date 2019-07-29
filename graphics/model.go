@@ -2,8 +2,8 @@ package graphics
 
 // Model is the topl-level graphics model.
 type Model struct {
-	Width           int
-	Height          int
+	Width           float64
+	Height          float64
 	FontHeight      float64
 	DashLineDashLen float64
 	DashLineGapLen  float64
@@ -11,7 +11,7 @@ type Model struct {
 }
 
 // NewModel instantiates a Model and initializes it ready to use.
-func NewModel(width int, height int, fontHeight float64,
+func NewModel(width float64, height float64, fontHeight float64,
 	dashLineDashLen float64, dashLineGapLen float64) *Model {
 	model := &Model{}
 	model.Width = width
