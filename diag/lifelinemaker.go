@@ -46,7 +46,7 @@ func (ll *lifelineMaker) titleBoxHeight() float64 {
 // boxes and interaction lines that cross a lifeline.
 func (ll *lifelineMaker) produceLifelines() {
 	for _, lifelineStatement := range ll.creator.lifelineStatements {
-		lineSegments := ll.produceOneLifeline(lifelineStatement)
+		lineSegments := ll.segmentsForLifeline(lifelineStatement)
 		x := ll.creator.lifelineGeomH.CentreLine(lifelineStatement)
 		for i := 0; i < len(lineSegments); i++ {
 			seg := lineSegments[i]
@@ -58,12 +58,12 @@ func (ll *lifelineMaker) produceLifelines() {
 }
 
 /*
-produceOneLifeline works out the set of dashed line segments that are required
+segmentsForLifeline works out the set of dashed line segments that are required
 to represent one lifeline - accomodating the gaps needed where
 the lifeline activity boxes live, or interaction lines that cross this
 lifeline.
 */
-func (ll *lifelineMaker) produceOneLifeline(lifeline *dslmodel.Statement) (
+func (ll *lifelineMaker) segmentsForLifeline(lifeline *dslmodel.Statement) (
 	lineSegments []*segment) {
 
 	// Acquire and combine the (ordered) gap requirements - between which

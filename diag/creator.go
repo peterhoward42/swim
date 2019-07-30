@@ -22,12 +22,12 @@ Creator is the top level type for the diag package and provides the API
 to create diagrams.
 */
 type Creator struct {
-    /*
-    Modelled width of the diagram. This is a, private and arbitrary, working
-    width that serves only to provide us with a coordinate system to build the
-    model in. It is expected that model renderers will need / want to scale it
-    to a coordinate system that suits them at render time.
-    */
+	/*
+	   Modelled width of the diagram. This is a, private and arbitrary, working
+	   width that serves only to provide us with a coordinate system to build the
+	   model in. It is expected that model renderers will need / want to scale it
+	   to a coordinate system that suits them at render time.
+	*/
 	width float64
 	// Font height is used as the root for all sizing decisions.
 	fontHeight float64
@@ -58,18 +58,18 @@ NewCreator provides a Creator ready to use. The textSizeRatio parameter defines
 the height of the text for labels and titles, as a proportion of the diagram
 width. A good default is 1/100 and suggested limits are 1/200 and 1/50.
 */
-func NewCreator(textSizeRatio float64, 
-    allStatements []*dslmodel.Statement) *Creator {
+func NewCreator(textSizeRatio float64,
+	allStatements []*dslmodel.Statement) *Creator {
 	lifelineStatements := isolateLifelines(allStatements)
 	activityBoxes := map[*dslmodel.Statement]*lifelineBoxes{}
 	for _, s := range lifelineStatements {
 		activityBoxes[s] = newlifelineBoxes()
 	}
-    // We use an arbitrary working width to give the diagram under 
-    // construction a human-relatable size to aid development and 
-    // debugging, and then calculate the font size as a proportion of that.
-    width := 2000.0
-    fontHeight := width * textSizeRatio
+	// We use an arbitrary working width to give the diagram under
+	// construction a human-relatable size to aid development and
+	// debugging, and then calculate the font size as a proportion of that.
+	width := 2000.0
+	fontHeight := width * textSizeRatio
 	sizer := sizer.NewSizer(width, fontHeight, lifelineStatements)
 	lifelineGeomH := newLifelineGeomH(width, fontHeight, sizer,
 		lifelineStatements)
@@ -100,7 +100,13 @@ func (c *Creator) Create() *graphics.Model {
 	c.graphicsModel = graphics.NewModel(
 		c.width, diagHeight, c.fontHeight,
 		c.sizer.DashLineDashLen, c.sizer.DashLineDashGap)
-	c.createFirstPass()
+	// initPass does the stuff that has to come at the top of the diagram
+	c.initPass()
+	// sequentialPass does the stuff that must be done in order to make the
+	// diagram grow down the page
+	c.sequentialPass()
+	// the remaining steps wrap things up that cannot be determined until the
+	// the sequential pass has grown the diagram down the page
 	c.finalizeActivityBoxes()
 	c.finalizeLifelines()
 	c.frameMaker.finalizeFrame()
@@ -122,16 +128,27 @@ func isolateLifelines(
 }
 
 /*
-createFirstPass takes each parsed statement from the DSL script in turn, to
-generate the primitives required that can be determined from a first pass.
-This includes for example the lifeline title boxes and the interaction lines and
+initPass generates the graphics that must be produced at the top of the diagram
+E.g the frame and title box, and the lifelines with their title
+boxes at the top of each.
+*/
+func (c *Creator) initPass() {
+	c.tideMark = c.sizer.DiagramPadT
+	// Quite complex - so delegate.
+	c.frameMaker.initFrameAndMakeTitleBox()
+	c.lifelineTitleBoxes()
+}
+
+/*
+sequentialPass takes each parsed statement from the DSL script in turn, to
+generate the sequence-dependent primitives.
+This includes for example the interaction lines and
 labels. But it excludes the generation of primitives that can only be
 dimensioned once the interaction line Y coordinates are known; for example
 the activity boxes that sit on lifelines.
 */
-func (c *Creator) createFirstPass() {
+func (c *Creator) sequentialPass() {
 	graphicalEvents := newScanner().Scan(c.allStatements)
-	c.tideMark = c.sizer.DiagramPadT
 	// Outer loop is per DSL statement
 	for _, statement := range c.allStatements {
 		statementEvents := graphicalEvents[statement]
@@ -167,56 +184,38 @@ func (c *Creator) graphicsForDrawingEvent(evt eventType,
 		c.interactionLine(statement)
 	case InteractionLabel:
 		c.interactionLabel(statement)
-	case LifelineTitleBox:
-		c.lifelineTitleBox(statement)
 	case SelfInteractionLines:
 		c.selfInteractionLines(statement)
 	case PotentiallyStartFromBox:
 		c.potentiallyStartFromBox(statement)
 	case PotentiallyStartToBox:
 		c.potentiallyStartToBox(statement)
-	case Frame:
-		c.frame(statement)
 	}
-}
-
-func (c *Creator) frame(statement *dslmodel.Statement) {
-	// Quite complex - so delegate.
-	c.frameMaker.initFrameAndMakeTitleBox(statement)
 }
 
 /*
-lifelineTitleBox generates the lines to represent the rectangular box at the top
-of a lifeline, and advances the tide mark corresponding to the depth they
-occupy.
+lifelineTitleBoxes generates the lines and text to draw the title boxes at
+the top of all the lifelines. Then advances the tide mark corresponding to the
+depth they occupy.
 */
-func (c *Creator) lifelineTitleBox(statement *dslmodel.Statement) {
-	// First make the rectangular box
-	centre := c.lifelineGeomH.CentreLine(statement)
-	left := centre - 0.5*c.lifelineGeomH.TitleBoxWidth
-	right := centre + 0.5*c.lifelineGeomH.TitleBoxWidth
-	var top float64
-	var bot float64
-	// For the first title box we encounter, we evaluate the top and bottom
-	// coordinate for it and all other title boxes, based on the tidemark.
-	// And remember these coordinates, and advance the tidemark. For all the
-	// the others, we use the saved coordinates and leave the tidemark alone.
-	if c.lifelineMaker.titleBoxTopAndBottom == nil {
-		top = c.tideMark
-		bot = top + c.lifelineMaker.titleBoxHeight()
-		c.lifelineMaker.titleBoxTopAndBottom = &segment{top, bot}
-		c.tideMark += c.lifelineMaker.titleBoxTopAndBottom.Length()
-		c.tideMark += c.sizer.TitleBoxPadB
-	} else {
-		top = c.lifelineMaker.titleBoxTopAndBottom.start
-		bot = c.lifelineMaker.titleBoxTopAndBottom.end
-	}
-	c.graphicsModel.Primitives.AddRect(left, top, right, bot)
+func (c *Creator) lifelineTitleBoxes() {
+	top := c.tideMark
+	bot := top + c.lifelineMaker.titleBoxHeight()
+	c.lifelineMaker.titleBoxTopAndBottom = &segment{top, bot}
 
-	// Make the Label
-	n := len(statement.LabelSegments)
-	firstRowY := bot - float64(n)*c.fontHeight - c.sizer.TitleBoxLabelPadB
-	c.rowOfLabels(centre, firstRowY, graphics.Centre, statement.LabelSegments)
+	for _, lifeline := range c.lifelineStatements {
+		centre := c.lifelineGeomH.CentreLine(lifeline)
+		left := centre - 0.5*c.lifelineGeomH.TitleBoxWidth
+		right := centre + 0.5*c.lifelineGeomH.TitleBoxWidth
+		c.graphicsModel.Primitives.AddRect(left, top, right, bot)
+
+		n := len(lifeline.LabelSegments)
+		firstRowY := bot - float64(n)*c.fontHeight - c.sizer.TitleBoxLabelPadB
+		c.rowOfLabels(centre, firstRowY, graphics.Centre, lifeline.LabelSegments)
+	}
+
+	c.tideMark += c.lifelineMaker.titleBoxTopAndBottom.Length()
+	c.tideMark += c.sizer.TitleBoxPadB
 }
 
 /*

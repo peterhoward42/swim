@@ -16,7 +16,6 @@ type eventType int
 // These constants comprise the set of values for EventType.
 const (
 	EndBox eventType = iota + 1
-	Frame
 	InteractionLine
 	InteractionLabel
 	LifelineTitleBox
@@ -28,7 +27,8 @@ const (
 
 /*
 EventsRequired provides the list of EventType(s) that should be stimulated
-in response to each DSL keyword.
+in response to those of the DSL keywords that are processed in the order they
+appear in the script. For example interaction lines, or STOP statements.
 
 The sequence within each of these lists is significant, because each event
 *claims* a certain amount of vertical room for itself, which then *pushes*
@@ -39,12 +39,6 @@ lines, will be drawn above the lines to which they refer, and therefore must
 precede the corresponding line events.
 */
 var EventsRequired = map[string][]eventType{
-	umli.Title: {
-		Frame, // advances tidemark
-	},
-	umli.Life: {
-		LifelineTitleBox, // advances tidemark
-	},
 	umli.Dash: {
 		InteractionLabel,      // advances tidemark
 		PotentiallyStartToBox, // no advance

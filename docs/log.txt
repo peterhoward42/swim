@@ -3,27 +3,28 @@
         *  decision log
         *  finalize dsl
         *  dedicated branch: textsize
-        o  step one privatise the diag with 
-            *  change type of width to float64,
-            *  remove it from constructor and set it to a package constant
-            *  change argument of constructor to take text size ratio argument,
-               and set fontHeight attribute accordingly
-            *  remove unneccessary casts
-        o  min viable image file render solution
+        *  step one privatise the diag with 
+        *  min viable image file render solution
         o  add dsl control and tests
-        o  upgrade image file renderer to scale
+            *  set precedent for prescan ops with frame and title
+            *  now correct commens on mainpass
+            *  add lifeline start in similar way to frame
+            o  now have place to put textsize word
+        o  upgrade image file renderer to do the scaling
         o  explore quality attainable
         o  make sure properly tested
         o  merge to master
 
     o  document the diagram creation algorithm
     o  make title compulsory
+        o  no but put into canonical
     o  careful think tests
     o  show lane letters - possibly optionally
     o  consider if image regression tests needed - or maybe only canonical?
     o  what happens if you introduce a lifeline late in the script?
     o  what happens if you put title in too late?
     o  question merit of sizer unit test given visual test efficiency
+    o  tune settings
     o  many lifelines example suggests self labels might be better off
        going back above the loop and being allowed to go further right
     o  Might be best to hard code and hide the size  - and
