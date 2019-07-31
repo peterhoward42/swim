@@ -1,5 +1,5 @@
 // Package dslmodel provides the Statement type, which makes it possible
-// to compose a machine readable,**structured** representation of a DSL 
+// to compose a machine readable,**structured** representation of a DSL
 // script by using a list Statement(s).
 // It aims to decouple the downstream diagram building
 // system from the Parser and to provide it with a clean and fully
@@ -13,6 +13,7 @@ type Statement struct {
 	LifelineName        string       // Only used for <life> statements.
 	ReferencedLifelines []*Statement // When lifeline operands are present
 	LabelSegments       []string     // Each line of text called for in the label
+	TextSize            float64      // Only used for <textsize> statements.
 }
 
 // NewStatement instantiates a Statement, ready to use.

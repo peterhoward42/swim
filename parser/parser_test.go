@@ -147,3 +147,36 @@ func TestMakeSureARepresentativeStatementOutputIsProperlyFormed(t *testing.T) {
 	assert.Equal("get_user_permissions(", s.LabelSegments[0])
 	assert.Equal("token)", s.LabelSegments[1])
 }
+
+func TestNoErrorsWhenOptionalStatementsAreOmitted(t *testing.T) {
+	assert := assert.New(t)
+	// This DSL excludes *title* and *textsize* statements.
+	// Both of which are optional.
+	_, err := Parse(`
+        life A foo
+        self A bar
+    `)
+	assert.Nil(err)
+}
+
+func TestErrorsForMalformedTextSize(t *testing.T) {
+	assert := assert.New(t)
+	_, err := Parse("textsize garbage")
+	assert.EqualError(err,
+		"Error on this line <textsize garbage> (line: 1): Text size must be a number")
+	_, err = Parse("textsize 21")
+	assert.EqualError(err,
+		"Error on this line <textsize 21> (line: 1): textsize must be between 5 and 20")
+	_, err = Parse("textsize 4")
+	assert.EqualError(err,
+		"Error on this line <textsize 4> (line: 1): textsize must be between 5 and 20")
+}
+
+func TestWellFormedTextSizeIsParsedCorrectly(t *testing.T) {
+	assert := assert.New(t)
+	statements, err := Parse("textsize 10")
+	assert.NoError(err)
+	s := statements[0]
+	expected := 10.0
+	assert.Equal(expected, s.TextSize)
+}

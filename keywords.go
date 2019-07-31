@@ -10,6 +10,7 @@ package umli
 // in both the parser and the dslmodel.
 const (
 	Title = "title"
+    TextSize = "textsize"
 	Life  = "life"
 	Dash  = "dash"
 	Full  = "full"
@@ -18,4 +19,4 @@ const (
 )
 
 // AllKeywords provides the keywords as a list.
-var AllKeywords = []string{Title, Life, Full, Dash, Self, Stop}
+var AllKeywords = []string{Title, Life, Full, Dash, Self, Stop, TextSize}

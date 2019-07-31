@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	re "regexp"
+	"strconv"
 	"strings"
 
 	"github.com/peterhoward42/umli"
@@ -60,10 +61,15 @@ func parseLine(line string, knownLifelines lifelineStatementsByName) (
 	if !strings.Contains(strings.Join(umli.AllKeywords, " "), keyWord) {
 		return nil, fmt.Errorf("unrecognized keyword: %s", keyWord)
 	}
-	// Validate and reconcile the lifelines referenced in the second word.
+
+	// Define variables to capture all the various operands
+	lifelinesReferenced := []*dslmodel.Statement{}
+	labelIndividualLines := []string{}
 	var lifelineNamesOperand string
-	var lifelinesReferenced []*dslmodel.Statement
-	if keyWord != umli.Title {
+	var textSize float64
+
+	// For statements that should have a lifelines operand
+	if shouldHaveLifelinesOperand(keyWord) {
 		lifelineNamesOperand = words[1]
 		if lifelinesReferenced, err = parseLifelinesOperand(
 			lifelineNamesOperand, keyWord, knownLifelines); err != nil {
@@ -71,16 +77,25 @@ func parseLine(line string, knownLifelines lifelineStatementsByName) (
 		}
 	}
 
-	// Isolate label text by stripping what we have already consumed.
-	labelText := strings.Replace(line, keyWord, "", 1)
-	labelText = strings.Replace(labelText, words[1], "", 1)
-	// Interpret pipes (|) as line breaks.
-	labelIndividualLines := isolateLabelConstituentLines(labelText)
+	// For statements that should have a label, validate and package
+	// the line segments.
+	if shouldHaveLabel(keyWord) {
+		// Isolate label text by stripping what we have already consumed.
+		labelText := strings.Replace(line, keyWord, "", 1)
+		labelText = strings.Replace(labelText, words[1], "", 1)
+		// Interpret pipes (|) as line breaks.
+		labelIndividualLines = isolateLabelConstituentLines(labelText)
+		if len(labelIndividualLines) == 0 {
+			return nil, errors.New("Label text missing")
+		}
+	}
 
-	// Make sure labels are present on statement for which they are
-	// mandatory
-	if keyWord != umli.Stop && len(labelIndividualLines) == 0 {
-		return nil, errors.New("Label text missing")
+	// Special case parsing of textsize keyword
+	if keyWord == umli.TextSize {
+		textSize, err = parseTextSize(words[1])
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	// Construct the Statement to return
@@ -88,6 +103,7 @@ func parseLine(line string, knownLifelines lifelineStatementsByName) (
 	statement.Keyword = keyWord
 	statement.LabelSegments = labelIndividualLines
 	statement.ReferencedLifelines = lifelinesReferenced
+	statement.TextSize = textSize
 
 	// A few extra steps for *Life* statements
 	if statement.Keyword == umli.Life {
@@ -155,4 +171,35 @@ func parseLifelinesOperand(lifelineNamesOperand, keyWord string,
 		}
 	}
 	return lifelinestatements, nil
+}
+
+func shouldHaveLifelinesOperand(keyWord string) bool {
+	switch keyWord {
+	case umli.Title, umli.TextSize:
+		return false
+	}
+	return true
+}
+
+func shouldHaveLabel(keyWord string) bool {
+	switch keyWord {
+	case umli.TextSize, umli.Stop:
+		return false
+	}
+	return true
+}
+
+// parseTextSize converts the textSizeOperand string into a float54
+// within acceptable bounds if possible.
+func parseTextSize(textSizeOperand string) (textSize float64, err error) {
+	if textSize, err = strconv.ParseFloat(textSizeOperand, 64); err != nil {
+		return -1, errors.New("Text size must be a number")
+	}
+	const minTextSize = 5
+	const maxTextSize = 20
+	if textSize < minTextSize || textSize > maxTextSize {
+		return -1, fmt.Errorf("textsize must be between %v and %v",
+			minTextSize, maxTextSize)
+	}
+	return textSize, nil
 }
