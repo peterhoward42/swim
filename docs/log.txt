@@ -20,8 +20,14 @@
                     *  that dsl without malformed text size passes
                     *  that parsing dsl with textsize produces a well 
                        properly formed statement
-                o  tdd diag including default
+                *  tdd diag including default
+                    *  lifecycle
+                        *  flesh out idea
+                        *  move into sub functions
+                        *  repair tests
                 o  add visual tests
+                    o  large font visual example isn't?
+                    o  add test that uses default when no textsize statement
                 o  make sure text size is in reference script
         o  upgrade image file renderer to do the scaling
         o  explore quality attainable

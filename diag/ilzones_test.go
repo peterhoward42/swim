@@ -15,8 +15,8 @@ func TestClaimsCreatedForSingleInteractionLine(t *testing.T) {
         full AB two | lines
 	`
 	statements := parser.MustCompileParse(script)
-	creator := NewCreator(1.0/100.0, statements)
-	creator.Create()
+	creator := &Creator{}
+	creator.Create(statements, 1.0/100.0)
 
 	// There should be two claims - one for the label and one (contiguously)
 	// for the line.
@@ -41,8 +41,8 @@ func TestCrossesBehaviour(t *testing.T) {
         full AC message
 	`
 	statements := parser.MustCompileParse(script)
-	creator := NewCreator(1.0/100.0, statements)
-	creator.Create()
+	creator := &Creator{}
+	creator.Create(statements, 1.0/100.0)
 
 	left := statements[0]
 	middle := statements[1]
@@ -59,8 +59,8 @@ func TestCrossesBehaviour(t *testing.T) {
         full CA message
 	`
 	statements = parser.MustCompileParse(script)
-	creator = NewCreator(1.0/100.0, statements)
-	creator.Create()
+	creator = &Creator{}
+	creator.Create(statements, 1.0/100.0)
 
 	left = statements[0]
 	middle = statements[1]
@@ -77,8 +77,8 @@ func TestCrossesBehaviour(t *testing.T) {
         full AB message
 	`
 	statements = parser.MustCompileParse(script)
-	creator = NewCreator(1.0/100.0, statements)
-	creator.Create()
+	creator = &Creator{}
+	creator.Create(statements, 1.0/100.0)
 
 	left = statements[0]
 	middle = statements[1]
@@ -94,8 +94,8 @@ func TestCrossesBehaviour(t *testing.T) {
         full AB message
 	`
 	statements = parser.MustCompileParse(script)
-	creator = NewCreator(1.0/100.0, statements)
-	creator.Create()
+	creator = &Creator{}
+	creator.Create(statements, 1.0/100.0)
 
 	left = statements[0]
 	right = statements[1]

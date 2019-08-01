@@ -185,8 +185,9 @@ func genericCreateHelper(t *testing.T, script string, textSizeRatio float64,
 	font, err := truetype.Parse(goregular.TTF)
 	assert.NoError(err)
 	statements := parser.MustCompileParse(script)
-	creator := NewCreator(textSizeRatio, statements)
-	graphicsModel := creator.Create()
+	// todo why not literal one liner?
+	creator := &Creator{}
+	graphicsModel := creator.Create(statements, 1.0/100.0)
 	fPath := filepath.Join(testResultsDir, imageBaseName)
 	err = render.NewImageFileCreator(font).Create(
 		fPath, render.PNG, graphicsModel)

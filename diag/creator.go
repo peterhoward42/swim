@@ -2,12 +2,13 @@ package diag
 
 /*
 This module contains the *Creator* type which provides the public interface
-to clients of the *diag* package. Clients should construct a Creator with
-NewCreator() and then call its Create() method.
+to clients of the *diag* package.
 
 The module then provides the high-level implementation for Create() and
 expresses the essential creation algorithm - delegating much of its work to
 code in other modules in the package.
+
+See todo for an explanation of the diagram creation algorithm.
 */
 
 import (
@@ -23,10 +24,11 @@ to create diagrams.
 */
 type Creator struct {
 	/*
-	   Modelled width of the diagram. This is a, private and arbitrary, working
-	   width that serves only to provide us with a coordinate system to build the
-	   model in. It is expected that model renderers will need / want to scale it
-	   to a coordinate system that suits them at render time.
+	   *width* is the width of the entire diagram. This is a, private and
+	   arbitrary, working width that serves only to provide us with a fixed,
+	   private, abstract coordinate system to build the model in. It is expected
+	   that model renderers will need / want to scale it to a coordinate system
+	   that suits them at render time.
 	*/
 	width float64
 	// Font height is used as the root for all sizing decisions.
@@ -54,59 +56,21 @@ type Creator struct {
 }
 
 /*
-NewCreator provides a Creator ready to use. The textSizeRatio parameter defines
-the height of the text for labels and titles, as a proportion of the diagram
-width. A good default is 1/100 and suggested limits are 1/200 and 1/50.
-*/
-func NewCreator(textSizeRatio float64,
-	allStatements []*dslmodel.Statement) *Creator {
-	lifelineStatements := isolateLifelines(allStatements)
-	activityBoxes := map[*dslmodel.Statement]*lifelineBoxes{}
-	for _, s := range lifelineStatements {
-		activityBoxes[s] = newlifelineBoxes()
-	}
-	// We use an arbitrary working width to give the diagram under
-	// construction a human-relatable size to aid development and
-	// debugging, and then calculate the font size as a proportion of that.
-	width := 2000.0
-	fontHeight := width * textSizeRatio
-	sizer := sizer.NewSizer(width, fontHeight, lifelineStatements)
-	lifelineGeomH := newLifelineGeomH(width, fontHeight, sizer,
-		lifelineStatements)
+Create is the main API method which work out what the diagram should look like.
+It orchestrates a multi-pass creation process which accumulates the graphics
+primitives required in its graphicsModel and then returns that model.
 
-	creator := &Creator{
-		width:              width,
-		fontHeight:         fontHeight,
-		allStatements:      allStatements,
-		lifelineStatements: lifelineStatements,
-		lifelineGeomH:      lifelineGeomH,
-		activityBoxes:      activityBoxes,
-		sizer:              sizer,
-	}
-	creator.frameMaker = newFrameMaker(creator)
-	creator.ilZones = NewInteractionLineZones(creator)
-	creator.lifelineMaker = newLifelineMaker(creator)
-	return creator
-}
-
-/*
-Create is the main API method which work out what the diagram should look
-like. It orchestrates a multi-pass creation process which accumulates
-the graphics primitives required in its graphicsModel attribute and then
-returns that model.
+The textSizeRatio parameter defines the height of the text for labels and
+titles as a proportion of the diagram width. A good default is 1/100 and
+suggested limits are 1/200 and 1/50.
 */
-func (c *Creator) Create() *graphics.Model {
-	diagHeight := 0.0 // Set later to accomodate contents once known.
-	c.graphicsModel = graphics.NewModel(
-		c.width, diagHeight, c.fontHeight,
-		c.sizer.DashLineDashLen, c.sizer.DashLineDashGap)
-	// initPass does the stuff that has to come at the top of the diagram
-	c.initPass()
-	// sequentialPass does the stuff that must be done in order to make the
-	// diagram grow down the page
-	c.sequentialPass()
-	// the remaining steps wrap things up that cannot be determined until the
-	// the sequential pass has grown the diagram down the page
+func (c *Creator) Create(allStatements []*dslmodel.Statement,
+	textSizeRatio float64) *graphics.Model {
+
+	c.initializeTheCreator(allStatements, textSizeRatio)
+	c.initializeTheGraphicsModel()
+	c.createGraphicsAnchoredToTopOfDiagram()
+	c.processDSLWorkingDownThePage()
 	c.finalizeActivityBoxes()
 	c.finalizeLifelines()
 	c.frameMaker.finalizeFrame()
@@ -114,25 +78,55 @@ func (c *Creator) Create() *graphics.Model {
 	return c.graphicsModel
 }
 
-// isolateLifelines provides the subset of Statements from the
-// given list that correspond to lifelines.
-func isolateLifelines(
-	allStatements []*dslmodel.Statement) []*dslmodel.Statement {
-	lifelineStatements := []*dslmodel.Statement{}
-	for _, statement := range allStatements {
-		if statement.Keyword == umli.Life {
-			lifelineStatements = append(lifelineStatements, statement)
-		}
+/*
+initializeTheCreator initialises the Creator structure, incuding composing
+a set of helper objects to which it can delegate.
+*/
+func (c *Creator) initializeTheCreator(allStatements []*dslmodel.Statement,
+	textSizeRatio float64) {
+	c.allStatements = allStatements
+	c.isolateLifelines()
+	c.activityBoxes = map[*dslmodel.Statement]*lifelineBoxes{}
+	for _, s := range c.lifelineStatements {
+		c.activityBoxes[s] = newlifelineBoxes()
 	}
-	return lifelineStatements
+	c.width = 2000.0 // Arbitrary but human-relatable to support debugging.
+	c.fontHeight = c.width * textSizeRatio
+	c.sizer = sizer.NewSizer(c.width, c.fontHeight, c.lifelineStatements)
+	c.lifelineGeomH = newLifelineGeomH(c.width, c.fontHeight, c.sizer,
+		c.lifelineStatements)
+	c.frameMaker = newFrameMaker(c)
+	c.ilZones = NewInteractionLineZones(c)
+	c.lifelineMaker = newLifelineMaker(c)
 }
 
 /*
-initPass generates the graphics that must be produced at the top of the diagram
-E.g the frame and title box, and the lifelines with their title
-boxes at the top of each.
+initializeTheGraphicsModel constructs a graphics.Model parameterized by
+width, height and font height and attaches it to the creator.
 */
-func (c *Creator) initPass() {
+func (c *Creator) initializeTheGraphicsModel() {
+	diagHeight := 0.0 // Set later to accomodate contents once known.
+	c.graphicsModel = graphics.NewModel(
+		c.width, diagHeight, c.fontHeight,
+		c.sizer.DashLineDashLen, c.sizer.DashLineDashGap)
+}
+
+// isolateLifelines provides the subset of Statements from the
+// given list that correspond to lifelines.
+func (c *Creator) isolateLifelines() {
+	for _, statement := range c.allStatements {
+		if statement.Keyword == umli.Life {
+			c.lifelineStatements = append(c.lifelineStatements, statement)
+		}
+	}
+}
+
+/*
+createGraphicsAnchoredToTopOfDiagram generates the graphics that must be
+produced at the top of the diagram E.g the frame and title box, and the
+lifelines with their title boxes at the top of each.
+*/
+func (c *Creator) createGraphicsAnchoredToTopOfDiagram() {
 	c.tideMark = c.sizer.DiagramPadT
 	// Quite complex - so delegate.
 	c.frameMaker.initFrameAndMakeTitleBox()
@@ -140,14 +134,13 @@ func (c *Creator) initPass() {
 }
 
 /*
-sequentialPass takes each parsed statement from the DSL script in turn, to
-generate the sequence-dependent primitives.
-This includes for example the interaction lines and
-labels. But it excludes the generation of primitives that can only be
-dimensioned once the interaction line Y coordinates are known; for example
-the activity boxes that sit on lifelines.
+processDSLWorkingDownThePage takes each parsed statement from the DSL script in
+turn, to generate the sequence-dependent primitives.  This includes for example
+the interaction lines and labels. But it excludes the generation of primitives
+that can only be dimensioned once the interaction line Y coordinates are known;
+for example the activity boxes that sit on lifelines.
 */
-func (c *Creator) sequentialPass() {
+func (c *Creator) processDSLWorkingDownThePage() {
 	graphicalEvents := newScanner().Scan(c.allStatements)
 	// Outer loop is per DSL statement
 	for _, statement := range c.allStatements {
