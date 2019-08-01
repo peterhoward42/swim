@@ -16,7 +16,7 @@ func TestClaimsCreatedForSingleInteractionLine(t *testing.T) {
 	`
 	statements := parser.MustCompileParse(script)
 	creator := &Creator{}
-	creator.Create(statements, 1.0/100.0)
+	creator.Create(statements)
 
 	// There should be two claims - one for the label and one (contiguously)
 	// for the line.
@@ -42,7 +42,7 @@ func TestCrossesBehaviour(t *testing.T) {
 	`
 	statements := parser.MustCompileParse(script)
 	creator := &Creator{}
-	creator.Create(statements, 1.0/100.0)
+	creator.Create(statements)
 
 	left := statements[0]
 	middle := statements[1]
@@ -60,7 +60,7 @@ func TestCrossesBehaviour(t *testing.T) {
 	`
 	statements = parser.MustCompileParse(script)
 	creator = &Creator{}
-	creator.Create(statements, 1.0/100.0)
+	creator.Create(statements)
 
 	left = statements[0]
 	middle = statements[1]
@@ -78,7 +78,7 @@ func TestCrossesBehaviour(t *testing.T) {
 	`
 	statements = parser.MustCompileParse(script)
 	creator = &Creator{}
-	creator.Create(statements, 1.0/100.0)
+	creator.Create(statements)
 
 	left = statements[0]
 	middle = statements[1]
@@ -95,7 +95,7 @@ func TestCrossesBehaviour(t *testing.T) {
 	`
 	statements = parser.MustCompileParse(script)
 	creator = &Creator{}
-	creator.Create(statements, 1.0/100.0)
+	creator.Create(statements)
 
 	left = statements[0]
 	right = statements[1]

@@ -140,7 +140,7 @@ func TestMakeSureARepresentativeStatementOutputIsProperlyFormed(t *testing.T) {
 	assert.Nil(err)
 
 	// full CB  get_user_permissions( | token)
-	s := statements[5]
+	s := statements[6]
 	assert.Equal("full", s.Keyword)
 	assert.Equal("C", s.ReferencedLifelines[0].LifelineName)
 	assert.Equal("B", s.ReferencedLifelines[1].LifelineName)

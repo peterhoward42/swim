@@ -60,11 +60,12 @@ expanded with a statement like this:
 
     textsize 10
 
-The number is the reciprocal of the ratio * 100, thus:
+    The number **is** the ratio, but multiplied by 1000, to make it
+    more friendly.
 
-    5  = 1:200
-    10 = 1:100
-    20 = 1:50
+    5  signifies 1:200  0.005
+    10 signifies 1:100  0.010
+    20 signifies 1:50   0.020
 
 The user should be protected from themselves by constraining the input
 value between 5 and 20.

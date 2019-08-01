@@ -1,41 +1,15 @@
     o  improve uxp / behaviour w.r.t. text size
-        *  analysis
-        *  decision log
-        *  finalize dsl
-        *  dedicated branch: textsize
-        *  step one privatise the diag with 
-        *  min viable image file render solution
-        o  add dsl control and tests
-            *  set precedent for prescan ops with frame and title
-            *  now correct commens on mainpass
-            *  add lifeline start in similar way to frame
-            o  now have place to put textsize word
-                *  get regression tests passing
-                o  tdd parser
-                    *  that dsl without textsize passes (and without title)
-                    o  that dsl with malformed textsize throws correct errors
-                        *  experiment with existing errors when input
-                        *  textsize garbage must be a number
-                        *  textsize out of range
-                    *  that dsl without malformed text size passes
-                    *  that parsing dsl with textsize produces a well 
-                       properly formed statement
-                *  tdd diag including default
-                    *  lifecycle
-                        *  flesh out idea
-                        *  move into sub functions
-                        *  repair tests
-                o  add visual tests
-                    o  large font visual example isn't?
-                    o  add test that uses default when no textsize statement
-                o  make sure text size is in reference script
-        o  upgrade image file renderer to do the scaling
-        o  explore quality attainable
-        o  make sure properly tested
         o  merge to master
+    o  upgrade image file renderer to do the scaling
+    o  explore quality attainable
+    o  make sure properly tested
 
+    o  some of the existing visual tests need not be
+        o  e.g. picking up default font height ratio
     o  refactor parser to switch on keyword(s)
+        o  with word split in common and re-used utils
     o  add a test that ensure parser barfs on empty input
+    o  make all error messages fit for a human at run time
     o  document the diagram creation algorithm
     o  make title compulsory
         o  no but put into canonical

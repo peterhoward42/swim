@@ -2,7 +2,8 @@ package parser
 
 // ReferenceInput is a convenient example DSL script for testing.
 const ReferenceInput = `
-title This is | Working Title
+title This is the | Working Title
+textsize 10
 life A  SL App
 life B  Core Permissions API
 life C  SL Admin API | edit_facilities | endpoint

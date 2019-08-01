@@ -59,15 +59,9 @@ type Creator struct {
 Create is the main API method which work out what the diagram should look like.
 It orchestrates a multi-pass creation process which accumulates the graphics
 primitives required in its graphicsModel and then returns that model.
-
-The textSizeRatio parameter defines the height of the text for labels and
-titles as a proportion of the diagram width. A good default is 1/100 and
-suggested limits are 1/200 and 1/50.
 */
-func (c *Creator) Create(allStatements []*dslmodel.Statement,
-	textSizeRatio float64) *graphics.Model {
-
-	c.initializeTheCreator(allStatements, textSizeRatio)
+func (c *Creator) Create(allStatements []*dslmodel.Statement) *graphics.Model {
+	c.initializeTheCreator(allStatements)
 	c.initializeTheGraphicsModel()
 	c.createGraphicsAnchoredToTopOfDiagram()
 	c.processDSLWorkingDownThePage()
@@ -82,22 +76,41 @@ func (c *Creator) Create(allStatements []*dslmodel.Statement,
 initializeTheCreator initialises the Creator structure, incuding composing
 a set of helper objects to which it can delegate.
 */
-func (c *Creator) initializeTheCreator(allStatements []*dslmodel.Statement,
-	textSizeRatio float64) {
+func (c *Creator) initializeTheCreator(allStatements []*dslmodel.Statement) {
 	c.allStatements = allStatements
 	c.isolateLifelines()
+	c.setWidthAndFontHeight(allStatements)
 	c.activityBoxes = map[*dslmodel.Statement]*lifelineBoxes{}
 	for _, s := range c.lifelineStatements {
 		c.activityBoxes[s] = newlifelineBoxes()
 	}
-	c.width = 2000.0 // Arbitrary but human-relatable to support debugging.
-	c.fontHeight = c.width * textSizeRatio
 	c.sizer = sizer.NewSizer(c.width, c.fontHeight, c.lifelineStatements)
 	c.lifelineGeomH = newLifelineGeomH(c.width, c.fontHeight, c.sizer,
 		c.lifelineStatements)
 	c.frameMaker = newFrameMaker(c)
 	c.ilZones = NewInteractionLineZones(c)
 	c.lifelineMaker = newLifelineMaker(c)
+}
+
+/*
+setWidthAndFontHeight sets the modelled diagram width and sets the font height
+as as a ratio of the width. The ratio is taken from the DSL when present, or
+otherwise a default.
+*/
+func (c *Creator) setWidthAndFontHeight(allStatements []*dslmodel.Statement) {
+	c.width = 2000.0 // Arbitrary but human-relatable to support debugging.
+	const defaultTextHeightRatio = 1.0 / 100.0
+	textHeightRatio := defaultTextHeightRatio
+	for _, s := range allStatements {
+		if s.Keyword == umli.TextSize {
+			// 5  signifies 1:200  0.005
+			// 10 signifies 1:100  0.010
+			// 20 signifies 1:50   0.020
+			textHeightRatio = s.TextSize / 1000.0
+			break
+		}
+	}
+	c.fontHeight = c.width * textHeightRatio
 }
 
 /*

@@ -28,7 +28,7 @@ func TestSortSegments(t *testing.T) {
 func TestMergeSegments(t *testing.T) {
 	assert := assert.New(t)
 	creator := &Creator{}
-	creator.Create([]*dslmodel.Statement{}, 2.0/100.0)
+	creator.Create([]*dslmodel.Statement{})
 
 	// Unaltered when do not overlap?
 	a := &segment{1, 2}

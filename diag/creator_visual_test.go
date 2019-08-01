@@ -49,14 +49,14 @@ func TestScratch(t *testing.T) {
 		stop G
 		
 	`
-	genericCreateHelper(t, script, 1.0/100.0, "scratch.png")
+	genericCreateHelper(t, script, "scratch.png")
 }
 
 // TestReferenceModel uses the reference DSL script and a typical
 // diagram size and font size.
 func TestReferenceModel(t *testing.T) {
 	script := parser.ReferenceInput
-	genericCreateHelper(t, script, 1.0/100.0, "canonical.png")
+	genericCreateHelper(t, script, "canonical.png")
 }
 
 /*
@@ -73,7 +73,7 @@ func TestStopStartBox(t *testing.T) {
         stop B
         full AB banana
     `
-	genericCreateHelper(t, script, 1.0/100.0, "stopstartbox.png")
+	genericCreateHelper(t, script, "stopstartbox.png")
 }
 
 /*
@@ -90,7 +90,7 @@ func TestIgnoresRedundantStop(t *testing.T) {
 		self A henrietta:w
         stop B
 	`
-	genericCreateHelper(t, script, 1.0/100.0, "redundantstop.png")
+	genericCreateHelper(t, script, "redundantstop.png")
 }
 
 // TestOneLifeline makes a diagram with just one lifeline - to help reveal
@@ -102,14 +102,16 @@ func TestOneLifeline(t *testing.T) {
 		self A Baz
 		self A A long | label over | multiple lines
 	`
-	genericCreateHelper(t, script, 1.0/100.0, "onelifeline.png")
+	genericCreateHelper(t, script, "onelifeline.png")
 }
 
 // TestLargeNumberOfLifelines illustrates the sizing and composition logic
-// when there are a large number of Lifelines.
+// when there are a large number of Lifelines. It helps itself by citing a
+// small text size.
 func TestLargeNumberOfLifelines(t *testing.T) {
 	script := `
 		title This Is The | Title
+		textsize 5
 		life A two word | title
 		life B two word | title
 		life C two word | title
@@ -130,7 +132,7 @@ func TestLargeNumberOfLifelines(t *testing.T) {
         self I three word | message
         self I three word | message
 	`
-	genericCreateHelper(t, script, 1.0/100.0, "manylifelines.png")
+	genericCreateHelper(t, script, "manylifelines.png")
 }
 
 // TestLargeNumberOfInteractions illustrates the sizing and composition
@@ -158,36 +160,59 @@ func TestLargeNumberOfInteraction(t *testing.T) {
         full CA three word | message
         full AB three word | message
 	`
-	genericCreateHelper(t, script, 1.0/100.0, "manyinteractions.png")
+	genericCreateHelper(t, script, "manyinteractions.png")
 }
 
 // TestLargeFont illustrates the sizing and composition
 // logic when font is relatively large.
 func TestLargeFont(t *testing.T) {
-	script := parser.ReferenceInput
-	genericCreateHelper(t, script, 2.0/100.0, "largfont.png")
+	script := `
+		title Large Font
+		textsize 20
+		life A Foo
+		life B Bar
+		full AB a message
+	`
+	genericCreateHelper(t, script, "largfont.png")
 }
 
 // TestSmallFont illustrates the sizing and composition
 // logic when font is relatively small.
 func TestSmallFont(t *testing.T) {
-	script := parser.ReferenceInput
-	genericCreateHelper(t, script, 1.0/200.0, "smallfont.png")
+	script := `
+		title Small Font
+		textsize 5
+		life A Foo
+		life B Bar
+		full AB a message
+	`
+	genericCreateHelper(t, script, "smallfont.png")
+}
+
+// TestSmallFont illustrates the sizing and composition
+// logic when font is relatively small.
+func TestWhenNoTextSizeIsSpecified(t *testing.T) {
+	script := `
+		title No font specified
+		life A Foo
+		life B Bar
+		full AB a message
+	`
+	genericCreateHelper(t, script, "nofontspecified.png")
 }
 
 // Helper functions (DRY)
 
 // genericCreateHelper makes a diagram from the given DSL script and
 // saves it in the ./testresults/new directory.
-func genericCreateHelper(t *testing.T, script string, textSizeRatio float64,
-	imageBaseName string) {
+func genericCreateHelper(t *testing.T, script string, imageBaseName string) {
 	assert := assert.New(t)
 	font, err := truetype.Parse(goregular.TTF)
 	assert.NoError(err)
 	statements := parser.MustCompileParse(script)
 	// todo why not literal one liner?
 	creator := &Creator{}
-	graphicsModel := creator.Create(statements, 1.0/100.0)
+	graphicsModel := creator.Create(statements)
 	fPath := filepath.Join(testResultsDir, imageBaseName)
 	err = render.NewImageFileCreator(font).Create(
 		fPath, render.PNG, graphicsModel)
