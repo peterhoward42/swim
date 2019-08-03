@@ -29,6 +29,7 @@ var testResultsDir = filepath.Join(".", "testresults", "new")
 // TestScratch is a wip test to isolate something during dev
 func TestScratch(t *testing.T) {
 	script := `
+		textsize 10
 		life A hbuild | store
 		life B dp_graph | neptune | hierarchy
 		life C dp_graph | neptune | query
@@ -49,7 +50,7 @@ func TestScratch(t *testing.T) {
 		stop G
 		
 	`
-	genericCreateHelper(t, script, "scratch.png")
+	genericCreateHelper(t, script, "scratch4000.png")
 }
 
 // TestReferenceModel uses the reference DSL script and a typical
