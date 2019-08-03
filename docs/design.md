@@ -10,7 +10,7 @@ Diagram creation has three phases handled by three separate packages:
 
 # Package Separation of Concerns
 
-## parser
+## Package:parser
 
 The input to the parser is the DSL script - in the form of a string.
 If the DSL script is well-formed and fit for purpose, the output is a 
@@ -28,7 +28,7 @@ The parser's responsibilities are to:
 - Produce error messages that are convenient and meaningful to the human
   writing the DSL script.
 
-## dslmodel
+## Package: dslmodel
 
 The type provided by `dslmodel` is `Statement`. This a structure with fields
 that can represent any of the DSL line forms explicitly. For example, it has a
@@ -47,7 +47,7 @@ this `full AB first line | second line | third`. The `Statement` however holds
 each (trimmed) line segment for a label separately in its `LabelSegments`
 field: a slice of strings.
 
-## graphics
+## Package: graphics
 
 Having described the input to the `diag` package, let us next describe
 it's output - the `graphics.Model` type. This is preparation for describing 
@@ -103,7 +103,7 @@ Important conceptual characteristics of this model are:
 - An implication is that renderers cannot discriminate arrow heads from any
   other filled polygons, and need not (cannot) be concerned with sizing them.
 
-## sizer
+## Package: sizer
 
 The `sizer` package is another auxilliary package that is worth explaining
 before we tackle the more complex `diag` package. It exists to minimize the
@@ -139,23 +139,64 @@ Thus `FrameTitleTextPadT` can be read as:
 > about it, to make it look right, and using half a font height is the amount
 > to use.
 
-
-
-
-## diag
+## Package: diag
 
 The `diag` package is the engine room of `umli`; where the logic lives to
 decide what the diagram needs to have in it, and what it should look like.
 
+There are quite a few modules in the `diag` package, with `creator.go`
+providing the API and orchestration of the method. The other modules each
+encapsulate specific delegated responsibilities.
+
+Diagram synthesis has a few conceptual steps:
+
+- Composing and initializing the specialised helper objects.
+- Producing the graphics (model) elements that can be thought of as being 
+  anchored to the top of the diagram.
+- Producing the graphics elements that arise from each line in the DSL. For
+  example interaction lines and their labels, and inferring where lifeline 
+  activity boxes must spring into being. Crucially this phase conceptually
+  moves down the page as it goes - advancing a **tide mark**.
+- Producing the graphical elements that can only be determined once the
+  sequential phase above has completed. For example drawing the lifelines, now
+  that we know where the bottom of the diagram is, and where they must be
+  broken to avoid activity boxes and interaction lines.
+
+### Catalogue of diag helper objects
 
 
-## Diagram Synthesis Logic
-
-## Graphics Model Responsibility
-
-## Rendering Responsibility
-
-## Sizer
+-  `arrow.go`: knows how to work out the geometry for a polygon to
+   represent an interaction line arrow head.
+- `boxstate.go`: offers to keep track of when activity boxes are started
+  on lifelines, and offers to draw the full box once an external party has
+  decided they should be closed off.
+- `events.go` advises what types of graphical elements are (or may be) 
+  required in response to each type of DSL statement.
+- `framemaker.go` offers to start drawing the diagram frame and its title at
+  the beginning, and then finishing it off once the diagram's depth is known.
+- `ilzones.go`. Short for *interaction line zones*. There is cross talk
+  required between the drawing of interaction lines and their labels, and the
+  drawing of lifelines, because the latter must be interrupted where there
+  are potentially-clashing interaction lines crossing them. This module acts as
+  the go-between and holds the information required.
+- `lifelinegeomH`. Short for *lifeline geometry horizontal*. Multiple decisions
+  must be made about how to position and space stuff, horizontally across the
+  diagram. Mostly deciding the Y coordinates for each lifeline, and many
+  other decision predicated on that. This includes some trade-off policies
+  depending on how dense the diagram is with lifelines. This module takes care
+  of all that.
+- `lifelinemaker.go` is willing to draw lifelines near the end of the diagram
+  creation process - once the information required is available. For example
+  how deep were the lifeline title boxes, and where must gaps be made in them.
+- `scanner.go` iterates over the `dslmodel.Statement`s sequentially,
+   packaging up and emitting the required drawing event mandates - as advised
+   by `events.go`.
+- `segment.go` It was found during implementation that several operations
+  required the concept of a one-dimensionsal extent. I.e. a thing with a
+  `start`
+  and an `end` coordinate value, and additionally that these be *sortable*
+  and *mergeable*. That's what this module encapsulates.
+  
 
 ## Test strategy
 
