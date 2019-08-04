@@ -1,7 +1,7 @@
     *  improve uxp / behaviour w.r.t. text size
     *  merge to master
     o  move diag docco into high level doc.go, and refer from readme 
-           partnered with dsl model.go
+        o  remind how to links
     o  refactor parser to switch on keyword(s)
         o  with word split in common and re-used utils
     o  upgrade image file renderer to do the scaling

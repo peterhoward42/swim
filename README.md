@@ -3,8 +3,8 @@
 This repository contains code that auto-generates a UML interaction
 diagram from a very simple text script.
 
-It is intended to create a fast and iterative thinking and creation process
-for the people creating them.
+It is intended to create a fast and iterative thinking, creation and editing 
+process for the people creating them.
 
 For example making this diagram:
 
@@ -27,19 +27,8 @@ The script is written in a Domain-Specific-Language (DSL) like this:
 
 > todo: change the diagram example to be one that matches the script.
 
-Creating the diagram has two conceptual phases. The first being to parse
-the DSL and build a `graphics.Model` that is little more than a list of lines, 
-strings and arrow heads, along with their coordinates, which when rendered, 
-will  produce the diagram.
-
-The second phase is to render this model. The `render` package provides
-renderes for:
-
-- .png image file
-- .jpg image file
-- a JSON representation
-- a YAML representation
-- an HTML canvas (See Note ***)
+Read about the code organisation and design, and how it works
+[here](docs/design.md)
 
 The code aims to be consumable in several different ways:
 
