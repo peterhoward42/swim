@@ -1,16 +1,17 @@
     *  improve uxp / behaviour w.r.t. text size
     *  merge to master
+    o  move diag docco into high level doc.go, and refer from readme 
+           partnered with dsl model.go
+    o  refactor parser to switch on keyword(s)
+        o  with word split in common and re-used utils
     o  upgrade image file renderer to do the scaling
         o  decision log stick with 2000
         o  update code comments thus
-        o  move diag docco into high level doc.go, and refer from readme 
-           partnered with dsl model.go
 
     o  some of the existing visual tests need not be
         o  e.g. picking up default font height ratio
-    o  refactor parser to switch on keyword(s)
-        o  with word split in common and re-used utils
     o  add a test that ensure parser barfs on empty input
+    o  renderers must transform the model coordinates
     o  improve all error messages to be fit for a human at run time
     o  document the diagram creation algorithm
     o  make title compulsory
