@@ -1,9 +1,17 @@
     *  improve uxp / behaviour w.r.t. text size
     *  merge to master
-    o  move diag docco into high level doc.go, and refer from readme 
-        o  remind how to links
+    *  move diag docco into high level doc.go, and refer from readme 
     o  refactor parser to switch on keyword(s)
-        o  with word split in common and re-used utils
+        *  coding
+        o  testing
+            o  get to pass
+            o  consider test structure - maybe test helpers?
+            o  how say what is missing e.g. label?
+            o  consider coverage given importance of human errors,
+               maybe as table test?
+        o  all logic covered?
+        o  improve style of code
+        o  regression test up rest of umli for changed parser api
     o  upgrade image file renderer to do the scaling
         o  decision log stick with 2000
         o  update code comments thus

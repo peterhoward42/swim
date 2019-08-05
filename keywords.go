@@ -20,3 +20,13 @@ const (
 
 // AllKeywords provides the keywords as a list.
 var AllKeywords = []string{Title, Life, Full, Dash, Self, Stop, TextSize}
+
+// KnownKeyword returns true if the given keyword is a recognized one.
+func KnownKeyword(keyWord string) bool  {
+    for _,  known := range AllKeywords {
+        if keyWord == known  {
+            return true
+        }
+    }
+    return false
+}
