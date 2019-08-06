@@ -12,9 +12,9 @@ instant feedback as they iterate. In particular making it easy to
 make it up as you go along, and change your mind continuously with little 
 cost.
 
-Using concise plain text as repeatable input is intended to let you treat 
-and manage these text inputs as you would code. And thus avoid the need to 
-manage image files or suchlike.
+Using simple plain text as the single source of truth for the diagrams  is
+intended to let you keep them alongside your source code. And thus avoid 
+the need to manage image files.
 
 The input is written in a Domain-Specific-Language (DSL) like this:
 
@@ -33,8 +33,8 @@ The input is written in a Domain-Specific-Language (DSL) like this:
 
 > todo: change the diagram example to be one that matches the script.
 
-Developers - read about the internal system design and algorithm 
-[here](docs/design.md)
+Developers - read about the internal 
+[system design and algorithm](docs/design.md)
 
 Users - get started by visiting [todo]
 

@@ -38,9 +38,10 @@ the proliferation of magic strings. In this case `umli.Full`.
 
 Most of the keywords require either one or two lifelines to be referenced. For
 example `stop A` requires one, while `full AB` requires two. The `Statement`
-type has a field for this called `ReferencedLifelines`, which is a slice of
-`*dslmodel.Statement`, i.e. pointers to the `Statements that define lifelines
-*A* and *B*. (I.e. pointers to the `Statement` instances for `life B foo`.
+type has a field for this called `ReferencedLifelines`. Rather than storing the
+lifeline letters - which would require another downstream look up - it stores 
+direct pointers to the `dslmodel.Statement`s that created the referenced 
+lifelines.
 
 The DSL allows a shorthand notation for defining a multiline string label Like
 this `full AB first line | second line | third`. The `Statement` however holds
@@ -90,10 +91,10 @@ Significant conceptual characteristics of this model are:
 - Simple, single-line string
 - No rotation. Horizontal only.
 - All strings have the same font height - defined at model scope, using
-  model coordinate system units (not point size or similar)
+  model length units (not point-size or similar)
 - Position defined with origin point and a horizontal and vertical 
   justification `{left, right, centre, top, bottom}`.
-- No concept of typeface; renderers an choose, but must respect font height
+- No concept of typeface; renderers can choose, but must respect font height
 
 ### Arrow Heads
 
@@ -162,7 +163,7 @@ The diagram synthesis algorithm has these conceptual steps:
 - Producing the graphical elements that can only be determined once the
   sequential phase above has completed. For example drawing the lifelines, now
   that we know where the bottom of the diagram is, and where they must be
-  broken to avoid activity boxes and interaction lines.
+  broken to avoid clashing with activity boxes and interaction lines.
 
 ### Catalogue of diag helper objects
 
@@ -265,15 +266,15 @@ of the diagrams created, where errors or the need for improvements is
 immediately apparent.
 
 It is inconveniently time consuming and fragile to create unit tests to check
-for the same things. Instead, once the visual unit test suite is complete, the
+for the same things.  Instead, once the visual unit test suite is complete, the
 golden-reference image files will be commited to the repo, and automated tests
-will perform regression tests against these. There is already an image
-comparison package ready (not yet in this repo), which is capable of comparing
-images pixel for pixel programmatically. This is necessary because a byte for
-byte comparison of the files produces false negatives in the presence of
-metadata inside the image files - for example timestamps. This test policy is
-copying the regression test idiom used by the `jest` npm package for testing
-single page web apps. todo - check reference.
+will perform regression tests against these. This idea is gratefully copied
+from [JEST's snapshot feature](https://jestjs.io/docs/en/snapshot-testing).
+There is already an image comparison package ready (not yet in this repo),
+which is capable of comparing images pixel for pixel programmatically. This is
+necessary because a byte for byte comparison of the files produces false
+negatives in the presence of metadata inside the image files - for example
+timestamps.
 
 
 ## Build, Test, Release and Deploy

@@ -3,8 +3,9 @@
     *  move diag docco into high level doc.go, and refer from readme 
     *  refactor parser to switch on keyword(s)
     o  upgrade image file renderer to do the scaling
-        o  decision log stick with 2000
-        o  update code comments thus
+        o  recheck design doc
+        o  recheck model doc
+        o  recheck diag doc
 
     o  some of the existing visual tests need not be
         o  e.g. picking up default font height ratio
