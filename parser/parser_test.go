@@ -6,6 +6,58 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// Start by testing the lower-level parsing helper functions
+
+func TestParseAddsLineNumberContextToErrors(t *testing.T) {
+	// Make sure that the Parse method augments errors returned to it
+	// with the line concerned and its line number.
+	assert := assert.New(t)
+	_, err := NewParser(`title Some Title
+		life A foo
+		life B bar
+		nonsense line
+	`).Parse()
+	msg := err.Error()
+	expectedBeginning := "Error on this line <nonsense line> (line: 4):"
+	assert.Equal(expectedBeginning, msg[:len(expectedBeginning)])
+}
+
+func TestLabelSplittingFunction(t *testing.T) {
+	// Make sure that that the utility function that splits labels into
+	// individual line segments works properly.
+	assert := assert.New(t)
+
+	// Multiline delimiters present
+	segments := (&Parser{}).isolateLabelConstituentLines("abc def | ghi | jkl")
+	assert.Len(segments, 3)
+	assert.Equal("abc def", segments[0])
+	assert.Equal("ghi", segments[1])
+	assert.Equal("jkl", segments[2])
+
+	// Multiline delimiters absent
+	segments = (&Parser{}).isolateLabelConstituentLines(" abc ")
+	assert.Len(segments, 1)
+	assert.Equal("abc", segments[0])
+}
+
+func TestStrippingOutWords(t *testing.T) {
+	// Make sure that that the utility function that removes words from
+	// the line works properly.
+	assert := assert.New(t)
+
+	// Remove 3 words that are present
+	stripped := (&Parser{}).removeWords(
+		"the quick lazy brown fox",
+		"quick", "lazy", "fox")
+	assert.Equal("the   brown", stripped)
+
+	// Make sure it works when one of the words to remove is not present
+	stripped = (&Parser{}).removeWords(
+		"the quick lazy brown fox",
+		"quick", "XXXXXXX", "fox")
+	assert.Equal("the  lazy brown", stripped)
+}
+
 func TestErrorMsgWhenTooFewWords(t *testing.T) {
 	assert := assert.New(t)
 	_, err := NewParser("life").Parse()
@@ -78,6 +130,14 @@ func TestErrorMsgForKeywordsThatExpectTwoLifelinesDontSpecifyTwoUCLetters(
 	_, err = NewParser("dash A3 foo").Parse()
 	assert.EqualError(err, "Error on this line <dash A3 foo> (line: 1): "+
 		"Lifelines specified must be two, upper case letters")
+
+	// Using the same letter twice
+	_, err = NewParser(`
+		life A foo
+		full AA bar
+	`).Parse()
+	assert.EqualError(err, "Error on this line <full AA bar> (line: 3): "+
+		"Lifeline letters must be different:(AA)")
 }
 
 func TestItIgnoresBlankLines(t *testing.T) {
