@@ -58,6 +58,15 @@ func TestStrippingOutWords(t *testing.T) {
 	assert.Equal("the  lazy brown", stripped)
 }
 
+func TestErrorMsgWhenNoInput(t *testing.T) {
+	assert := assert.New(t)
+	_, err := NewParser(`
+        
+
+    `).Parse()
+	assert.EqualError(err, "There is no input text")
+}
+
 func TestErrorMsgWhenTooFewWords(t *testing.T) {
 	assert := assert.New(t)
 	_, err := NewParser("life").Parse()

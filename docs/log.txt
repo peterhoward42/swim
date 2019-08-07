@@ -2,13 +2,9 @@
     *  merge to master
     *  move diag docco into high level doc.go, and refer from readme 
     *  refactor parser to switch on keyword(s)
-    o  some of the existing visual tests need not be
-        o  e.g. picking up default font height ratio
-
-
+    *  some of the existing visual tests need not be
 
     o  add a test that ensure parser barfs on empty input
-    o  renderers must transform the model coordinates
     o  improve all error messages to be fit for a human at run time
     o  careful think tests
         o  do all visual tests earn their keep?

@@ -26,33 +26,6 @@ import (
 
 var testResultsDir = filepath.Join(".", "testresults", "new")
 
-// TestScratch is a wip test to isolate something during dev
-func TestScratch(t *testing.T) {
-	script := `
-		textsize 10
-		life A hbuild | store
-		life B dp_graph | neptune | hierarchy
-		life C dp_graph | neptune | query
-		life D dp_graph | neptune.go
-		life E gremgo | neptune | pool
-		life F gremgo | neptune | client
-		life G graphson
-		full AB CountNodes
-		full BC CountHierarchyNodes
-		dash CB "g.V().hasLabel ..."
-		stop C
-		full BD GetNumber(query)
-		full DE GetCount
-		self D retry
-		full EF GetCount
-		full FG Deserialize
-		dash GF number json
-		stop G
-		
-	`
-	genericCreateHelper(t, script, "scratch4000.png")
-}
-
 // TestReferenceModel uses the reference DSL script and a typical
 // diagram size and font size.
 func TestReferenceModel(t *testing.T) {
@@ -70,7 +43,6 @@ func TestStopStartBox(t *testing.T) {
         life A foo
         life B bar
         full AB apple
-        dash BA orange
         stop B
         full AB banana
     `
@@ -190,8 +162,8 @@ func TestSmallFont(t *testing.T) {
 	genericCreateHelper(t, script, "smallfont.png")
 }
 
-// TestSmallFont illustrates the sizing and composition
-// logic when font is relatively small.
+// TestWhenNoTextSizeIsSpecified makes sure a default font height gets
+// used when none is specified.
 func TestWhenNoTextSizeIsSpecified(t *testing.T) {
 	script := `
 		title No font specified

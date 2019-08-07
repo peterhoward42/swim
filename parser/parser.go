@@ -35,6 +35,9 @@ func NewParser(inputScript string) *Parser {
 
 // Parse is the parsing invocation method.
 func (p *Parser) Parse() ([]*dslmodel.Statement, error) {
+	if len(strings.TrimSpace(p.inputScript)) == 0 {
+		return nil, errors.New("There is no input text")
+	}
 	reader := strings.NewReader(p.inputScript)
 	scanner := bufio.NewScanner(reader)
 	statements := []*dslmodel.Statement{}
