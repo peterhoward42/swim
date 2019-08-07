@@ -114,7 +114,7 @@ func (p *Parser) parseTextSize(line string, words []string) (
 	const minTextSize = 5
 	const maxTextSize = 20
 	if textSize < minTextSize || textSize > maxTextSize {
-		return nil, fmt.Errorf("textsize must be between %v and %v",
+		return nil, fmt.Errorf("Text size must be between %v and %v",
 			minTextSize, maxTextSize)
 	}
 	return &dslmodel.Statement{
@@ -159,7 +159,7 @@ func (p *Parser) parseFullOrDash(line string, words []string) (
 	for _, letter := range lifelineLetters {
 		lifeline, ok := p.lifelineStatementsByName[letter]
 		if !ok {
-			return nil, fmt.Errorf("Unknown lifeline: %v", letter)
+			return nil, fmt.Errorf("Unknown lifeline: %s", letter)
 		}
 		lifelines = append(lifelines, lifeline)
 	}
@@ -179,7 +179,7 @@ func (p *Parser) parseStop(line string, words []string) (
 	}
 	lifeline, ok := p.lifelineStatementsByName[words[1]]
 	if !ok {
-		return nil, fmt.Errorf("Unknown lifeline: %v", words[1])
+		return nil, fmt.Errorf("Unknown lifeline: %s", words[1])
 	}
 	return &dslmodel.Statement{
 		Keyword:             umli.Stop,
@@ -195,7 +195,7 @@ func (p *Parser) parseSelf(line string, words []string) (
 	}
 	lifeline, ok := p.lifelineStatementsByName[words[1]]
 	if !ok {
-		return nil, fmt.Errorf("Unknown lifeline: %v", words[1])
+		return nil, fmt.Errorf("Unknown lifeline: %s", words[1])
 	}
 	label := p.removeWords(line, umli.Self, words[1])
 	return &dslmodel.Statement{

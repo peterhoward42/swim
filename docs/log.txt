@@ -3,9 +3,9 @@
     *  move diag docco into high level doc.go, and refer from readme 
     *  refactor parser to switch on keyword(s)
     *  some of the existing visual tests need not be
+    *  add a test that ensure parser barfs on empty input
+    *  improve all error messages to be fit for a human at run time
 
-    o  add a test that ensure parser barfs on empty input
-    o  improve all error messages to be fit for a human at run time
     o  careful think tests
         o  do all visual tests earn their keep?
     o  show lane letters - possibly optionally

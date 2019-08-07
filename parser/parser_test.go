@@ -225,10 +225,10 @@ func TestErrorsForMalformedTextSize(t *testing.T) {
 		"Error on this line <textsize garbage> (line: 1): Text size must be a number")
 	_, err = NewParser("textsize 21").Parse()
 	assert.EqualError(err,
-		"Error on this line <textsize 21> (line: 1): textsize must be between 5 and 20")
+		"Error on this line <textsize 21> (line: 1): Text size must be between 5 and 20")
 	_, err = NewParser("textsize 4").Parse()
 	assert.EqualError(err,
-		"Error on this line <textsize 4> (line: 1): textsize must be between 5 and 20")
+		"Error on this line <textsize 4> (line: 1): Text size must be between 5 and 20")
 }
 
 func TestWellFormedTextSizeIsParsedCorrectly(t *testing.T) {
