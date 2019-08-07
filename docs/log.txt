@@ -2,20 +2,14 @@
     *  merge to master
     *  move diag docco into high level doc.go, and refer from readme 
     *  refactor parser to switch on keyword(s)
-    o  upgrade image file renderer to do the scaling
-        o  recheck design doc
-        o  recheck model doc
-        o  recheck diag doc
-
     o  some of the existing visual tests need not be
         o  e.g. picking up default font height ratio
+
+
+
     o  add a test that ensure parser barfs on empty input
     o  renderers must transform the model coordinates
     o  improve all error messages to be fit for a human at run time
-    o  document the diagram creation algorithm
-    o  make title compulsory
-        o  no but put into canonical
-    o  is the font iffy?
     o  careful think tests
         o  do all visual tests earn their keep?
     o  show lane letters - possibly optionally
@@ -27,23 +21,18 @@
     o  tune settings
     o  many lifelines example suggests self labels might be better off
        going back above the loop and being allowed to go further right
-    o  Might be best to hard code and hide the size  - and
-       encourage client to scale in context, or to make images big and
-       then use image lib to scale to suit?
-        o  if so, then make sure no pointless tests
     o  Change reference model to make label not too long, and maybe
        be more computer sciency - plus update readme to suit
-    o  Add title keyword which could be "edit me"
     o  virgin clone of umli fails create tests because no directory
        to save in - fix when decide on visual image difference testing
     o  Lifeline should be different mark space than response line
-    o  Convenient save / load and view local directory
     o  Web assembly
     o  benchmarks and tuning
     o  update readme
     o  design docco
     o  godoc example
     o  may need to rebrand as uml **sequence** diagram
+        o  incl all refs to umli
     o  cf creately and sequencediag.com differentiate
     o  Todo resurrect regressions tests for images
         o  include tinternet examples?
