@@ -9,24 +9,26 @@ package umli
 // They are in the top level package so that they can be used
 // in both the parser and the dslmodel.
 const (
-	Title = "title"
-    TextSize = "textsize"
-	Life  = "life"
-	Dash  = "dash"
-	Full  = "full"
-	Self  = "self"
-	Stop  = "stop"
+	Title       = "title"
+	TextSize    = "textsize"
+	ShowLetters = "showletters"
+	Life        = "life"
+	Dash        = "dash"
+	Full        = "full"
+	Self        = "self"
+	Stop        = "stop"
 )
 
 // AllKeywords provides the keywords as a list.
-var AllKeywords = []string{Title, Life, Full, Dash, Self, Stop, TextSize}
+var AllKeywords = []string{
+	Title, Life, ShowLetters, Full, Dash, Self, Stop, TextSize}
 
 // KnownKeyword returns true if the given keyword is a recognized one.
-func KnownKeyword(keyWord string) bool  {
-    for _,  known := range AllKeywords {
-        if keyWord == known  {
-            return true
-        }
-    }
-    return false
+func KnownKeyword(keyWord string) bool {
+	for _, known := range AllKeywords {
+		if keyWord == known {
+			return true
+		}
+	}
+	return false
 }

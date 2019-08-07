@@ -81,6 +81,8 @@ func (p *Parser) parseLine(line string) (s *dslmodel.Statement, err error) {
 		s, err = p.parseTitle(line, words)
 	case umli.TextSize:
 		s, err = p.parseTextSize(line, words)
+	case umli.ShowLetters:
+		s, err = p.parseShowLetters(line, words)
 	case umli.Life:
 		s, err = p.parseLife(line, words)
 	case umli.Full, umli.Dash:
@@ -89,6 +91,10 @@ func (p *Parser) parseLine(line string) (s *dslmodel.Statement, err error) {
 		s, err = p.parseSelf(line, words)
 	case umli.Stop:
 		s, err = p.parseStop(line, words)
+	default:
+		panic(fmt.Sprintf(
+			"Developer has registered keyword <%s> but forgotten to call handler",
+			keyWord))
 	}
 	if err != nil {
 		return nil, err
@@ -120,6 +126,23 @@ func (p *Parser) parseTextSize(line string, words []string) (
 	return &dslmodel.Statement{
 		Keyword:  umli.TextSize,
 		TextSize: textSize,
+	}, nil
+}
+
+func (p *Parser) parseShowLetters(line string, words []string) (
+	s *dslmodel.Statement, err error) {
+	var show bool
+	switch words[1] {
+	case "true":
+		show = true
+	case "false":
+		show = false
+	default:
+		return nil, errors.New("showletters expects <true> or <false>")
+	}
+	return &dslmodel.Statement{
+		Keyword:     umli.ShowLetters,
+		ShowLetters: show,
 	}, nil
 }
 
@@ -227,7 +250,7 @@ func (p *Parser) isolateLabelConstituentLines(labelText string) []string {
 // of a line starting with the given keyword.
 func (p *Parser) minWordsRequiredFor(keyWord string) int {
 	switch keyWord {
-	case umli.Title, umli.TextSize, umli.Stop:
+	case umli.Title, umli.TextSize, umli.ShowLetters, umli.Stop:
 		return 2
 	case umli.Life, umli.Full, umli.Dash, umli.Self:
 		return 3

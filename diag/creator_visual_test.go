@@ -84,7 +84,7 @@ func TestOneLifeline(t *testing.T) {
 func TestLargeNumberOfLifelines(t *testing.T) {
 	script := `
 		title This Is The | Title
-		textsize 5
+		textsize 10
 		life A two word | title
 		life B two word | title
 		life C two word | title

@@ -24,15 +24,17 @@ to create diagrams.
 */
 type Creator struct {
 	/*
-	   *width* is the width of the entire diagram. This is a, private and
-	   arbitrary, working width that serves only to provide us with a fixed,
-	   private, abstract coordinate system to build the model in. It is expected
-	   that model renderers will need / want to scale it to a coordinate system
-	   that suits them at render time.
+   *width* is the width of the entire diagram. This is a, private and
+   arbitrary, working-width that serves only to provide us with a fixed,
+   private, abstract coordinate system to build the model in. It is expected
+   that model renderers will need / want to scale it to a coordinate system
+   that suits them at render time.
 	*/
 	width float64
 	// Font height is used as the root for all sizing decisions.
 	fontHeight float64
+    // Should the lifeline letters be shown in each lifeline title box?
+    showLetters bool
 	// Parsed DSL script.
 	allStatements []*dslmodel.Statement
 	// The statements representing lifelines - isolated.
@@ -80,6 +82,7 @@ func (c *Creator) initializeTheCreator(allStatements []*dslmodel.Statement) {
 	c.allStatements = allStatements
 	c.isolateLifelines()
 	c.setWidthAndFontHeight(allStatements)
+	c.setShowLetters(allStatements)
 	c.activityBoxes = map[*dslmodel.Statement]*lifelineBoxes{}
 	for _, s := range c.lifelineStatements {
 		c.activityBoxes[s] = newlifelineBoxes()
@@ -111,6 +114,20 @@ func (c *Creator) setWidthAndFontHeight(allStatements []*dslmodel.Statement) {
 		}
 	}
 	c.fontHeight = c.width * textHeightRatio
+}
+
+/*
+setShowLetters looks for a *showletters* statement, and sets the creator's
+flag attribute accordingly, or to the behaviour default of true.
+*/
+func (c *Creator) setShowLetters(allStatements []*dslmodel.Statement) {
+	c.showLetters = true // default behaviour
+	for _, s := range allStatements {
+		if s.Keyword == umli.ShowLetters {
+            c.showLetters = s.ShowLetters
+            break
+		}
+	}
 }
 
 /*

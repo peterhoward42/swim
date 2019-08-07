@@ -4,6 +4,8 @@ package parser
 const ReferenceInput = `
 title This is the | Working Title
 textsize 10
+showletters true
+
 life A  SL App
 life B  Core Permissions API
 life C  SL Admin API | edit_facilities | endpoint

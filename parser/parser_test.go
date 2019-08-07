@@ -83,7 +83,7 @@ func TestErrorMsgWhenKeywordIsUnrecognized(t *testing.T) {
 		"Error on this line <foo bar> (line: 1): Unrecognized keyword: foo")
 }
 
-func TestErrorMsgWhenLifelineIsNotSingleUCLetterForStopAndLifeline(t *testing.T) {
+func TestErrorWhenSingleLetterLifelineExpected(t *testing.T) {
 	assert := assert.New(t)
 
 	// Few cases to look at details of error message.
@@ -119,7 +119,7 @@ func TestErrorMsgWhenLifelineIsNotSingleUCLetterForStopAndLifeline(t *testing.T)
 			"must be a single, upper case letter")
 }
 
-func TestErrorMsgForKeywordsThatExpectTwoLifelinesDontSpecifyTwoUCLetters(
+func TestErrorWhenTwoLetterLifelinesExpected(
 	t *testing.T) {
 	assert := assert.New(t)
 
@@ -209,7 +209,7 @@ func TestMakeSureARepresentativeStatementOutputIsProperlyFormed(t *testing.T) {
 
 func TestNoErrorsWhenOptionalStatementsAreOmitted(t *testing.T) {
 	assert := assert.New(t)
-	// This DSL excludes *title* and *textsize* statements.
+	// This DSL excludes {title, textsize, showletters} statements
 	// Both of which are optional.
 	_, err := NewParser(`
         life A foo
@@ -238,4 +238,25 @@ func TestWellFormedTextSizeIsParsedCorrectly(t *testing.T) {
 	s := statements[0]
 	expected := 10.0
 	assert.Equal(expected, s.TextSize)
+}
+
+func TestErrorsForMalformedShowLetters(t *testing.T) {
+	assert := assert.New(t)
+	_, err := NewParser("showletters garbage").Parse()
+	assert.EqualError(err,
+		"Error on this line <showletters garbage> (line: 1): showletters expects <true> or <false>")
+}
+
+func TestWellFormedShowLettersIsParsedCorrectly(t *testing.T) {
+	assert := assert.New(t)
+	
+	statements, err := NewParser("showletters true").Parse()
+	assert.NoError(err)
+	s := statements[0]
+	assert.True(s.ShowLetters)
+
+	statements, err = NewParser("showletters false").Parse()
+	assert.NoError(err)
+	s = statements[0]
+	assert.False(s.ShowLetters)
 }

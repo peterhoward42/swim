@@ -5,11 +5,22 @@
     *  some of the existing visual tests need not be
     *  add a test that ensure parser barfs on empty input
     *  improve all error messages to be fit for a human at run time
-
-    o  careful think tests
-        o  do all visual tests earn their keep?
     o  show lane letters - possibly optionally
-    o  resolution and crispness
+        *  decide visuals = augment lifeline title labels
+        *  decide toggle: showletters true
+        *  parsing and state similar to textsize
+            *  tdd up reference example benign
+            *  tdd up error handling
+            *  proper capture of false
+            *  proper capture of true
+        o  show them (or not)
+            *  proper capture of default in diag
+            o  tdd getting them to show properly
+            o  make sure reflected the way they should be in visual tests
+            o  make sure have negative test too
+
+    o  may need to rebrand as uml **sequence** diagram
+        o  incl all refs to umli
     o  consider if image regression tests needed - or maybe only canonical?
     o  what happens if you introduce a lifeline late in the script?
     o  what happens if you put title in too late?
@@ -23,12 +34,12 @@
        to save in - fix when decide on visual image difference testing
     o  Lifeline should be different mark space than response line
     o  Web assembly
+    o  resolution and crispness
     o  benchmarks and tuning
+    o  consumption in the anticipated forms
     o  update readme
     o  design docco
     o  godoc example
-    o  may need to rebrand as uml **sequence** diagram
-        o  incl all refs to umli
     o  cf creately and sequencediag.com differentiate
     o  Todo resurrect regressions tests for images
         o  include tinternet examples?

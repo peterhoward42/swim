@@ -14,6 +14,7 @@ type Statement struct {
 	ReferencedLifelines []*Statement // When lifeline operands are present
 	LabelSegments       []string     // Each line of text called for in the label
 	TextSize            float64      // Only used for <textsize> statements.
+	ShowLetters         bool         // Only used for <showletters> statements.
 }
 
 // NewStatement instantiates a Statement, ready to use.
