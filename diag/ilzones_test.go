@@ -23,10 +23,10 @@ func TestClaimsCreatedForSingleInteractionLine(t *testing.T) {
 	claims := creator.ilZones.claims
 	assert.Len(claims, 2)
 
-	assert.Equal(165.0, claims[0].extent.start)
-	assert.Equal(215.0, claims[0].extent.end)
-	assert.Equal(215.0, claims[1].extent.start)
-	assert.Equal(231.0, claims[1].extent.end)
+	assert.Equal(205.0, claims[0].extent.start)
+	assert.Equal(255.0, claims[0].extent.end)
+	assert.Equal(255.0, claims[1].extent.start)
+	assert.Equal(271.0, claims[1].extent.end)
 }
 
 func TestCrossesBehaviour(t *testing.T) {

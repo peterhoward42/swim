@@ -5,19 +5,7 @@
     *  some of the existing visual tests need not be
     *  add a test that ensure parser barfs on empty input
     *  improve all error messages to be fit for a human at run time
-    o  show lane letters - possibly optionally
-        *  decide visuals = augment lifeline title labels
-        *  decide toggle: showletters true
-        *  parsing and state similar to textsize
-            *  tdd up reference example benign
-            *  tdd up error handling
-            *  proper capture of false
-            *  proper capture of true
-        o  show them (or not)
-            *  proper capture of default in diag
-            o  tdd getting them to show properly
-            o  make sure reflected the way they should be in visual tests
-            o  make sure have negative test too
+    *  show lane letters - possibly optionally
 
     o  may need to rebrand as uml **sequence** diagram
         o  incl all refs to umli

@@ -162,16 +162,27 @@ func TestSmallFont(t *testing.T) {
 	genericCreateHelper(t, script, "smallfont.png")
 }
 
-// TestWhenNoTextSizeIsSpecified makes sure a default font height gets
-// used when none is specified.
-func TestWhenNoTextSizeIsSpecified(t *testing.T) {
+// TestWhenAllOptionalStatementsAreAbsent makes sure default text height and
+// show letters gets used when explicit statements for these are not in the script.
+func TestWhenAllOptionalStatementsAreAbsent(t *testing.T) {
 	script := `
-		title No font specified
 		life A Foo
 		life B Bar
 		full AB a message
 	`
-	genericCreateHelper(t, script, "nofontspecified.png")
+	genericCreateHelper(t, script, "optionsmissing.png")
+}
+
+// TestExplicitTurningOffLetters makes sure you can turn the lifeline letters
+// off from the script
+func TestExplicitTurningOffLetters(t *testing.T) {
+	script := `
+		showletters false
+		life A Foo
+		life B Bar
+		full AB a message
+	`
+	genericCreateHelper(t, script, "noletters.png")
 }
 
 // Helper functions (DRY)
