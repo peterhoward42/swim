@@ -6,24 +6,32 @@
     *  add a test that ensure parser barfs on empty input
     *  improve all error messages to be fit for a human at run time
     *  show lane letters - possibly optionally
+    o  many lifelines example suggests self labels might be better off
+       going back above the loop and being allowed to go further right
+        *  analyse changes
+            *  fairly straightforward - just change order a bit
+        o  branch: selfabove
 
     o  may need to rebrand as uml **sequence** diagram
         o  incl all refs to umli
     o  consider if image regression tests needed - or maybe only canonical?
+    o  or can I rearchitect to make more decoupled and better to test?
     o  what happens if you introduce a lifeline late in the script?
     o  what happens if you put title in too late?
     o  question merit of sizer unit test given visual test efficiency
     o  tune settings
-    o  many lifelines example suggests self labels might be better off
-       going back above the loop and being allowed to go further right
     o  Change reference model to make label not too long, and maybe
        be more computer sciency - plus update readme to suit
     o  virgin clone of umli fails create tests because no directory
        to save in - fix when decide on visual image difference testing
     o  Lifeline should be different mark space than response line
     o  Web assembly
-    o  resolution and crispness
+    o  cli
     o  benchmarks and tuning
+    o  ci/cd
+        o  circle?
+        o  go releases?
+    o  resolution and crispness
     o  consumption in the anticipated forms
     o  update readme
     o  design docco
@@ -35,5 +43,3 @@
 
 ----------------------------------------------------------------------------
 ----------------------------------------------------------------------------
-"Error on this line <textsize> (line: 1): Lifeline name must "+
-			"be single, upper case letter")
