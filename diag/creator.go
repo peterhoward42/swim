@@ -313,6 +313,16 @@ has occupied by advancing the tide mark.
 func (c *Creator) selfInteractionLines(
 	statement *dslmodel.Statement) {
 	theLifeline := statement.ReferencedLifelines[0]
+
+	// First the labels
+	centre := c.lifelineGeomH.CentreLine(theLifeline)
+	labelX := centre + c.sizer.InteractionLineLabelIndent
+	firstRowY := c.tideMark
+	c.rowOfLabels(labelX, firstRowY, graphics.Left, statement.LabelSegments)
+	n := len(statement.LabelSegments)
+	c.tideMark += float64(n) * c.fontHeight
+	c.tideMark += c.sizer.InteractionLineTextPadB
+
 	left, right := c.lifelineGeomH.SelfInteractionLineXCoords(theLifeline)
 	top := c.tideMark
 	bot := c.tideMark + c.sizer.SelfLoopHeight
@@ -324,12 +334,6 @@ func (c *Creator) selfInteractionLines(
 	arrowVertices := makeArrow(right, left, bot,
 		c.sizer.ArrowLen, c.sizer.ArrowHeight)
 	prims.AddFilledPoly(arrowVertices)
-
-	// Labels go inside the self-loop.
-	labelX := left + c.sizer.InteractionLineLabelIndent
-	n := len(statement.LabelSegments)
-	firstRowY := bot - float64(n)*c.fontHeight - c.sizer.InteractionLineTextPadB
-	c.rowOfLabels(labelX, firstRowY, graphics.Left, statement.LabelSegments)
 
 	c.tideMark = bot + c.sizer.InteractionLinePadB
 }

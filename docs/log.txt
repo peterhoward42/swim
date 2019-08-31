@@ -7,9 +7,6 @@
     *  improve all error messages to be fit for a human at run time
     *  show lane letters - possibly optionally
     o  many lifelines example suggests self labels might be better off
-       going back above the loop and being allowed to go further right
-        *  analyse changes
-            *  fairly straightforward - just change order a bit
         o  branch: selfabove
 
     o  may need to rebrand as uml **sequence** diagram
