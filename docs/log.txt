@@ -15,6 +15,7 @@
        fact that make this the INPUT to the creator, and output of the parser,
        instead of a list of statments. In fact make it the new dslmodel type.
         o  branch
+            o  timeout parser removewords should be removeTheseStrings
         o  define DSLModel type constructedwith []statment
         o  add queries to it believed needed
         o  make parser output this instead of []dslstatement
