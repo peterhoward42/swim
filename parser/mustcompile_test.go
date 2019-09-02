@@ -8,11 +8,11 @@ import (
 
 func TestParsedOutputIsCorrectWhenInputIsProper(t *testing.T) {
 	assert := assert.New(t)
-	statements := MustCompileParse(`
+	model := MustCompileParse(`
 		life A foo
 		life B bar
 	`)
-	assert.Len(statements, 2)
+	assert.Len(model.Statements(), 2)
 }
 
 func TestPanicsWhenImportIsMalformed(t *testing.T) {

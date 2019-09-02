@@ -1,6 +1,6 @@
 // Package parser provides the Parse function, which is capable of parsing lines
 // of DSL text to provide a structured representation of it - in the form
-// of a slice of dslmodel.Statement(s).
+// of a dsl.Model.
 package parser
 
 import (
@@ -12,35 +12,28 @@ import (
 	"strings"
 
 	"github.com/peterhoward42/umli"
-	"github.com/peterhoward42/umli/dslmodel"
+	"github.com/peterhoward42/umli/dsl"
 )
 
-/*
-Parser provides the service of parsing the DSL into dslmodel.Statements.
-*/
+// Parser is capable of parsing the DSL script to produce a dsl.Model.
 type Parser struct {
-	inputScript              string
-	lifelineStatementsByName map[string]*dslmodel.Statement
+    inputScript string
+	model dsl.Model
 }
 
-/*
-NewParser returns a Parser ready to use.
-*/
 func NewParser(inputScript string) *Parser {
-	return &Parser{
-		inputScript:              inputScript,
-		lifelineStatementsByName: map[string]*dslmodel.Statement{},
-	}
+    return &Parser{
+        inputScript: inputScript,
+        }
 }
 
 // Parse is the parsing invocation method.
-func (p *Parser) Parse() ([]*dslmodel.Statement, error) {
+func (p *Parser) Parse() (*dsl.Model, error) {
 	if len(strings.TrimSpace(p.inputScript)) == 0 {
 		return nil, errors.New("There is no input text")
 	}
 	reader := strings.NewReader(p.inputScript)
 	scanner := bufio.NewScanner(reader)
-	statements := []*dslmodel.Statement{}
 	lineNo := 0
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -53,18 +46,18 @@ func (p *Parser) Parse() ([]*dslmodel.Statement, error) {
 		if err != nil {
 			return nil, umli.DSLError(trimmed, lineNo, err.Error())
 		}
-		statements = append(statements, statement)
+		p.model.Append(statement)
 	}
 	if err := scanner.Err(); err != nil {
 		return nil, err
 	}
-	return statements, nil
+	return &p.model, nil
 }
 
 // parseLine parses the text present in a single line of DSL, into
 // the fields expected, validates them, and packages the result into a
-// dslmodel.Statement.
-func (p *Parser) parseLine(line string) (s *dslmodel.Statement, err error) {
+// dsl.Statement.
+func (p *Parser) parseLine(line string) (s *dsl.Statement, err error) {
 	words := strings.Split(line, " ")
 	keyWord := words[0]
 	if !umli.KnownKeyword(keyWord) {
@@ -103,16 +96,16 @@ func (p *Parser) parseLine(line string) (s *dslmodel.Statement, err error) {
 }
 
 func (p *Parser) parseTitle(line string, words []string) (
-	s *dslmodel.Statement, err error) {
+	s *dsl.Statement, err error) {
 	label := p.removeWords(line, umli.Title)
-	return &dslmodel.Statement{
+	return &dsl.Statement{
 		Keyword:       umli.Title,
 		LabelSegments: p.isolateLabelConstituentLines(label),
 	}, nil
 }
 
 func (p *Parser) parseTextSize(line string, words []string) (
-	s *dslmodel.Statement, err error) {
+	s *dsl.Statement, err error) {
 	var textSize float64
 	if textSize, err = strconv.ParseFloat(words[1], 64); err != nil {
 		return nil, errors.New("Text size must be a number")
@@ -123,14 +116,14 @@ func (p *Parser) parseTextSize(line string, words []string) (
 		return nil, fmt.Errorf("Text size must be between %v and %v",
 			minTextSize, maxTextSize)
 	}
-	return &dslmodel.Statement{
+	return &dsl.Statement{
 		Keyword:  umli.TextSize,
 		TextSize: textSize,
 	}, nil
 }
 
 func (p *Parser) parseShowLetters(line string, words []string) (
-	s *dslmodel.Statement, err error) {
+	s *dsl.Statement, err error) {
 	var show bool
 	switch words[1] {
 	case "true":
@@ -140,35 +133,34 @@ func (p *Parser) parseShowLetters(line string, words []string) (
 	default:
 		return nil, errors.New("showletters expects <true> or <false>")
 	}
-	return &dslmodel.Statement{
+	return &dsl.Statement{
 		Keyword:     umli.ShowLetters,
 		ShowLetters: show,
 	}, nil
 }
 
 func (p *Parser) parseLife(line string, words []string) (
-	s *dslmodel.Statement, err error) {
+	s *dsl.Statement, err error) {
 	if !singleUCLetter.MatchString(words[1]) {
 		return nil, fmt.Errorf(
 			"Lifeline name (%s) must be a single, upper case letter", words[1])
 	}
 	lifelineName := words[1]
-	if p.lifelineIsKnown(lifelineName) {
+	if p.model.LifelineIsKnown(lifelineName) {
 		return nil, fmt.Errorf(
 			"Lifeline (%s) has already been used", lifelineName)
 	}
 	label := p.removeWords(line, umli.Life, lifelineName)
-	s = &dslmodel.Statement{
+	s = &dsl.Statement{
 		Keyword:       umli.Life,
 		LifelineName:  lifelineName,
 		LabelSegments: p.isolateLabelConstituentLines(label),
 	}
-	p.lifelineStatementsByName[lifelineName] = s
 	return s, nil
 }
 
 func (p *Parser) parseFullOrDash(line string, words []string) (
-	s *dslmodel.Statement, err error) {
+	s *dsl.Statement, err error) {
 	if !twoUCLetters.MatchString(words[1]) {
 		return nil, errors.New(
 			"Lifelines specified must be two, upper case letters")
@@ -178,16 +170,16 @@ func (p *Parser) parseFullOrDash(line string, words []string) (
 		return nil, fmt.Errorf(
 			"Lifeline letters must be different:(%s)", words[1])
 	}
-	lifelines := []*dslmodel.Statement{}
+	lifelines := []*dsl.Statement{}
 	for _, letter := range lifelineLetters {
-		lifeline, ok := p.lifelineStatementsByName[letter]
+		lifeline, ok := p.model.LifelineStatementByName(letter)
 		if !ok {
 			return nil, fmt.Errorf("Unknown lifeline: %s", letter)
 		}
 		lifelines = append(lifelines, lifeline)
 	}
 	label := p.removeWords(line, words[0], words[1])
-	return &dslmodel.Statement{
+	return &dsl.Statement{
 		Keyword:             words[0],
 		ReferencedLifelines: lifelines,
 		LabelSegments:       p.isolateLabelConstituentLines(label),
@@ -195,35 +187,35 @@ func (p *Parser) parseFullOrDash(line string, words []string) (
 }
 
 func (p *Parser) parseStop(line string, words []string) (
-	s *dslmodel.Statement, err error) {
+	s *dsl.Statement, err error) {
 	if !singleUCLetter.MatchString(words[1]) {
 		return nil, fmt.Errorf(
 			"Lifeline name (%s) must be a single, upper case letter", words[1])
 	}
-	lifeline, ok := p.lifelineStatementsByName[words[1]]
+	lifeline, ok := p.model.LifelineStatementByName(words[1])
 	if !ok {
 		return nil, fmt.Errorf("Unknown lifeline: %s", words[1])
 	}
-	return &dslmodel.Statement{
+	return &dsl.Statement{
 		Keyword:             umli.Stop,
-		ReferencedLifelines: []*dslmodel.Statement{lifeline},
+		ReferencedLifelines: []*dsl.Statement{lifeline},
 	}, nil
 }
 
 func (p *Parser) parseSelf(line string, words []string) (
-	s *dslmodel.Statement, err error) {
+	s *dsl.Statement, err error) {
 	if !singleUCLetter.MatchString(words[1]) {
 		return nil, fmt.Errorf(
 			"Lifeline name (%s) must be a single, upper case letter", words[1])
 	}
-	lifeline, ok := p.lifelineStatementsByName[words[1]]
+	lifeline, ok := p.model.LifelineStatementByName(words[1])
 	if !ok {
 		return nil, fmt.Errorf("Unknown lifeline: %s", words[1])
 	}
 	label := p.removeWords(line, umli.Self, words[1])
-	return &dslmodel.Statement{
+	return &dsl.Statement{
 		Keyword:             umli.Self,
-		ReferencedLifelines: []*dslmodel.Statement{lifeline},
+		ReferencedLifelines: []*dsl.Statement{lifeline},
 		LabelSegments:       p.isolateLabelConstituentLines(label),
 	}, nil
 }
@@ -268,13 +260,6 @@ func (p *Parser) removeWords(line string, stringsToRemove ...string) string {
 		line = strings.Replace(line, s, "", 1)
 	}
 	return strings.TrimSpace(line)
-}
-
-// lifelineIsKnown returns true if the parser has previously encountered
-// a lifeline statement for the given name.
-func (p *Parser) lifelineIsKnown(lifelineName string) bool {
-	_, ok := p.lifelineStatementsByName[lifelineName]
-	return ok
 }
 
 var singleUCLetter = re.MustCompile(`^[A-Z]$`)

@@ -14,8 +14,7 @@
        go, validating by stripping out state that knows about []statements. In
        fact that make this the INPUT to the creator, and output of the parser,
        instead of a list of statments. In fact make it the new dslmodel type.
-        o  branch
-            o  timeout parser removewords should be removeTheseStrings
+        *  branch: dslmodel
         o  define DSLModel type constructedwith []statment
         o  add queries to it believed needed
         o  make parser output this instead of []dslstatement
@@ -23,8 +22,10 @@
         o  DI it to creator instead of []statement, and deprive creator
            of having this state, DI it onward.
         o  Fix up
+        o  Update out of date comments all over the place
 
 
+    o  timeout parser removewords should be removeTheseStrings
     o  events and scanner a bit over engineered
         o  could be replaced by scan over statements, focussing
            on pass-filtering
