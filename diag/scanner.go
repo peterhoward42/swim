@@ -9,12 +9,12 @@ produces things - according to the space taken up by each graphics event.
 */
 
 import (
-	"github.com/peterhoward42/umli/dslmodel"
+	"github.com/peterhoward42/umli/dsl"
 )
 
 // eventsForStatements provides a lookup table for the graphical element
 // drawing events that are required for a set of DSL statements.
-type eventsForStatements = map[*dslmodel.Statement][]eventType
+type eventsForStatements = map[*dsl.Statement][]eventType
 
 // scanner is capable of receiving a list of Statements, and producing
 // the list of graphical element drawing mandates that correspond to each.
@@ -28,7 +28,7 @@ func newScanner() *scanner {
 
 // Scan consumes the given list of Statements and captures the corresponding
 // drawing-element mandates.
-func (s *scanner) Scan(statements []*dslmodel.Statement) eventsForStatements {
+func (s *scanner) Scan(statements []*dsl.Statement) eventsForStatements {
 	eventsLookup := eventsForStatements{}
 	for _, statement := range statements {
 		eventsForStatement := EventsRequired[statement.Keyword]

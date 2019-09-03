@@ -1,7 +1,7 @@
 package diag
 
 import (
-	"github.com/peterhoward42/umli/dslmodel"
+	"github.com/peterhoward42/umli/dsl"
 	"github.com/peterhoward42/umli/graphics"
 	"github.com/peterhoward42/umli/sizer"
 )
@@ -18,7 +18,7 @@ boxes and as margins at the left and right edge of the diagram.
 */
 type lifelineGeomH struct {
 	sizer           *sizer.Sizer
-	lifelineIndices map[*dslmodel.Statement]int
+	lifelineIndices map[*dsl.Statement]int
 	diagWidth       float64
 	TitleBoxWidth   float64
 	TitleBoxGutter  float64
@@ -26,14 +26,14 @@ type lifelineGeomH struct {
 
 // NewLifelineGeomH provides a lifelineGeomH ready to use.
 func newLifelineGeomH(diagWidth float64, fontHt float64, sizer *sizer.Sizer,
-	lifelines []*dslmodel.Statement) *lifelineGeomH {
+	m *dsl.Model) *lifelineGeomH {
 
 	g := &lifelineGeomH{
-		lifelineIndices: map[*dslmodel.Statement]int{},
+		lifelineIndices: map[*dsl.Statement]int{},
 		diagWidth:       diagWidth,
 		sizer:           sizer,
 	}
-	for i, lifeline := range lifelines {
+	for i, lifeline := range m.LifelineStatements() {
 		g.lifelineIndices[lifeline] = i
 	}
 
@@ -43,7 +43,7 @@ func newLifelineGeomH(diagWidth float64, fontHt float64, sizer *sizer.Sizer,
 	// Start with idealised title box width.
 	// I.e big enough to fit circa 3 short title words across.
 	g.TitleBoxWidth = sizer.IdealLifelineTitleBoxWidth
-	n := float64(len(lifelines))
+	n := float64(len(g.lifelineIndices))
 	spaceAvail := float64(diagWidth) - g.TitleBoxWidth*n
 	nGuttersRequired := n + 1
 	g.TitleBoxGutter = spaceAvail / nGuttersRequired
@@ -63,7 +63,7 @@ func newLifelineGeomH(diagWidth float64, fontHt float64, sizer *sizer.Sizer,
 CentreLine provides the X coordinate for the centreline of the Nth lifeline.
 Zero-based index.
 */
-func (g *lifelineGeomH) CentreLine(lifeline *dslmodel.Statement) float64 {
+func (g *lifelineGeomH) CentreLine(lifeline *dsl.Statement) float64 {
 	n := float64(g.lifelineIndices[lifeline])
 	return (n+1)*g.TitleBoxGutter + (n+0.5)*g.TitleBoxWidth
 }
@@ -72,7 +72,7 @@ func (g *lifelineGeomH) CentreLine(lifeline *dslmodel.Statement) float64 {
 ActivityBoxXCoords provides the X coordinates for an activity box on a lifeline
 */
 func (g *lifelineGeomH) ActivityBoxXCoords(
-	lifeline *dslmodel.Statement) (left, centre, right float64) {
+	lifeline *dsl.Statement) (left, centre, right float64) {
 	centre = g.CentreLine(lifeline)
 	left = centre - 0.5*g.sizer.ActivityBoxWidth
 	right = centre + 0.5*g.sizer.ActivityBoxWidth
@@ -84,7 +84,7 @@ SelfInteractionLineXCoords provides the left and right coordinates for a *self*
 interaction line.
 */
 func (g *lifelineGeomH) SelfInteractionLineXCoords(
-	lifeline *dslmodel.Statement) (left, right float64) {
+	lifeline *dsl.Statement) (left, right float64) {
 	_, abc, abr := g.ActivityBoxXCoords(lifeline)
 	left = abr
 	right = abc + 0.5*g.TitleBoxWidth
@@ -94,7 +94,7 @@ func (g *lifelineGeomH) SelfInteractionLineXCoords(
 // InteractionLineEndPoints works out the x coordinates for an interaction
 // line between two given lifelines.
 func (g *lifelineGeomH) InteractionLineEndPoints(
-	sourceLifeline, destLifeline *dslmodel.Statement) (x1, x2 float64) {
+	sourceLifeline, destLifeline *dsl.Statement) (x1, x2 float64) {
 	sourceC := g.CentreLine(sourceLifeline)
 	destC := g.CentreLine(destLifeline)
 	if sourceC > destC {
@@ -110,7 +110,7 @@ func (g *lifelineGeomH) InteractionLineEndPoints(
 // InteractionLabelPosition works out the position and justification
 // that should be used for an interaction line's label.
 func (g *lifelineGeomH) InteractionLabelPosition(
-	sourceLifeline, destLifeline *dslmodel.Statement) (
+	sourceLifeline, destLifeline *dsl.Statement) (
 	x float64, horizJustification graphics.Justification) {
 	x = 0.5 * (g.CentreLine(sourceLifeline) + g.CentreLine(destLifeline))
 	horizJustification = graphics.Centre

@@ -13,7 +13,7 @@ See todo for an explanation of the diagram creation algorithm.
 
 import (
 	"github.com/peterhoward42/umli"
-	"github.com/peterhoward42/umli/dslmodel"
+	"github.com/peterhoward42/umli/dsl"
 	"github.com/peterhoward42/umli/graphics"
 	"github.com/peterhoward42/umli/sizer"
 )
@@ -34,15 +34,13 @@ type Creator struct {
 	// Font height is used as the root for all sizing decisions.
 	fontHeight float64
 	// Parsed DSL script.
-	allStatements []*dslmodel.Statement
-	// The statements representing lifelines - isolated.
-	lifelineStatements []*dslmodel.Statement
+	model *dsl.Model
 	// Owns the horizontal sizing and layout for lifelines
 	lifelineGeomH *lifelineGeomH
 	// In charge of making the outer frame and title.
 	frameMaker *frameMaker
 	// Keeps track of activity box top and bottom coordinates.
-	activityBoxes map[*dslmodel.Statement]*lifelineBoxes
+	activityBoxes map[*dsl.Statement]*lifelineBoxes
 	// Keeps track of the space taken up by interaction lines.
 	ilZones *InteractionLineZones
 	// A delegate to make the lifelines dashed line segments.
@@ -60,8 +58,8 @@ Create is the main API method which work out what the diagram should look like.
 It orchestrates a multi-pass creation process which accumulates the graphics
 primitives required in its graphicsModel and then returns that model.
 */
-func (c *Creator) Create(allStatements []*dslmodel.Statement) *graphics.Model {
-	c.initializeTheCreator(allStatements)
+func (c *Creator) Create(model *dsl.Model) *graphics.Model {
+	c.initializeTheCreator(model)
 	c.initializeTheGraphicsModel()
 	c.createGraphicsAnchoredToTopOfDiagram()
 	c.processDSLWorkingDownThePage()
@@ -76,18 +74,17 @@ func (c *Creator) Create(allStatements []*dslmodel.Statement) *graphics.Model {
 initializeTheCreator initialises the Creator structure, incuding composing
 a set of helper objects to which it can delegate.
 */
-func (c *Creator) initializeTheCreator(allStatements []*dslmodel.Statement) {
-	c.allStatements = allStatements
-	c.isolateLifelines()
-	c.setWidthAndFontHeight(allStatements)
-	c.addLettersToLifelineTitles(allStatements)
-	c.activityBoxes = map[*dslmodel.Statement]*lifelineBoxes{}
-	for _, s := range c.lifelineStatements {
+func (c *Creator) initializeTheCreator(m *dsl.Model) {
+	c.model = m
+	c.setWidthAndFontHeight()
+	c.addLettersToLifelineTitles()
+	c.activityBoxes = map[*dsl.Statement]*lifelineBoxes{}
+	for _, s := range c.model.LifelineStatements() {
 		c.activityBoxes[s] = newlifelineBoxes()
 	}
-	c.sizer = sizer.NewSizer(c.width, c.fontHeight, c.lifelineStatements)
+	c.sizer = sizer.NewSizer(c.width, c.fontHeight)
 	c.lifelineGeomH = newLifelineGeomH(c.width, c.fontHeight, c.sizer,
-		c.lifelineStatements)
+		c.model)
 	c.frameMaker = newFrameMaker(c)
 	c.ilZones = NewInteractionLineZones(c)
 	c.lifelineMaker = newLifelineMaker(c)
@@ -98,11 +95,11 @@ setWidthAndFontHeight sets the modelled diagram width and sets the font height
 as as a ratio of the width. The ratio is taken from the DSL when present, or
 otherwise a default.
 */
-func (c *Creator) setWidthAndFontHeight(allStatements []*dslmodel.Statement) {
+func (c *Creator) setWidthAndFontHeight() {
 	c.width = 2000.0 // Arbitrary but human-relatable to support debugging.
 	const defaultTextHeightRatio = 1.0 / 100.0
 	textHeightRatio := defaultTextHeightRatio
-	for _, s := range allStatements {
+	for _, s := range c.model.Statements() {
 		if s.Keyword == umli.TextSize {
 			// 5  signifies 1:200  0.005
 			// 10 signifies 1:100  0.010
@@ -118,9 +115,9 @@ func (c *Creator) setWidthAndFontHeight(allStatements []*dslmodel.Statement) {
 addLettersToLifelineTitles looks for a *showletters* statement, and sets the creator's
 flag attribute accordingly, or to the behaviour default of true.
 */
-func (c *Creator) addLettersToLifelineTitles(allStatements []*dslmodel.Statement) {
+func (c *Creator) addLettersToLifelineTitles() {
 	showLetters := true // default behaviour
-	for _, s := range allStatements {
+	for _, s := range c.model.Statements() {
 		if s.Keyword == umli.ShowLetters && s.ShowLetters == false {
 			showLetters = false
 			break
@@ -129,7 +126,7 @@ func (c *Creator) addLettersToLifelineTitles(allStatements []*dslmodel.Statement
 	// To show the lifeline letters we add them to the lifeline
 	// title box labels.
 	if showLetters {
-		for _, s := range c.lifelineStatements {
+		for _, s := range c.model.LifelineStatements() {
 			letter := s.LifelineName
 			addition := []string{"", letter}
 			s.LabelSegments = append(s.LabelSegments, addition...)
@@ -146,16 +143,6 @@ func (c *Creator) initializeTheGraphicsModel() {
 	c.graphicsModel = graphics.NewModel(
 		c.width, diagHeight, c.fontHeight,
 		c.sizer.DashLineDashLen, c.sizer.DashLineDashGap)
-}
-
-// isolateLifelines provides the subset of Statements from the
-// given list that correspond to lifelines.
-func (c *Creator) isolateLifelines() {
-	for _, statement := range c.allStatements {
-		if statement.Keyword == umli.Life {
-			c.lifelineStatements = append(c.lifelineStatements, statement)
-		}
-	}
 }
 
 /*
@@ -178,9 +165,9 @@ that can only be dimensioned once the interaction line Y coordinates are known;
 for example the activity boxes that sit on lifelines.
 */
 func (c *Creator) processDSLWorkingDownThePage() {
-	graphicalEvents := newScanner().Scan(c.allStatements)
+	graphicalEvents := newScanner().Scan(c.model.Statements())
 	// Outer loop is per DSL statement
-	for _, statement := range c.allStatements {
+	for _, statement := range c.model.Statements() {
 		statementEvents := graphicalEvents[statement]
 		// Inner loop is for the (multiple) graphical events called for
 		// by that statement.
@@ -205,7 +192,7 @@ required to render a single diagram element drawing event. It also advances
 c.tideMark, to accomodate the space taken up by what it generated.
 */
 func (c *Creator) graphicsForDrawingEvent(evt eventType,
-	statement *dslmodel.Statement) {
+	statement *dsl.Statement) {
 
 	switch evt {
 	case EndBox:
@@ -233,7 +220,7 @@ func (c *Creator) lifelineTitleBoxes() {
 	bot := top + c.lifelineMaker.titleBoxHeight()
 	c.lifelineMaker.titleBoxTopAndBottom = &segment{top, bot}
 
-	for _, lifeline := range c.lifelineStatements {
+	for _, lifeline := range c.model.LifelineStatements() {
 		centre := c.lifelineGeomH.CentreLine(lifeline)
 		left := centre - 0.5*c.lifelineGeomH.TitleBoxWidth
 		right := centre + 0.5*c.lifelineGeomH.TitleBoxWidth
@@ -255,7 +242,7 @@ itself by advancing the tide mark. And registers this space claim with
 the creator's InteractionLineZones component.
 */
 func (c *Creator) interactionLabel(
-	statement *dslmodel.Statement) {
+	statement *dsl.Statement) {
 	sourceLifeline := statement.ReferencedLifelines[0]
 	destLifeline := statement.ReferencedLifelines[1]
 	x, horizJustification := c.lifelineGeomH.InteractionLabelPosition(
@@ -289,7 +276,7 @@ the vertical space it needs for itself by advancing the tide mark.  And
 registers this space claim with the creator's InteractionLineZones component.
 */
 func (c *Creator) interactionLine(
-	statement *dslmodel.Statement) {
+	statement *dsl.Statement) {
 	sourceLifeline := statement.ReferencedLifelines[0]
 	destLifeline := statement.ReferencedLifelines[1]
 	x1, x2 := c.lifelineGeomH.InteractionLineEndPoints(
@@ -311,7 +298,7 @@ including the arrow head and labels. It then claims the vertical space it
 has occupied by advancing the tide mark.
 */
 func (c *Creator) selfInteractionLines(
-	statement *dslmodel.Statement) {
+	statement *dsl.Statement) {
 	theLifeline := statement.ReferencedLifelines[0]
 
 	// First the labels
@@ -344,7 +331,7 @@ lifeline activity box for the lifeline that this interaction line is
 going to, and if it hasn't it registers where it should start.
 */
 func (c *Creator) potentiallyStartToBox(
-	statement *dslmodel.Statement) {
+	statement *dsl.Statement) {
 	behindTidemarkDelta := 0.0
 	c.potentiallyStartActivityBox(statement.ReferencedLifelines[1],
 		behindTidemarkDelta)
@@ -360,7 +347,7 @@ tidemark unchanged, so that the interaction line that follows, stays in contact
 with its label (which has already been emitted).
 */
 func (c *Creator) potentiallyStartFromBox(
-	statement *dslmodel.Statement) {
+	statement *dsl.Statement) {
 	behindTidemarkDelta := c.sizer.ActivityBoxVerticalOverlap
 	c.potentiallyStartActivityBox(statement.ReferencedLifelines[0],
 		behindTidemarkDelta)
@@ -369,7 +356,7 @@ func (c *Creator) potentiallyStartFromBox(
 // potentiallyStartActivityBox is a DRY helper to (potentially) note the
 // top edge of a lifeline's activity box in c.activityBoxes.
 func (c *Creator) potentiallyStartActivityBox(
-	lifeline *dslmodel.Statement, behindTidemarkDelta float64) {
+	lifeline *dsl.Statement, behindTidemarkDelta float64) {
 	// Already a box in progress?
 	if c.activityBoxes[lifeline].inProgress() {
 		return
@@ -384,7 +371,7 @@ explicit *stop* instruction in the DSL. It then advances the
 tide mark to a little beyond the bottom of the box.
 */
 func (c *Creator) endBox(
-	endBoxStatement *dslmodel.Statement) {
+	endBoxStatement *dsl.Statement) {
 	lifeline := endBoxStatement.ReferencedLifelines[0]
 	bottom := c.tideMark
 	c.finalizeActivityBox(lifeline, bottom)
@@ -407,7 +394,7 @@ based on the top Y coordinate stored in c.activityBoxes and the given bottom Y
 coordinate. It then advances the tide mark to the bottom value provided.
 */
 func (c *Creator) finalizeActivityBox(
-	lifeline *dslmodel.Statement, bottom float64) {
+	lifeline *dsl.Statement, bottom float64) {
 	// Skip those that have been stopped earlier explicitly with a *stop*
 	// statement.
 	if !c.activityBoxes[lifeline].inProgress() {

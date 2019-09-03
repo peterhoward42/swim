@@ -11,7 +11,7 @@ bottom of the diagram.
 */
 
 import (
-	"github.com/peterhoward42/umli/dslmodel"
+	"github.com/peterhoward42/umli/dsl"
 )
 
 // boxExtent keeps track of the Y coordinates at which a box starts and
@@ -80,6 +80,6 @@ func (llb *lifelineBoxes) boxExtentsAsSegments() []*segment {
 }
 
 // newBoxStates provides a lifelineBoxes ready to use.
-func newLifelineBoxes(lifelineStatement *dslmodel.Statement) *lifelineBoxes {
+func newLifelineBoxes(lifelineStatement *dsl.Statement) *lifelineBoxes {
 	return &lifelineBoxes{[]*boxExtent{}}
 }

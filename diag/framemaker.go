@@ -62,7 +62,7 @@ func (fm *frameMaker) finalizeFrame() {
 // findTitleSegments provides the constituent rows of text specified in
 // a *Title* statement if one is present.
 func (fm *frameMaker) findTitleSegments() []string {
-	for _, statement := range fm.creator.allStatements {
+	for _, statement := range fm.creator.model.Statements() {
 		if statement.Keyword == umli.Title {
 			return statement.LabelSegments
 		}
