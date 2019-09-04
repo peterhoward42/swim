@@ -46,13 +46,13 @@ func TestStrippingOutWords(t *testing.T) {
 	assert := assert.New(t)
 
 	// Remove 3 words that are present
-	stripped := (&Parser{}).removeWords(
+	stripped := (&Parser{}).removeStrings(
 		"the quick lazy brown fox",
 		"quick", "lazy", "fox")
 	assert.Equal("the   brown", stripped)
 
 	// Make sure it works when one of the words to remove is not present
-	stripped = (&Parser{}).removeWords(
+	stripped = (&Parser{}).removeStrings(
 		"the quick lazy brown fox",
 		"quick", "XXXXXXX", "fox")
 	assert.Equal("the  lazy brown", stripped)

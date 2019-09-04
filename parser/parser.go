@@ -17,14 +17,14 @@ import (
 
 // Parser is capable of parsing the DSL script to produce a dsl.Model.
 type Parser struct {
-    inputScript string
-	model dsl.Model
+	inputScript string
+	model       dsl.Model
 }
 
 func NewParser(inputScript string) *Parser {
-    return &Parser{
-        inputScript: inputScript,
-        }
+	return &Parser{
+		inputScript: inputScript,
+	}
 }
 
 // Parse is the parsing invocation method.
@@ -97,7 +97,7 @@ func (p *Parser) parseLine(line string) (s *dsl.Statement, err error) {
 
 func (p *Parser) parseTitle(line string, words []string) (
 	s *dsl.Statement, err error) {
-	label := p.removeWords(line, umli.Title)
+	label := p.removeStrings(line, umli.Title)
 	return &dsl.Statement{
 		Keyword:       umli.Title,
 		LabelSegments: p.isolateLabelConstituentLines(label),
@@ -150,7 +150,7 @@ func (p *Parser) parseLife(line string, words []string) (
 		return nil, fmt.Errorf(
 			"Lifeline (%s) has already been used", lifelineName)
 	}
-	label := p.removeWords(line, umli.Life, lifelineName)
+	label := p.removeStrings(line, umli.Life, lifelineName)
 	s = &dsl.Statement{
 		Keyword:       umli.Life,
 		LifelineName:  lifelineName,
@@ -178,7 +178,7 @@ func (p *Parser) parseFullOrDash(line string, words []string) (
 		}
 		lifelines = append(lifelines, lifeline)
 	}
-	label := p.removeWords(line, words[0], words[1])
+	label := p.removeStrings(line, words[0], words[1])
 	return &dsl.Statement{
 		Keyword:             words[0],
 		ReferencedLifelines: lifelines,
@@ -212,7 +212,7 @@ func (p *Parser) parseSelf(line string, words []string) (
 	if !ok {
 		return nil, fmt.Errorf("Unknown lifeline: %s", words[1])
 	}
-	label := p.removeWords(line, umli.Self, words[1])
+	label := p.removeStrings(line, umli.Self, words[1])
 	return &dsl.Statement{
 		Keyword:             umli.Self,
 		ReferencedLifelines: []*dsl.Statement{lifeline},
@@ -252,10 +252,10 @@ func (p *Parser) minWordsRequiredFor(keyWord string) int {
 }
 
 /*
-removeWords returns the given line, from which any instances of the
+removeStrings returns a copy of line, from which any instances of the
 stringsToRemove have been removed. It also trims whitespace from the ends.
 */
-func (p *Parser) removeWords(line string, stringsToRemove ...string) string {
+func (p *Parser) removeStrings(line string, stringsToRemove ...string) string {
 	for _, s := range stringsToRemove {
 		line = strings.Replace(line, s, "", 1)
 	}
