@@ -17,16 +17,9 @@
 
     *  quite a few of the loops over all statements in diag service
        queries that could be moved into dsl model
+    *  timeout parser removewords should be removeTheseStrings
+    *  events and scanner a bit over engineered
 
-
-    o  timeout parser removewords should be removeTheseStrings
-    o  events and scanner a bit over engineered
-        o  could be replaced by scan over statements, focussing
-           on pass-filtering
-            o  ditch scanner and event types
-            o  change diag.Creator.processDSLWorkingDownThePage() with
-               loop over statements and what is is currently in 
-               graphicsForDrawingEvent
 
     o  cherry pick these in smallest impact order...
     o  reduce creator attributes and member methods in favour of DI to 

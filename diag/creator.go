@@ -156,23 +156,23 @@ func (c *Creator) createGraphicsAnchoredToTopOfDiagram() {
 	c.lifelineTitleBoxes()
 }
 
-/*
-processDSLWorkingDownThePage takes each parsed statement from the DSL script in
-turn, to generate the sequence-dependent primitives.  This includes for example
-the interaction lines and labels. But it excludes the generation of primitives
-that can only be dimensioned once the interaction line Y coordinates are known;
-for example the activity boxes that sit on lifelines.
-*/
 func (c *Creator) processDSLWorkingDownThePage() {
-	graphicalEvents := newScanner().Scan(c.model.Statements())
-	// Outer loop is per DSL statement
-	for _, statement := range c.model.Statements() {
-		statementEvents := graphicalEvents[statement]
-		// Inner loop is for the (multiple) graphical events called for
-		// by that statement.
-		for _, evt := range statementEvents {
-			// Evaluate and add the graphics primitives required.
-			c.graphicsForDrawingEvent(evt, statement)
+	for _, s := range c.model.Statements() {
+		switch s.Keyword {
+		case umli.Dash:
+			c.interactionLabel(s)
+			c.potentiallyStartToBox(s)
+			c.interactionLine(s)
+		case umli.Full:
+			c.interactionLabel(s)
+			c.potentiallyStartFromBox(s)
+			c.potentiallyStartToBox(s)
+			c.interactionLine(s)
+		case umli.Self:
+			c.potentiallyStartFromBox(s)
+			c.selfInteractionLines(s)
+		case umli.Stop:
+			c.endBox(s)
 		}
 	}
 }
@@ -183,30 +183,6 @@ large enough to accomodate the final tide mark.
 */
 func (c *Creator) finalizeDiagramHeight() {
 	c.graphicsModel.Height = c.tideMark + c.sizer.DiagramPadB
-}
-
-/*
-graphicsForDrawingEvent synthesizes the lines and label strings primititives
-required to render a single diagram element drawing event. It also advances
-c.tideMark, to accomodate the space taken up by what it generated.
-*/
-func (c *Creator) graphicsForDrawingEvent(evt eventType,
-	statement *dsl.Statement) {
-
-	switch evt {
-	case EndBox:
-		c.endBox(statement)
-	case InteractionLine:
-		c.interactionLine(statement)
-	case InteractionLabel:
-		c.interactionLabel(statement)
-	case SelfInteractionLines:
-		c.selfInteractionLines(statement)
-	case PotentiallyStartFromBox:
-		c.potentiallyStartFromBox(statement)
-	case PotentiallyStartToBox:
-		c.potentiallyStartToBox(statement)
-	}
 }
 
 /*
