@@ -99,14 +99,15 @@ func (c *Creator) setWidthAndFontHeight() {
 	c.width = 2000.0 // Arbitrary but human-relatable to support debugging.
 	const defaultTextHeightRatio = 1.0 / 100.0
 	textHeightRatio := defaultTextHeightRatio
-	for _, s := range c.model.Statements() {
-		if s.Keyword == umli.TextSize {
-			// 5  signifies 1:200  0.005
-			// 10 signifies 1:100  0.010
-			// 20 signifies 1:50   0.020
-			textHeightRatio = s.TextSize / 1000.0
-			break
+	s, ok := c.model.FirstStatementOfType(umli.TextSize)
+	if ok {
+		if s.TextSize == 0 {
+			panic("Developer error, this must not be allowed to happen")
 		}
+		// 5  signifies 1:200  0.005
+		// 10 signifies 1:100  0.010
+		// 20 signifies 1:50   0.020
+		textHeightRatio = s.TextSize / 1000.0
 	}
 	c.fontHeight = c.width * textHeightRatio
 }
@@ -117,11 +118,9 @@ flag attribute accordingly, or to the behaviour default of true.
 */
 func (c *Creator) addLettersToLifelineTitles() {
 	showLetters := true // default behaviour
-	for _, s := range c.model.Statements() {
-		if s.Keyword == umli.ShowLetters && s.ShowLetters == false {
-			showLetters = false
-			break
-		}
+	s, ok := c.model.FirstStatementOfType(umli.ShowLetters)
+	if ok && s.ShowLetters == false {
+		showLetters = false
 	}
 	// To show the lifeline letters we add them to the lifeline
 	// title box labels.

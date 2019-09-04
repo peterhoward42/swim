@@ -15,7 +15,7 @@
        fact that make this the INPUT to the creator, and output of the parser,
        instead of a list of statments. In fact make it the new dslmodel type.
 
-    o  quite a few of the loops over all statements in diag service
+    *  quite a few of the loops over all statements in diag service
        queries that could be moved into dsl model
 
 
