@@ -1,8 +1,8 @@
 package diag
 
 import (
-	"github.com/peterhoward42/umli"
 	"github.com/peterhoward42/umli/graphics"
+	"github.com/peterhoward42/umli"
 )
 
 /*
@@ -26,9 +26,10 @@ in an enclosing rectangle just below it. Then advancing the tidemark
 accordingly.
 */
 func (fm *frameMaker) initFrameAndMakeTitleBox() {
-	titleSegments := fm.findTitleSegments()
-	if len(titleSegments) == 0 {
-		titleSegments = []string{"Unknown Title"}
+    titleSegments :=  []string{"Unknown Title"} // Fall back.
+    s, ok := fm.creator.model.FirstStatementOfType(umli.Title)
+    if ok {
+        titleSegments =  s.LabelSegments
 	}
 	c := fm.creator
 	fm.frameTop = c.tideMark
@@ -57,15 +58,4 @@ func (fm *frameMaker) finalizeFrame() {
 	left := c.sizer.FramePadLR
 	right := float64(c.width) - c.sizer.FramePadLR
 	c.graphicsModel.Primitives.AddRect(left, fm.frameTop, right, frameBottom)
-}
-
-// findTitleSegments provides the constituent rows of text specified in
-// a *Title* statement if one is present.
-func (fm *frameMaker) findTitleSegments() []string {
-	for _, statement := range fm.creator.allStatements {
-		if statement.Keyword == umli.Title {
-			return statement.LabelSegments
-		}
-	}
-	return []string{}
 }

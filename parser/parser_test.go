@@ -46,13 +46,13 @@ func TestStrippingOutWords(t *testing.T) {
 	assert := assert.New(t)
 
 	// Remove 3 words that are present
-	stripped := (&Parser{}).removeWords(
+	stripped := (&Parser{}).removeStrings(
 		"the quick lazy brown fox",
 		"quick", "lazy", "fox")
 	assert.Equal("the   brown", stripped)
 
 	// Make sure it works when one of the words to remove is not present
-	stripped = (&Parser{}).removeWords(
+	stripped = (&Parser{}).removeStrings(
 		"the quick lazy brown fox",
 		"quick", "XXXXXXX", "fox")
 	assert.Equal("the  lazy brown", stripped)
@@ -151,27 +151,30 @@ func TestErrorWhenTwoLetterLifelinesExpected(
 
 func TestItIgnoresBlankLines(t *testing.T) {
 	assert := assert.New(t)
-	statements, err := NewParser(`
+	model, err := NewParser(`
 		life A  SL App
 
 		life B  Core Permissions API
     `).Parse()
 	assert.Nil(err)
+    statements := model.Statements()
 	assert.Len(statements, 2)
 }
 
 func TestItCapturesLabelTextWithNoLineBreaksIn(t *testing.T) {
 	assert := assert.New(t)
-	statements, err := NewParser("life A SL App").Parse()
+	model, err := NewParser("life A SL App").Parse()
 	assert.Nil(err)
+    statements := model.Statements()
 	assert.Len(statements[0].LabelSegments, 1)
 	assert.Equal("SL App", statements[0].LabelSegments[0], 1)
 }
 
 func TestItCapturesLabelTextWithLineBreaksIn(t *testing.T) {
 	assert := assert.New(t)
-	statements, err := NewParser("life A  The quick | brown fox | etc").Parse()
+	model, err := NewParser("life A  The quick | brown fox | etc").Parse()
 	assert.Nil(err)
+    statements := model.Statements()
 	assert.Len(statements[0].LabelSegments, 3)
 	// Note we check not only the splitting but also that each
 	// segment is trimmed of whitespace.
@@ -195,10 +198,11 @@ func TestMakeSureEveryKeywordIsHandledWithoutError(t *testing.T) {
 
 func TestMakeSureARepresentativeStatementOutputIsProperlyFormed(t *testing.T) {
 	assert := assert.New(t)
-	statements, err := NewParser(ReferenceInput).Parse()
+	model, err := NewParser(ReferenceInput).Parse()
 	assert.Nil(err)
 
 	// full CB  get_user_permissions( | token)
+    statements := model.Statements()
 	s := statements[7]
 	assert.Equal("full", s.Keyword)
 	assert.Equal("C", s.ReferencedLifelines[0].LifelineName)
@@ -233,8 +237,9 @@ func TestErrorsForMalformedTextSize(t *testing.T) {
 
 func TestWellFormedTextSizeIsParsedCorrectly(t *testing.T) {
 	assert := assert.New(t)
-	statements, err := NewParser("textsize 10").Parse()
+	model, err := NewParser("textsize 10").Parse()
 	assert.NoError(err)
+    statements := model.Statements()
 	s := statements[0]
 	expected := 10.0
 	assert.Equal(expected, s.TextSize)
@@ -250,13 +255,15 @@ func TestErrorsForMalformedShowLetters(t *testing.T) {
 func TestWellFormedShowLettersIsParsedCorrectly(t *testing.T) {
 	assert := assert.New(t)
 	
-	statements, err := NewParser("showletters true").Parse()
+	model, err := NewParser("showletters true").Parse()
 	assert.NoError(err)
+    statements := model.Statements()
 	s := statements[0]
 	assert.True(s.ShowLetters)
 
-	statements, err = NewParser("showletters false").Parse()
+	model, err = NewParser("showletters false").Parse()
 	assert.NoError(err)
+    statements = model.Statements()
 	s = statements[0]
 	assert.False(s.ShowLetters)
 }

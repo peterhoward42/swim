@@ -1,7 +1,7 @@
 package diag
 
 import (
-	"github.com/peterhoward42/umli/dslmodel"
+	"github.com/peterhoward42/umli/dsl"
 )
 
 /*
@@ -29,7 +29,7 @@ func newLifelineMaker(creator *Creator) *lifelineMaker {
 // title box with the most label lines.
 func (ll *lifelineMaker) titleBoxHeight() float64 {
 	maxNLabelLines := 0
-	for _, s := range ll.creator.lifelineStatements {
+	for _, s := range ll.creator.model.LifelineStatements() {
 		n := len(s.LabelSegments)
 		if n > maxNLabelLines {
 			maxNLabelLines = n
@@ -45,7 +45,7 @@ func (ll *lifelineMaker) titleBoxHeight() float64 {
 // to render all the lifelines, including leaving gaps where there are activity
 // boxes and interaction lines that cross a lifeline.
 func (ll *lifelineMaker) produceLifelines() {
-	for _, lifelineStatement := range ll.creator.lifelineStatements {
+	for _, lifelineStatement := range ll.creator.model.LifelineStatements() {
 		lineSegments := ll.segmentsForLifeline(lifelineStatement)
 		x := ll.creator.lifelineGeomH.CentreLine(lifelineStatement)
 		for i := 0; i < len(lineSegments); i++ {
@@ -63,7 +63,7 @@ to represent one lifeline - accomodating the gaps needed where
 the lifeline activity boxes live, or interaction lines that cross this
 lifeline.
 */
-func (ll *lifelineMaker) segmentsForLifeline(lifeline *dslmodel.Statement) (
+func (ll *lifelineMaker) segmentsForLifeline(lifeline *dsl.Statement) (
 	lineSegments []*segment) {
 
 	// Acquire and combine the (ordered) gap requirements - between which

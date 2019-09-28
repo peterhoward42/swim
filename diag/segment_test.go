@@ -3,7 +3,6 @@ package diag
 import (
 	"testing"
 
-	"github.com/peterhoward42/umli/dslmodel"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -27,8 +26,6 @@ func TestSortSegments(t *testing.T) {
 
 func TestMergeSegments(t *testing.T) {
 	assert := assert.New(t)
-	creator := &Creator{}
-	creator.Create([]*dslmodel.Statement{})
 
 	// Unaltered when do not overlap?
 	a := &segment{1, 2}

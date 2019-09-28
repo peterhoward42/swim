@@ -14,9 +14,9 @@ func TestClaimsCreatedForSingleInteractionLine(t *testing.T) {
 		life B bar
         full AB two | lines
 	`
-	statements := parser.MustCompileParse(script)
+	model := parser.MustCompileParse(script)
 	creator := &Creator{}
-	creator.Create(statements)
+	creator.Create(model)
 
 	// There should be two claims - one for the label and one (contiguously)
 	// for the line.
@@ -40,10 +40,11 @@ func TestCrossesBehaviour(t *testing.T) {
 		life C baz
         full AC message
 	`
-	statements := parser.MustCompileParse(script)
+	model := parser.MustCompileParse(script)
 	creator := &Creator{}
-	creator.Create(statements)
+	creator.Create(model)
 
+    statements := model.Statements()
 	left := statements[0]
 	middle := statements[1]
 	right := statements[2]
@@ -58,10 +59,11 @@ func TestCrossesBehaviour(t *testing.T) {
 		life C baz
         full CA message
 	`
-	statements = parser.MustCompileParse(script)
+	model = parser.MustCompileParse(script)
 	creator = &Creator{}
-	creator.Create(statements)
+	creator.Create(model)
 
+    statements = model.Statements()
 	left = statements[0]
 	middle = statements[1]
 	right = statements[2]
@@ -76,10 +78,11 @@ func TestCrossesBehaviour(t *testing.T) {
 		life C baz
         full AB message
 	`
-	statements = parser.MustCompileParse(script)
+	model = parser.MustCompileParse(script)
 	creator = &Creator{}
-	creator.Create(statements)
+	creator.Create(model)
 
+    statements = model.Statements()
 	left = statements[0]
 	middle = statements[1]
 	right = statements[2]
@@ -93,10 +96,11 @@ func TestCrossesBehaviour(t *testing.T) {
 		life B bar
         full AB message
 	`
-	statements = parser.MustCompileParse(script)
+	model = parser.MustCompileParse(script)
 	creator = &Creator{}
-	creator.Create(statements)
+	creator.Create(model)
 
+    statements = model.Statements()
 	left = statements[0]
 	right = statements[1]
 	crosses = creator.ilZones.crosses(left, left, right)

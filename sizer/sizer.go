@@ -15,7 +15,6 @@ algorithmic part of diagram creation.
 package sizer
 
 import (
-	"github.com/peterhoward42/umli/dslmodel"
 )
 
 // Naming conventions:
@@ -66,8 +65,7 @@ type Sizer struct {
 
 // NewSizer provides a Sizer structure that has been initialised
 // as is ready for use.
-func NewSizer(diagramWidth float64, fontHeight float64,
-	lifelineStatements []*dslmodel.Statement) *Sizer {
+func NewSizer(diagramWidth float64, fontHeight float64) *Sizer {
 	sizer := &Sizer{}
 
 	// The requested font height is used as a datum reference,

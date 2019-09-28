@@ -9,29 +9,17 @@
     *  many lifelines example suggests self labels might be better off
     *  may need to rebrand as uml **sequence** diagram =no is ok
 
-    o  introduce statement holder and query service - e.g. all lifline statements
+    *  introduce statement holder and query service - e.g. all lifline statements
        and use this instead of existing services, do as DI not state from the get
        go, validating by stripping out state that knows about []statements. In
        fact that make this the INPUT to the creator, and output of the parser,
        instead of a list of statments. In fact make it the new dslmodel type.
-        o  branch
-            o  timeout parser removewords should be removeTheseStrings
-        o  define DSLModel type constructedwith []statment
-        o  add queries to it believed needed
-        o  make parser output this instead of []dslstatement
-           fix up
-        o  DI it to creator instead of []statement, and deprive creator
-           of having this state, DI it onward.
-        o  Fix up
 
+    *  quite a few of the loops over all statements in diag service
+       queries that could be moved into dsl model
+    *  timeout parser removewords should be removeTheseStrings
+    *  events and scanner a bit over engineered
 
-    o  events and scanner a bit over engineered
-        o  could be replaced by scan over statements, focussing
-           on pass-filtering
-            o  ditch scanner and event types
-            o  change diag.Creator.processDSLWorkingDownThePage() with
-               loop over statements and what is is currently in 
-               graphicsForDrawingEvent
 
     o  cherry pick these in smallest impact order...
     o  reduce creator attributes and member methods in favour of DI to 
@@ -61,6 +49,9 @@
            o  segment
 
         o  come back to creator itself
+            o  can creator be split into api and internal?
+            o  none of the new methods in creator init should take a 
+               creator argument
                
     o  consider if image regression tests needed - or maybe only canonical?
     o  what happens if you introduce a lifeline late in the script?
