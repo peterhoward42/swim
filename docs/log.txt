@@ -1,43 +1,27 @@
-    *  improve uxp / behaviour w.r.t. text size
-    *  merge to master
-    *  move diag docco into high level doc.go, and refer from readme 
-    *  refactor parser to switch on keyword(s)
-    *  some of the existing visual tests need not be
-    *  add a test that ensure parser barfs on empty input
-    *  improve all error messages to be fit for a human at run time
-    *  show lane letters - possibly optionally
-    *  many lifelines example suggests self labels might be better off
-    *  may need to rebrand as uml **sequence** diagram =no is ok
+o  sizer
+	*  define sizer as an interface with a new name
+	*  rename existing sizer as an implementation
+	o  am I on a branch? if not make so
+	o  find something that we can unit test with a small implementation
+	o  fix up all existing places that use old sizer without trying torefactor
+	   more than that
+	o  commit as sizer change
 
-    *  introduce statement holder and query service - e.g. all lifline statements
-       and use this instead of existing services, do as DI not state from the get
-       go, validating by stripping out state that knows about []statements. In
-       fact that make this the INPUT to the creator, and output of the parser,
-       instead of a list of statments. In fact make it the new dslmodel type.
-
-    *  quite a few of the loops over all statements in diag service
-       queries that could be moved into dsl model
-    *  timeout parser removewords should be removeTheseStrings
-    *  events and scanner a bit over engineered
+	o  sizer could be defined as interface, so that then provide 
+	   locked down one for tests, and be free to tune over time 
+	   without breaking tests
+	o  could be defined as single method interface with string
+	   dict lookup to allow sparse implementations
+	o  could have concrete implemenation that takes sparse
+	   dict constructor dict
 
 
-    o  cherry pick these in smallest impact order...
+
     o  reduce creator attributes and member methods in favour of DI to 
        methods, so that...
     o  main lifecycle helper methods can be split out to other diag modules,
        leaving diag package (below) as only containing only synthesis
        phases types and methods
-    o  or can I rearchitect to make more decoupled and better to test?
-        o  what is that encoder/json style package?, would be nice to
-           have diag/orchestration, diag/framemaker etc
-        o  sizer
-            o  sizer could be defined as interface, so that then provide 
-               locked down one for tests, and be free to tune over time 
-               without breaking tests
-            o  could be defined as single method interface with string
-               dict lookup to allow sparse implementations
-            o  could have concrete implemenation that takes sparse
-               dict constructor dict
 
         o  the following helper modules should be stdalong packages, with
            private attributes, DI and unit tests:
@@ -52,6 +36,7 @@
             o  can creator be split into api and internal?
             o  none of the new methods in creator init should take a 
                creator argument
+	o  design docco, package docco  and readme needs reflecting
                
     o  consider if image regression tests needed - or maybe only canonical?
     o  what happens if you introduce a lifeline late in the script?
@@ -62,6 +47,7 @@
        be more computer sciency - plus update readme to suit
     o  virgin clone of umli fails create tests because no directory
        to save in - fix when decide on visual image difference testing
+	  	o  make similar to stdalone gui would be good to include linting
     o  Lifeline should be different mark space than response line
     o  Web assembly
     o  cli
