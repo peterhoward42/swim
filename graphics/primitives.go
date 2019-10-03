@@ -79,6 +79,18 @@ func (p *Primitives) AddLabel(theString string, fontHeight float64,
 	p.Labels = append(p.Labels, label)
 }
 
+/*
+RowOfStrings adds a set of strings vertically aligned underneath one another.
+It hard-code the vertical justification to top.
+*/
+func (p *Primitives) RowOfStrings(x float64, firstRowY float64,
+	fontHeight float64, hJust Justification, strings []string) {
+	for i, s := range strings {
+		y := firstRowY + float64(i)*fontHeight
+		p.AddLabel(s, fontHeight, x, y, hJust, Top)
+	}
+}
+
 // AddRect adds 4 lines to the Primitive's line store to represent
 // the rectangle of the given opposite corners.
 func (p *Primitives) AddRect(

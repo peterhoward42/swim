@@ -1,8 +1,19 @@
 o  sizer
 	*  define sizer as an interface with a new name
 	*  rename existing sizer as an implementation
-	o  am I on a branch? if not make so
+	*  am I on a branch? if not make so
 	o  find something that we can unit test with a small implementation
+		o  framemaker
+			*  remove creator attribute and instead pass in sizer to constructor
+			*  pass in title to use
+			*  need to factor creator.RowOfLabels into a graphics package as
+			   method on primitives + test
+			*  sizer contract should panic when no show
+			o  try to create a test
+				o  temp push framemaker into own package
+
+	o  find other targets
+	o  decide which of now disparate packages to pull back into diag
 	o  fix up all existing places that use old sizer without trying torefactor
 	   more than that
 	o  commit as sizer change
@@ -36,6 +47,8 @@ o  sizer
             o  can creator be split into api and internal?
             o  none of the new methods in creator init should take a 
                creator argument
+	o  box state looks like it can be simplified, and could do with a test
+	o  arrow could go into something like a plain geom package
 	o  design docco, package docco  and readme needs reflecting
                
     o  consider if image regression tests needed - or maybe only canonical?

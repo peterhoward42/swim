@@ -231,21 +231,6 @@ func (c *Creator) interactionLabel(
 }
 
 /*
-rowOfLabels is a (DRY) helper function to make the graphics.Primitives
-objects for the set of strings representing a multi-row label. It hard-codes
-the vertical justification (to top), but takes a parameter to specify
-horizontal justification. It does not advance the tideMark.
-*/
-func (c *Creator) rowOfLabels(x float64, firstRowY float64,
-	horizJustification graphics.Justification, labelSegments []string) {
-	for i, labelSeg := range labelSegments {
-		y := firstRowY + float64(i)*c.fontHeight
-		c.graphicsModel.Primitives.AddLabel(labelSeg, c.fontHeight,
-			x, y, horizJustification, graphics.Top)
-	}
-}
-
-/*
 interactionLine generates the horizontal line and arrow head.  It then claims
 the vertical space it needs for itself by advancing the tide mark.  And
 registers this space claim with the creator's InteractionLineZones component.

@@ -1,5 +1,7 @@
 package sizer
 
+import "fmt"
+
 /*
 CompleteSizer implements the Sizer interface by providing an implementation
 that can provide the comprehensive set of sizing parameters required by
@@ -29,12 +31,13 @@ func NewCompleteSizer(diagramWidth float64, fontHeight float64) *CompleteSizer {
 	return &CompleteSizer{diagramWidth}
 }
 
-// Get returns the size specified by propertyName, or zero if that
-// size if the property is not recognized.
+// Get returns the size specified by propertyName, or panics
+// if the property is not recognized.
 func (s CompleteSizer) Get(propertyName string) (size float64) {
 	v, ok := table[propertyName]
 	if !ok {
-		return 0
+		msg := fmt.Sprintf("Sizer could not look up the key: <%s>", propertyName)
+		panic(msg)
 	}
 	return v * s.fontHeight
 }

@@ -23,6 +23,26 @@ func TestAddRectDecomposesCorrectly(t *testing.T) {
 	assert.Equal(Point{0, 0}, end)
 }
 
+func TestRowOfStringsDecomposesCorrectly(t *testing.T) {
+	assert := assert.New(t)
+	p := NewPrimitives()
+	x := 5.0
+	topRow := 20.0
+	fontHeight := 3.0
+	p.RowOfStrings(x, topRow, fontHeight, Right, []string{"foo", "bar"})
+	assert.Len(p.Labels, 2)
+	// Inspect the second of the two to make sure it has the geometry it
+	// should (including the offset below the first row)
+	expected := Label{
+		TheString:  "bar",
+		FontHeight: fontHeight,
+		Anchor:     NewPoint(x, topRow+fontHeight),
+		HJust:      Right,
+		VJust:      Top,
+	}
+	assert.Equal(expected, *p.Labels[1])
+}
+
 func TestAddAccumulatesProperly(t *testing.T) {
 	assert := assert.New(t)
 

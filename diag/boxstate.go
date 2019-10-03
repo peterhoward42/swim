@@ -1,13 +1,10 @@
 package diag
 
 /*
-This module contains code that owns state and processing logic in relation
-to drawing activity boxes on lifelines. There are no statements in the DSL
-to draw boxes as such. Instead the initiation of each one is inferred from
-an interaction line statement (full or dash). However a box cannot be
-drawn until it is known how far down the diagram it finishes. A box is
-either terminated by an explicit *stop* statement, or implicitly at the
-bottom of the diagram.
+This module keeps track of the sequence of activity boxes on one lifeline.
+It takes instructions to register the Y coordinate at which a box should
+be registered as starting, and similarly instructions to later terminate a
+box at a given (bigger) Y coordinate.
 */
 
 import (
