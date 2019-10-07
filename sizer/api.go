@@ -1,11 +1,9 @@
 /*
-Package sizer is concerned with sizing diagram elements that can be sensibly
-defined as proportions of the diagram's font height. (Which is the principal
-driver of sizing).
+Package sizer is concerned with sizing diagram elements.
 
 Not only how big things are, but also how far apart they should be.
 
-E.g. the coordinates for each lifeline title box, the mark-space settings for
+E.g. the size of a lifeline title box, the mark-space settings for
 dashed lines, arrow sizing, the margins or padding required for each thing etc.
 */
 package sizer

@@ -10,9 +10,19 @@ o  sizer
 			   method on primitives + test
 			*  sizer contract should panic when no show
 			o  try to create a test
-				o  temp push framemaker into own package
+				*  temp push framemaker into own package
+				o  work up the test(s)
+					*  need TestSizer(map)
+					o  need ContainsRect (and a test)
+					o  while at it make a line contain points not ptrs, to
+					   make tests easier.
+					 	*  get graphics package to compile
+						*  get graphics test to pass
+						o  make sure got all required graphics tests
+							o  all cases for contains line
+							o  test for contains rect
 
-	o  find other targets
+	o  find other targets to use sizer
 	o  decide which of now disparate packages to pull back into diag
 	o  fix up all existing places that use old sizer without trying torefactor
 	   more than that

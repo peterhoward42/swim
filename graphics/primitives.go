@@ -13,15 +13,10 @@ type Point struct {
 	Y float64
 }
 
-// NewPoint creates a Point ready to use.
-func NewPoint(x, y float64) *Point {
-	return &Point{x, y}
-}
-
 // Line represents a line, optionally dashed.
 type Line struct {
-	P1     *Point
-	P2     *Point
+	P1     Point
+	P2     Point
 	Dashed bool // vs. Full
 }
 
@@ -42,7 +37,7 @@ const (
 type Label struct {
 	TheString  string
 	FontHeight float64
-	Anchor     *Point
+	Anchor     Point
 	HJust      Justification
 	VJust      Justification
 }
@@ -62,20 +57,20 @@ func NewPrimitives() *Primitives {
 // AddLine adds the given line to the Primitive's line store.
 func (p *Primitives) AddLine(
 	x1 float64, y1 float64, x2 float64, y2 float64, dashed bool) {
-	line := &Line{NewPoint(x1, y1), NewPoint(x2, y2), dashed}
+	line := &Line{Point{x1, y1}, Point{x2, y2}, dashed}
 	p.Lines = append(p.Lines, line)
 }
 
 // AddFilledPoly adds the given filled polygon to the Primitive's store.
-func (p *Primitives) AddFilledPoly(vertices []*Point) {
-	poly := NewFilledPoly(vertices)
-	p.FilledPolys = append(p.FilledPolys, poly)
+func (p *Primitives) AddFilledPoly(vertices []Point) {
+	poly := FilledPoly(vertices)
+	p.FilledPolys = append(p.FilledPolys, &poly)
 }
 
 // AddLabel adds a Label to the Primitive's Lable store.
 func (p *Primitives) AddLabel(theString string, fontHeight float64,
 	x float64, y float64, hJust Justification, vJust Justification) {
-	label := &Label{theString, fontHeight, &Point{x, y}, hJust, vJust}
+	label := &Label{theString, fontHeight, Point{x, y}, hJust, vJust}
 	p.Labels = append(p.Labels, label)
 }
 
