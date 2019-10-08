@@ -4,6 +4,9 @@ o  sizer
 	*  am I on a branch? if not make so
 	o  find something that we can unit test with a small implementation
 		*  framemaker
+		*  push arrow into its own package
+		o  infact move arrow into new geom 
+		o  push segment into its own package inside geom too
 
 	o  find other targets to use sizer
 	o  decide which of now disparate packages to pull back into diag
