@@ -3,29 +3,7 @@ o  sizer
 	*  rename existing sizer as an implementation
 	*  am I on a branch? if not make so
 	o  find something that we can unit test with a small implementation
-		o  framemaker
-			*  remove creator attribute and instead pass in sizer to constructor
-			*  pass in title to use
-			*  need to factor creator.RowOfLabels into a graphics package as
-			   method on primitives + test
-			*  sizer contract should panic when no show
-			o  try to create a test
-				*  temp push framemaker into own package
-				o  work up the test(s)
-					*  need TestSizer(map)
-					o  need ContainsRect (and a test)
-					o  while at it make a line contain points not ptrs, to
-					   make tests easier.
-					 	*  get graphics package to compile
-						*  get graphics test to pass
-						o  make sure got all required graphics tests
-							*  all cases for contains line
-							o  test for contains rect
-								o  revealed that containsline impl is wrong,
-								   but contains line test does not fail?
-								 	o  how are contains line tests passing?
-										o  improve test to stimulate failure
-										   the fix up
+		*  framemaker
 
 	o  find other targets to use sizer
 	o  decide which of now disparate packages to pull back into diag

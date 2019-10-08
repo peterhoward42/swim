@@ -6,7 +6,7 @@ import (
 )
 
 /*
-maker knows how to draw the diagram outer frame and title box into a
+Maker knows how to draw the diagram outer frame and title box into a
 graphics.Primitives structure.
 */
 type Maker struct {
@@ -15,7 +15,7 @@ type Maker struct {
 	prims    *graphics.Primitives
 }
 
-// newMaker provides a lifelineBoxes ready to use.
+// NewMaker provides a lifelineBoxes ready to use.
 func NewMaker(s sizer.Sizer, prims *graphics.Primitives) *Maker {
 	return &Maker{
 		sizer: s,
@@ -24,7 +24,7 @@ func NewMaker(s sizer.Sizer, prims *graphics.Primitives) *Maker {
 }
 
 /*
-initFrameAndMakeTitleBox is responsible capturing the Y coordinate at which
+InitFrameAndMakeTitleBox is responsible capturing the Y coordinate at which
 the diagram's frame rectangle should start, and then drawing the diagram title
 in an enclosing rectangle just below it. Then advancing the tidemark
 accordingly.
@@ -47,7 +47,7 @@ func (fm *Maker) InitFrameAndMakeTitleBox(titleSegments []string,
 }
 
 /*
-finalizeFrame claims a little space below the diagram vertical extent so far,
+FinalizeFrame claims a little space below the diagram vertical extent so far,
 and draws the enclosing frame. It is not responsible for reserving space,
 below the frame - that is handled externally.
 */
