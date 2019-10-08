@@ -19,8 +19,13 @@ o  sizer
 					 	*  get graphics package to compile
 						*  get graphics test to pass
 						o  make sure got all required graphics tests
-							o  all cases for contains line
+							*  all cases for contains line
 							o  test for contains rect
+								o  revealed that containsline impl is wrong,
+								   but contains line test does not fail?
+								 	o  how are contains line tests passing?
+										o  improve test to stimulate failure
+										   the fix up
 
 	o  find other targets to use sizer
 	o  decide which of now disparate packages to pull back into diag

@@ -6,27 +6,27 @@ contents. For example does it contain the four lines required to represent
 a given rectangle?
 
 The queries are optimised for code simplicity (mainly for tests) at the
-expense of runtime performance.
+expense of Big-O complexity.
 */
 
 // ContainsRect evaluates if the primitives contain the lines required to
 // represent the rectangle defined by tl and br?
-func (p *Primitives) ContainsRect(tl, br *Point) bool {
+func (p *Primitives) ContainsRect(tl, br Point) bool {
 
 	l := tl.X
 	r := br.X
 	t := tl.Y
 	b := br.Y
 
-	want := []Line{}
+	required := []Line{}
 
-	want = append(want, Line{Point{l, t}, Point{r, t}, false})
-	want = append(want, Line{Point{r, t}, Point{r, b}, false})
-	want = append(want, Line{Point{r, b}, Point{l, b}, false})
-	want = append(want, Line{Point{l, b}, Point{l, t}, false})
+	required = append(required, Line{Point{l, t}, Point{r, t}, false})
+	required = append(required, Line{Point{r, t}, Point{r, b}, false})
+	required = append(required, Line{Point{r, b}, Point{l, b}, false})
+	required = append(required, Line{Point{l, b}, Point{l, t}, false})
 
-	for _, line := range p.Lines {
-		if !p.ContainsLine(*line) {
+	for _, line := range required {
+		if !p.ContainsLine(line) {
 			return false
 		}
 	}
@@ -38,12 +38,11 @@ func (p *Primitives) ContainsRect(tl, br *Point) bool {
 func (p *Primitives) ContainsLine(line Line) bool {
 	for _, x := range p.Lines {
 		if x.P1 == line.P1 && x.P2 == line.P2 && x.Dashed == line.Dashed {
-			continue
+			return true
 		}
 		if x.P1 == line.P2 && x.P2 == line.P1 && x.Dashed == line.Dashed {
-			continue
+			return true
 		}
-		return false
 	}
-	return true
+	return false
 }
