@@ -2,11 +2,17 @@ o  sizer
 	*  define sizer as an interface with a new name
 	*  rename existing sizer as an implementation
 	*  am I on a branch? if not make so
-	o  find something that we can unit test with a small implementation
+	*  find something that we can unit test with a small implementation
 		*  framemaker
+	o  work through other bits of diag amenable to being factored out, and
+	   using new sizer.
 		*  push arrow into its own package
-		o  infact move arrow into new geom 
-		o  push segment into its own package inside geom too
+		*  infact move arrow into new geom 
+		*  push segment into its own package inside geom too
+		o  lifelinegeomh
+			*  move into own package and refactor
+				o  tdd from CenterLine method
+				o  add tests for other required methods
 
 	o  find other targets to use sizer
 	o  decide which of now disparate packages to pull back into diag

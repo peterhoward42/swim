@@ -29,7 +29,9 @@ attribute, smallest-first.
 
 Note the (confusing) pass by value semantics. It still has the effect of
 sorting the caller's copy, because the copy made when the parameter is passed
-in, (by definition) still refers to the same underlying array.
+in, (by definition) still refers to the same underlying array. Hence sorting
+the copy is swapping the positions of items in the underlying array they share
+in common.
 */
 func SortSegments(segs []Segment) {
 	sort.Slice(segs, func(i, j int) bool {
@@ -52,14 +54,14 @@ func MergeSegments(segs []Segment) (newSegs []Segment) {
 	newSegs = []Segment{}
 	var tail *Segment
 	for i, seg := range segs {
-		if (i == 0) {
+		if i == 0 {
 			newSegs = append(newSegs, seg)
 			tail = &newSegs[0]
 			continue
 		}
 		if seg.Start >= tail.End {
 			newSegs = append(newSegs, seg)
-			tail = &newSegs[len(newSegs) -1]
+			tail = &newSegs[len(newSegs)-1]
 			continue
 		}
 		if seg.Start >= tail.Start && seg.End <= tail.End {
