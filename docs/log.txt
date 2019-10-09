@@ -9,10 +9,8 @@ o  sizer
 		*  push arrow into its own package
 		*  infact move arrow into new geom 
 		*  push segment into its own package inside geom too
-		o  lifelinegeomh
-			*  move into own package and refactor
-				o  tdd from CenterLine method
-				o  add tests for other required methods
+		*  lifelinegeomh
+		o  standardise of given, when, then
 
 	o  find other targets to use sizer
 	o  decide which of now disparate packages to pull back into diag

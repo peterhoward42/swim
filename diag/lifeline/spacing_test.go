@@ -11,17 +11,16 @@ import (
 /*
 Given a Spacing object initialised with two lifelines, and a hard-coded
 sizer...
-Then when calling its CentreLine object for the second of the lifelines...
-It should produce an X coordinate at roughly 2/3 of the diagram width.
+When calling its CentreLine method for the second of the lifelines...
+Then it should produce an X coordinate faithful to the internal algorithm.
 */
-func TestCentreLine(t *testing.T) {
+func TestCentreLineCanonicalCase(t *testing.T) {
 	assert := assert.New(t)
 	_ = assert
 
-	diagWidth := 800
 	sizer := sizer.NewLiteralSizer(map[string]float64{
-		"DiagWidth": 800,
-		"FontHt": 20,
+		"DiagWidth":                  800,
+		"FontHt":                     20,
 		"IdealLifelineTitleBoxWidth": 100.0,
 	})
 
@@ -32,10 +31,57 @@ func TestCentreLine(t *testing.T) {
 	spacing := NewSpacing(sizer, lifelines)
 	x, err := spacing.CentreLine(lifelineB)
 	assert.NoError(err)
-	expected := diagWidth * 2.0 / 3.0
-	assert.InDelta(expected, x, 20)
+	assert.Equal(550.0, x)
 }
 
-// convert to accurate test
-// add edge case test
-// add when crowded test to show special case kicks in
+/*
+Given a Spacing object initialised with two lifelines, and a hard-coded
+sizer that asks for huge title boxes...
+When calling its CentreLine method for the second of the lifelines...
+Then it should produce an X coordinate faithful to the internal algorithm which
+reduces the title box size to maintain the gutter widths.
+*/
+func TestCentreLineSquashedCase(t *testing.T) {
+	assert := assert.New(t)
+	_ = assert
+
+	sizer := sizer.NewLiteralSizer(map[string]float64{
+		"DiagWidth":                  800,
+		"FontHt":                     20,
+		"IdealLifelineTitleBoxWidth": 99999999.0,
+	})
+
+	lifelineA := &dsl.Statement{}
+	lifelineB := &dsl.Statement{}
+	lifelines := []*dsl.Statement{lifelineA, lifelineB}
+
+	spacing := NewSpacing(sizer, lifelines)
+	x, err := spacing.CentreLine(lifelineB)
+	assert.NoError(err)
+	assert.Equal(1195.0, x)
+}
+
+/*
+Given a Spacing object initialised with a single lifelines, and a hard-coded
+sizer...
+When calling its CentreLine method for the second of the lifelines...
+Then it should produce an X coordinate in the middle of the diagram's width.
+*/
+func TestCentreLineCornerCaseOfOneLifeline(t *testing.T) {
+	assert := assert.New(t)
+	_ = assert
+
+	sizer := sizer.NewLiteralSizer(map[string]float64{
+		"DiagWidth":                  800,
+		"FontHt":                     20,
+		"IdealLifelineTitleBoxWidth": 100.0,
+	})
+
+	lifelineA := &dsl.Statement{}
+	lifelines := []*dsl.Statement{lifelineA}
+
+	spacing := NewSpacing(sizer, lifelines)
+	x, err := spacing.CentreLine(lifelineA)
+	assert.NoError(err)
+	assert.Equal(400.0, x)
+}

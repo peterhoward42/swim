@@ -1,8 +1,8 @@
 package lifeline
 
 import (
-	"fmt"
 	"errors"
+	"fmt"
 
 	"github.com/peterhoward42/umli/dsl"
 	"github.com/peterhoward42/umli/sizer"
@@ -36,16 +36,11 @@ CentreLine provides the X coordinate for the centreline of lifeline.
 */
 func (s Spacing) CentreLine(lifeline *dsl.Statement) (float64, error) {
 	dv := s.calcDrivingValues()
-	_ = dv
 	num, err := s.lifelineNumber(lifeline)
-	_ = num
 	if err != nil {
 		return 0, fmt.Errorf("lifelineNumber: %v", err)
 	}
-	/*
-		return (n+1)*drivingValues.TitleBoxGutter + (n+0.5)*drivingValues.TitleBoxWidth
-	*/
-	return 0.0, nil
+	return (float64(num)+1)*dv.titleBoxGutter + (float64(num)+0.5)*dv.titleBoxWidth, nil
 }
 
 /*
@@ -58,6 +53,13 @@ type drivingValues struct {
 	titleBoxGutter float64
 }
 
+/*
+calcDrivingValues calculates the values that other spacing decisions are derived
+from. They include trying to use an optimal looking width for lifeline title
+boxes, but backtracking when this would make the gutter between the title boxes
+too small and reducing the size of the title boxes such that a minimum gutter
+of one font height is preserved.
+*/
 func (s *Spacing) calcDrivingValues() drivingValues {
 	var dv drivingValues
 	dv.titleBoxWidth = s.sizer.Get("IdealLifelineTitleBoxWidth")

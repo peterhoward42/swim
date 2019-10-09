@@ -11,8 +11,8 @@ import (
 
 /*
 Given hard-coded input parameters,
-Then when makeArrow is called,
-It should produce geometrically correct vertices.
+When when makeArrow is called,
+Then, it should produce geometrically correct vertices.
 */
 func TestRightwardsArrowIsWellFormed(t *testing.T) {
 	assert := assert.New(t)

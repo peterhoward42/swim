@@ -11,7 +11,7 @@ import (
 /*
 Given a frame.Maker, initialised with a Sizer that you can configure to
 return fixed values,
-then calling its InitFrameAndMakeTitleBox method,
+then when calling its InitFrameAndMakeTitleBox method,
 it should produce a correctly sized and positioned frame title box, with a title
 inside in the right place. And also return the correctly calculated new
 tide mark.
