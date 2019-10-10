@@ -10,7 +10,17 @@ o  sizer
 		*  infact move arrow into new geom 
 		*  push segment into its own package inside geom too
 		*  lifelinegeomh
-		o  standardise of given, when, then
+		*  standardise of given, when, then
+      o  boxstate
+         *  redesign api
+         o  implement in new package and tdd up
+            *  initiate
+            *  tdd basic add
+            *  tdd basic terminate
+            *  tdd err handling
+            o  tdd queries
+				o  what needed?
+         o  ditch old one
 
 	o  find other targets to use sizer
 	o  decide which of now disparate packages to pull back into diag
@@ -79,4 +89,13 @@ o  sizer
 
 
 ----------------------------------------------------------------------------
+Box state api redesign
 ----------------------------------------------------------------------------
+o  better name
+   o  Activityboxes
+   o  inside lifeline package
+o  new constructor
+o  add(startingAt)
+o  terminate(endingAt)
+o  error if call add when prev exists and is not terminated
+o  error if call terminate when prev already is, or no prev

@@ -1,4 +1,4 @@
-package seg
+package geom
 
 import (
 	"math"
@@ -6,7 +6,7 @@ import (
 )
 
 /*
-Type Segment can be used represent a gap in a line, or a short section of
+Segment can be used represent a gap in a line, or a short section of
 a line. It provides methods to sort and merge segments when you have
 multiple Segments that belong to the same underlying line.
 

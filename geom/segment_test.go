@@ -1,4 +1,4 @@
-package seg
+package geom
 
 import (
 	"testing"

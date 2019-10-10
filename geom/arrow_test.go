@@ -1,4 +1,4 @@
-package arrow
+package geom
 
 import (
 	"testing"
@@ -7,7 +7,6 @@ import (
 
 	"github.com/peterhoward42/umli/graphics"
 )
-
 
 /*
 Given hard-coded input parameters,
@@ -22,7 +21,7 @@ func TestRightwardsArrowIsWellFormed(t *testing.T) {
 	arrowLen := 2.0
 	arrowHeight := 1.0
 	vertices := makeArrow(x1, x2, y, arrowLen, arrowHeight)
-	assert.Equal(graphics.Point{8, 4.5}, vertices[0])
-	assert.Equal(graphics.Point{10, 5.0}, vertices[1])
-	assert.Equal(graphics.Point{8, 5.5}, vertices[2])
+	assert.Equal(graphics.Point{X: 8, Y: 4.5}, vertices[0])
+	assert.Equal(graphics.Point{X: 10, Y: 5.0}, vertices[1])
+	assert.Equal(graphics.Point{X: 8, Y: 5.5}, vertices[2])
 }
