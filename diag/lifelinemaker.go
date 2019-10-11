@@ -28,17 +28,7 @@ func newLifelineMaker(creator *Creator) *lifelineMaker {
 // titleBoxHeight calculates the height based on sufficient room for the
 // title box with the most label lines.
 func (ll *lifelineMaker) titleBoxHeight() float64 {
-	maxNLabelLines := 0
-	for _, s := range ll.creator.model.LifelineStatements() {
-		n := len(s.LabelSegments)
-		if n > maxNLabelLines {
-			maxNLabelLines = n
-		}
-	}
-	topMargin := ll.creator.sizer.TitleBoxLabelPadT
-	botMargin := ll.creator.sizer.TitleBoxLabelPadB
-	ht := topMargin + botMargin + float64(maxNLabelLines)*ll.creator.fontHeight
-	return ht
+	replace this with calls to lifeline.TitleBox.Height()
 }
 
 // ProduceLifelines works out the dashed line segments that should be created

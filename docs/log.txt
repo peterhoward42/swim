@@ -11,10 +11,9 @@ o  sizer
 		*  push segment into its own package inside geom too
 		*  lifelinegeomh
 		*  standardise of given, when, then
-      o  boxstate
-         *  redesign api
-         *  implement in new package and tdd up
-         o  ditch old one
+      *  boxstate
+	  *  new module lifeline.titlebox with only height in so far
+	  o  revert given/then/when in favour of method names
 
 	o  find other targets to use sizer
 	o  decide which of now disparate packages to pull back into diag
