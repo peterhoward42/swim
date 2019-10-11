@@ -13,13 +13,7 @@ o  sizer
 		*  standardise of given, when, then
       o  boxstate
          *  redesign api
-         o  implement in new package and tdd up
-            *  initiate
-            *  tdd basic add
-            *  tdd basic terminate
-            *  tdd err handling
-            o  tdd queries
-				o  what needed?
+         *  implement in new package and tdd up
          o  ditch old one
 
 	o  find other targets to use sizer

@@ -25,10 +25,10 @@ func NewActivityBoxes() *ActivityBoxes {
 // should start, but with the Y coordinate at which it should end - as yet
 // unknown.
 func (ab *ActivityBoxes) AddStartingAt(startY float64) error {
-	if len(ab.segs) != 0 && ab.segs[len(ab.segs) -1].End == -1 {
+	if len(ab.segs) != 0 && ab.segs[len(ab.segs)-1].End == -1 {
 		return errors.New("Cannot add new box when previous is not terminated")
 	}
-	ab.segs = append(ab.segs, geom.Segment{Start: startY, End:-1})
+	ab.segs = append(ab.segs, geom.Segment{Start: startY, End: -1})
 	return nil
 }
 
@@ -49,4 +49,21 @@ func (ab *ActivityBoxes) TerminateAt(endY float64) error {
 // AsSegments provides all the boxes that have been registered.
 func (ab *ActivityBoxes) AsSegments() []geom.Segment {
 	return ab.segs
+}
+
+/*
+GetStartOfFinalBoxIfNotTerminated provides the y coordinate at which the
+most recently added box starts at - but only when there is at least one
+box, and the most recently added box has not yet been terminated. Otherwise
+it returns nil.
+*/
+func (ab *ActivityBoxes) GetStartOfFinalBoxIfNotTerminated() *float64 {
+	if len(ab.segs) == 0 {
+		return nil
+	}
+	mostRecent := &ab.segs[len(ab.segs)-1]
+	if mostRecent.End == -1 {
+		return &mostRecent.Start
+	}
+	return nil
 }
