@@ -17,9 +17,7 @@ o  sizer
 	  o  ilzones
 	  	*  diag/interactions/nogozone.go
 		*  diag/lifelines/span.go
-		o  diag/lifelines/gaps.go
-			o  populate based  on nogozones
-			o  populate based on activity boxes
+		*  diag/lifelines/gaps.go
 		o  diag/lifelines/segments.go
 			o  orchestrate and reconcile gaps from both sources and do 
 			   mark space optimisation

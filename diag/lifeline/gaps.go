@@ -31,6 +31,9 @@ func (gaps *Gaps) PopulateFromNoGoZones(noGoZones []interactions.NoGoZone,
 	}
 }
 
+/*
+PopulateFrom
+
 // lifelineIsAmong returns true if aLifeline is in someLifelines.
 func (gaps *Gaps) lifelineIsAmong(
 	someLifelines []*dsl.Statement, aLifeline *dsl.Statement) bool {
