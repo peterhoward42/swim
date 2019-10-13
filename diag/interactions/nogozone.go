@@ -11,7 +11,7 @@ in order to advise crossing lifelines where they must be broken, so as to avoid
 clashing with the interaction lines.
 */
 type NoGoZone struct {
-	height      geom.Segment
-	oneEnd      *dsl.Statement
-	theOtherEnd *dsl.Statement
+	Height      geom.Segment
+	OneEnd      *dsl.Statement
+	TheOtherEnd *dsl.Statement
 }
