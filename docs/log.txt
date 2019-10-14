@@ -22,7 +22,7 @@ o  sizer
 			o  orchestrate and reconcile gaps from both sources and do 
 			   mark space optimisation
 			   to generate segs to render
-		o  ditch ilzones as such
+		o  ditch old ilzones
 
 	o  find other targets to use sizer
 	o  decide which of now disparate packages to pull back into diag
