@@ -18,10 +18,7 @@ o  sizer
 	  	*  diag/interactions/nogozone.go
 		*  diag/lifelines/span.go
 		*  diag/lifelines/gaps.go
-		o  diag/lifelines/segments.go
-			o  orchestrate and reconcile gaps from both sources and do 
-			   mark space optimisation
-			   to generate segs to render
+		*  diag/lifelines/segments.go
 		o  ditch old ilzones
 
 	o  find other targets to use sizer
