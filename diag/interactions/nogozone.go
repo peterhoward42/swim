@@ -12,6 +12,6 @@ clashing with the interaction lines.
 */
 type NoGoZone struct {
 	Height      geom.Segment
-	OneEnd      *dsl.Statement
-	TheOtherEnd *dsl.Statement
+	OneEndLifeline      *dsl.Statement
+	OtherEndLifeline *dsl.Statement
 }

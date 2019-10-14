@@ -13,13 +13,9 @@ o  sizer
 		*  standardise of given, when, then
       *  boxstate
 	  *  new module lifeline.titlebox with only height in so far
-	  o  revert given/then/when in favour of method names
-	  o  ilzones
-	  	*  diag/interactions/nogozone.go
-		*  diag/lifelines/span.go
-		*  diag/lifelines/gaps.go
-		*  diag/lifelines/segments.go
-		o  ditch old ilzones
+	  *  revert given/then/when in favour of method names
+	  *  ilzones
+	  o  what can we do to dispense with ilzones?
 
 	o  find other targets to use sizer
 	o  decide which of now disparate packages to pull back into diag

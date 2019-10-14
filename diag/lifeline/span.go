@@ -3,27 +3,26 @@ package lifeline
 import "github.com/peterhoward42/umli/dsl"
 
 /*
-SpanExcl is concerned with the lifelines that cross an interaction
-line. Specifically, when you provide the lifelines from which an interaction
-line goes to and from, it provides the lifelines that lie between them.
+SpanExcl works out for any two lifelines (from, to), which other lifelines lie
+between them, and will thus be crossed by an interaction line between (from,to)
 */
 func SpanExcl(
 	from, to *dsl.Statement, allLifelines []*dsl.Statement) []*dsl.Statement {
-	sToI := map[*dsl.Statement]int{}
-	iToS := map[int]*dsl.Statement{}
+	lifelineIndex := map[*dsl.Statement]int{}
+	indexToLifeline := map[int]*dsl.Statement{}
 	for i, s := range allLifelines {
-		sToI[s] = i
-		iToS[i] = s
+		lifelineIndex[s] = i
+		indexToLifeline[i] = s
 	}
-	fromI := sToI[from]
-	toI := sToI[to]
+	fromIndex := lifelineIndex[from]
+	toIndex := lifelineIndex[to]
 	span := []*dsl.Statement{}
-	if toI > fromI {
-		for i := fromI + 1; i <= toI-1; i++ {
+	if toIndex > fromIndex {
+		for i := fromIndex + 1; i <= toIndex-1; i++ {
 			span = append(span, allLifelines[i])
 		}
 	} else {
-		for i := fromI - 1; i >= toI+1; i-- {
+		for i := fromIndex - 1; i >= toIndex+1; i-- {
 			span = append(span, allLifelines[i])
 		}
 	}

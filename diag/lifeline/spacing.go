@@ -10,9 +10,7 @@ import (
 
 /*
 Spacing holds the knowledge about the horizontal pitch and geometry
-of lifelines. For example, how to space them out across the page, and
-providing the left and right edge coordinates for the activity boxes on each
-etc.
+of lifelines. For example, how to space them out across the page.
 
 It makes all the title boxes the same width, and distributes these equally
 across the width of the diagram. It uses the same gap (gutter) between these
