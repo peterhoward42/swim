@@ -15,7 +15,13 @@ o  sizer
 	  *  new module lifeline.titlebox with only height in so far
 	  *  revert given/then/when in favour of method names
 	  *  ilzones
-	  o  what can we do to dispense with ilzones?
+	  *  what can we do to dispense with ilzones? (ditch it)
+		   doesn't need a dedicated type - so just ditch it
+	o  now look again at creator itself for more stripping out
+		o  try making a rival creator in diag/api package and see what packages 
+		   and modules can be split out, attempting tdd as we go
+		 	o  can we get the whole project to build as a baseline?
+				o  nearly there!
 
 	o  find other targets to use sizer
 	o  decide which of now disparate packages to pull back into diag

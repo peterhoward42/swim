@@ -7,18 +7,19 @@ import (
 )
 
 /*
-Segments represents the line segments that should be drawn to represent a
-lifeline while avoiding drawing over the top of other things.
+Segments represents the separate line segments that should be drawn to
+represent a lifeline, once the gaps that are needed in it  have been taken into
+account.
 */
 type LifelineSegments struct {
 	Segs []geom.Segment
 }
 
 /*
-Assemble populates s by working out the segments required by finding out what gaps are
-required to avoid NoGoZone(s), and to avoid lifeline's activity boxes, and reconciling
-these needs, and making a few adjustments - for example to avoid ending
-up with very tiny segments.
+Assemble populates s by working out the segments required taking into account
+both the gaps that are required to avoid NoGoZone(s), and the gaps required to
+not interfere with the lifeline's activity boxes. It also makes a few
+adjustments - for example to avoid ending up with very tiny segments.
 */
 func (s *LifelineSegments) Assemble(
 	lifeline *dsl.Statement,
