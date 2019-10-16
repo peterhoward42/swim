@@ -20,8 +20,8 @@ o  sizer
 	o  now look again at creator itself for more stripping out
 		o  try making a rival creator in diag/api package and see what packages 
 		   and modules can be split out, attempting tdd as we go
-		 	o  can we get the whole project to build as a baseline?
-				o  nearly there!
+		 	*  get the whole project to build as a baseline?
+			*  fix lint problems
 
 	o  find other targets to use sizer
 	o  decide which of now disparate packages to pull back into diag

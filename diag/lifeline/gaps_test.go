@@ -17,13 +17,13 @@ func TestGetCorrectGapsWhenLifelineIsAffectedByAllNoGoZones(t *testing.T) {
 	c := &dsl.Statement{}
 	allLifelines := []*dsl.Statement{a, b, c}
 
-	seg12 := geom.Segment{1, 2}
-	seg56 := geom.Segment{5, 6}
+	seg12 := geom.Segment{Start: 1, End: 2}
+	seg56 := geom.Segment{Start: 5, End: 6}
 
 	// Use two NoGozone(s) between lifelines a and c.
 	nogozones := []interactions.NoGoZone{
-		interactions.NoGoZone{seg12, a, c},
-		interactions.NoGoZone{seg56, a, c},
+		interactions.NewNoGoZone(seg12, a, c),
+		interactions.NewNoGoZone(seg56, a, c),
 	}
 
 	// Lifeline b is affected by these NoGoZone(s) because b lies in between
@@ -47,13 +47,13 @@ func TestGetZeroGapsWhenLifelineIsAffectedByNoneOfTheNoGoZones(t *testing.T) {
 	c := &dsl.Statement{}
 	allLifelines := []*dsl.Statement{a, b, c}
 
-	seg12 := geom.Segment{1, 2}
-	seg56 := geom.Segment{5, 6}
+	seg12 := geom.Segment{Start: 1, End: 2}
+	seg56 := geom.Segment{Start: 5, End: 6}
 
 	// Use two NoGozone(s) between lifelines a and c.
 	nogozones := []interactions.NoGoZone{
-		interactions.NoGoZone{seg12, a, c},
-		interactions.NoGoZone{seg56, a, c},
+		interactions.NewNoGoZone(seg12, a, c),
+		interactions.NewNoGoZone(seg56, a, c),
 	}
 
 	// Lifeline c is not affected by these NoGoZone(s) because c does not lie

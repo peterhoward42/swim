@@ -15,3 +15,9 @@ type NoGoZone struct {
 	OneEndLifeline   *dsl.Statement
 	OtherEndLifeline *dsl.Statement
 }
+
+// NewNoGoZone creates and initialises a NoGoZone
+func NewNoGoZone(height geom.Segment, oneEndLifeline,
+	otherEndLifelone *dsl.Statement) NoGoZone {
+	return NoGoZone{height, oneEndLifeline, otherEndLifelone}
+}

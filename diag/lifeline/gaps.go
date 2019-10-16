@@ -15,7 +15,7 @@ type Gaps struct {
 }
 
 /*
-PopulateFromNoGoZones assembles the gaps that are needed in lifeline, to 
+PopulateFromNoGoZones assembles the gaps that are needed in lifeline, to
 respect noGoZones.
 */
 func (gaps *Gaps) PopulateFromNoGoZones(noGoZones []interactions.NoGoZone,
@@ -23,8 +23,9 @@ func (gaps *Gaps) PopulateFromNoGoZones(noGoZones []interactions.NoGoZone,
 	gaps.Items = []geom.Segment{}
 	for _, noGoZone := range noGoZones {
 		// Does this noGoZone affect lifeline?
-		affectedLifelines := SpanExcl(noGoZone.OneEnd, noGoZone.TheOtherEnd, 
-		allLifelines)
+		affectedLifelines := SpanExcl(noGoZone.OneEndLifeline,
+			noGoZone.OtherEndLifeline,
+			allLifelines)
 		if gaps.lifelineIsAmong(affectedLifelines, lifeline) {
 			gaps.Items = append(gaps.Items, noGoZone.Height)
 		}
@@ -41,4 +42,3 @@ func (gaps *Gaps) lifelineIsAmong(
 	}
 	return false
 }
-

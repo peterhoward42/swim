@@ -67,7 +67,7 @@ func (cr ImageFileCreator) paintBackground() {
 func (cr ImageFileCreator) renderLines() {
 	cr.dc.SetColor(colornames.Black)
 	for _, line := range cr.mdl.Primitives.Lines {
-		cr.setDashStyle(line)
+		cr.setDashStyle(&line)
 		cr.dc.DrawLine(line.P1.X, line.P1.Y, line.P2.X, line.P2.Y)
 		cr.dc.Stroke()
 	}
@@ -76,9 +76,9 @@ func (cr ImageFileCreator) renderLines() {
 func (cr ImageFileCreator) renderPolygons() {
 	cr.dc.SetColor(colornames.Black)
 	for _, poly := range cr.mdl.Primitives.FilledPolys {
-		start := poly.Vertices[0]
+		start := poly[0]
 		cr.dc.MoveTo(start.X, start.Y)
-		for _, vertex := range poly.Vertices {
+		for _, vertex := range poly {
 			cr.dc.LineTo(vertex.X, vertex.Y)
 		}
 		cr.dc.ClosePath()
