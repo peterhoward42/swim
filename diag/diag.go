@@ -1,7 +1,6 @@
 package diag
 
 import (
-	"fmt"
 	"github.com/peterhoward42/umli/dsl"
 	"github.com/peterhoward42/umli/graphics"
 )
@@ -27,9 +26,8 @@ primitives required in its graphicsModel and then returns that model.
 */
 func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 	dd := &DrivingDimensions{}
-	width, fontHeight, err := dd.WidthAndFontHeight(dslModel)
-	if err != nil {
-		return nil, fmt.Errorf("WidthAndFontHeight: %v", err)
-	}
+	width, fontHeight := dd.WidthAndFontHeight(dslModel)
+	_ = width
+	_ = fontHeight
 	return nil, nil
 }

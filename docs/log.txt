@@ -22,13 +22,7 @@ o  sizer
 		   and modules can be split out, attempting tdd as we go
 		 	*  get the whole project to build as a baseline?
 			*  fix lint problems
-			o  fix width and height
-				o  driving dims
-					o  new dslmodel fn
-						o  need unit tests for existing model queries
-							o  create query module
-							o  do tests
-						o  now add SizeFromTextStatement
+			*  fix width and height
 
 	o  find other targets to use sizer
 	o  decide which of now disparate packages to pull back into diag

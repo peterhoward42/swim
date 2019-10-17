@@ -73,3 +73,13 @@ func (m *Model) LifelineIsKnown(name string) bool {
 	_, ok := m.LifelineStatementByName(name)
 	return ok
 }
+
+// SizeFromTextStatement provides the text size specified by the first
+// textsize statement, (or returns ok false if there isn't one).
+func (m *Model) SizeFromTextStatement() (sz float64, ok bool) {
+	s, ok := m.FirstStatementOfType(umli.TextSize)
+	if !ok {
+		return 0, false
+	}
+	return s.TextSize, true
+}
