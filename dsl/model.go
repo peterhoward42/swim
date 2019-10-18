@@ -25,6 +25,18 @@ func (m *Model) Append(s *Statement) {
 }
 
 /*
+AddLifelineLetters alters all the titles for all lifeline statements, by
+inserting a new label segment at the beginning of the existing label segments,
+comprising the lifeline's name (letter).
+*/
+func (m *Model) AddLifelineLetters() {
+	for _, s := range m.LifelineStatements() {
+		addition := []string{"", s.LifelineName}
+		s.LabelSegments = append(s.LabelSegments, addition...)
+	}
+}
+
+/*
 LifelineStatements provides the subset of statements held that are
 *life* statements - in the order in which they appear in the script.
 */
@@ -82,4 +94,14 @@ func (m *Model) SizeFromTextStatement() (sz float64, ok bool) {
 		return 0, false
 	}
 	return s.TextSize, true
+}
+
+// LifelineLettersSupressed returns true if there is an explict don't-show
+// lifeline letters statement
+func (m *Model) LifelineLettersSupressed() bool {
+	s, ok := m.FirstStatementOfType(umli.ShowLetters)
+	if !ok {
+		return false
+	}
+	return !s.ShowLetters
 }

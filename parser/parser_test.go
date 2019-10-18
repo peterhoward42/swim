@@ -157,15 +157,17 @@ func TestItIgnoresBlankLines(t *testing.T) {
 		life B  Core Permissions API
     `).Parse()
 	assert.Nil(err)
-    statements := model.Statements()
+	statements := model.Statements()
 	assert.Len(statements, 2)
 }
 
 func TestItCapturesLabelTextWithNoLineBreaksIn(t *testing.T) {
 	assert := assert.New(t)
-	model, err := NewParser("life A SL App").Parse()
+	model, err := NewParser(`
+	life A SL App
+	showletters false`).Parse()
 	assert.Nil(err)
-    statements := model.Statements()
+	statements := model.Statements()
 	assert.Len(statements[0].LabelSegments, 1)
 	assert.Equal("SL App", statements[0].LabelSegments[0], 1)
 }
@@ -174,8 +176,8 @@ func TestItCapturesLabelTextWithLineBreaksIn(t *testing.T) {
 	assert := assert.New(t)
 	model, err := NewParser("life A  The quick | brown fox | etc").Parse()
 	assert.Nil(err)
-    statements := model.Statements()
-	assert.Len(statements[0].LabelSegments, 3)
+	statements := model.Statements()
+	assert.Len(statements[0].LabelSegments, 5)
 	// Note we check not only the splitting but also that each
 	// segment is trimmed of whitespace.
 	assert.Equal("The quick", statements[0].LabelSegments[0])
@@ -202,7 +204,7 @@ func TestMakeSureARepresentativeStatementOutputIsProperlyFormed(t *testing.T) {
 	assert.Nil(err)
 
 	// full CB  get_user_permissions( | token)
-    statements := model.Statements()
+	statements := model.Statements()
 	s := statements[7]
 	assert.Equal("full", s.Keyword)
 	assert.Equal("C", s.ReferencedLifelines[0].LifelineName)
@@ -239,7 +241,7 @@ func TestWellFormedTextSizeIsParsedCorrectly(t *testing.T) {
 	assert := assert.New(t)
 	model, err := NewParser("textsize 10").Parse()
 	assert.NoError(err)
-    statements := model.Statements()
+	statements := model.Statements()
 	s := statements[0]
 	expected := 10.0
 	assert.Equal(expected, s.TextSize)
@@ -254,16 +256,45 @@ func TestErrorsForMalformedShowLetters(t *testing.T) {
 
 func TestWellFormedShowLettersIsParsedCorrectly(t *testing.T) {
 	assert := assert.New(t)
-	
+
 	model, err := NewParser("showletters true").Parse()
 	assert.NoError(err)
-    statements := model.Statements()
+	statements := model.Statements()
 	s := statements[0]
 	assert.True(s.ShowLetters)
 
 	model, err = NewParser("showletters false").Parse()
 	assert.NoError(err)
-    statements = model.Statements()
+	statements = model.Statements()
 	s = statements[0]
 	assert.False(s.ShowLetters)
+}
+
+func TestLifelineTitlesGetLettersWhenShowLettersIsTrue(t *testing.T) {
+	assert := assert.New(t)
+	model, err := NewParser(`
+		life A foo
+		showletters true`).Parse()
+	assert.NoError(err)
+	lifeline := model.Statements()[0]
+	assert.Equal("A", lifeline.LabelSegments[2])
+}
+
+func TestLifelineTitlesOmitLettersWhenShowLettersIsFalse(t *testing.T) {
+	assert := assert.New(t)
+	model, err := NewParser(`
+		life A foo
+		showletters false`).Parse()
+	assert.NoError(err)
+	lifeline := model.Statements()[0]
+	assert.Equal(lifeline.LabelSegments[0], "foo")
+}
+
+func TestLifelineTitlesGetLettersWhenShowLettersIsOmitted(t *testing.T) {
+	assert := assert.New(t)
+	model, err := NewParser(`
+		life A foo`).Parse()
+	assert.NoError(err)
+	lifeline := model.Statements()[0]
+	assert.Equal("A", lifeline.LabelSegments[2])
 }

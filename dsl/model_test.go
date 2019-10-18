@@ -99,6 +99,36 @@ func TestTextSizeWhenNotPresent(t *testing.T) {
 	assert.False(ok)
 }
 
+func TestLifelineLettersSupressed(t *testing.T) {
+	assert := assert.New(t)
+	m := Model{
+		statements: []*Statement{&Statement{
+			Keyword:     umli.ShowLetters,
+			ShowLetters: true,
+		}}}
+	assert.False(m.LifelineLettersSupressed())
+
+	m = Model{
+		statements: []*Statement{&Statement{
+			Keyword:     umli.ShowLetters,
+			ShowLetters: false,
+		}}}
+	assert.True(m.LifelineLettersSupressed())
+}
+
+func TestAddLifelineLetters(t *testing.T) {
+	assert := assert.New(t)
+	m := Model{
+		statements: []*Statement{&Statement{
+			Keyword:     umli.Life,
+			LifelineName: "A",
+			LabelSegments: []string{"foo"},
+		}}}
+	m.AddLifelineLetters()
+	assert.Len(m.Statements()[0].LabelSegments, 3)
+	assert.Equal("A", m.Statements()[0].LabelSegments[2])
+}
+
 func makeStatement(name string, statementType string) *Statement {
 	s := NewStatement()
 	s.Keyword = statementType

@@ -51,6 +51,7 @@ func (p *Parser) Parse() (*dsl.Model, error) {
 	if err := scanner.Err(); err != nil {
 		return nil, err
 	}
+	p.addOptionalLifelineLetters()
 	return &p.model, nil
 }
 
@@ -260,6 +261,18 @@ func (p *Parser) removeStrings(line string, stringsToRemove ...string) string {
 		line = strings.Replace(line, s, "", 1)
 	}
 	return strings.TrimSpace(line)
+}
+
+/*
+addOptionalLifelineLetters mutates the labels the lifeline labels in the
+already-populated p.model to add the lifeline letter as a prefix, unless there
+is a dsl command present to turn this behaviour off.
+*/
+func (p *Parser) addOptionalLifelineLetters() {
+	if p.model.LifelineLettersSupressed() {
+		return
+	}
+	p.model.AddLifelineLetters()
 }
 
 var singleUCLetter = re.MustCompile(`^[A-Z]$`)

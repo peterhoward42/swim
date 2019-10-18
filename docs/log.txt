@@ -23,7 +23,10 @@ o  sizer
 		 	*  get the whole project to build as a baseline?
 			*  fix lint problems
 			*  fix width and height
+			*  test that just exercises Create method
+			*  push show letters behaviour into parser / dsl.Model
 
+	o  wean off reference input?
 	o  find other targets to use sizer
 	o  decide which of now disparate packages to pull back into diag
 	o  fix up all existing places that use old sizer without trying torefactor
