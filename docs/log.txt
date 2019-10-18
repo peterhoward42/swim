@@ -25,6 +25,8 @@ o  sizer
 			*  fix width and height
 			*  test that just exercises Create method
 			*  push show letters behaviour into parser / dsl.Model
+			*  make a sizer and check with diag integ test
+			*  call framemaker from create
 
 	o  wean off reference input?
 	o  find other targets to use sizer

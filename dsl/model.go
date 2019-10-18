@@ -96,6 +96,18 @@ func (m *Model) SizeFromTextStatement() (sz float64, ok bool) {
 	return s.TextSize, true
 }
 
+/*
+Title provides the title specified in a title statement or
+[]string{"Title Unspecified"}
+*/
+func (m *Model) Title() []string {
+	s, ok := m.FirstStatementOfType(umli.Title)
+	if !ok {
+		return []string{"Title Unspecified"}
+	}
+	return s.LabelSegments
+}
+
 // LifelineLettersSupressed returns true if there is an explict don't-show
 // lifeline letters statement
 func (m *Model) LifelineLettersSupressed() bool {

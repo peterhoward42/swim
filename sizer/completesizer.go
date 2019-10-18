@@ -47,10 +47,12 @@ var table = map[string]float64{
 	// Whole diagram scope
 	"DiagramPadT": 1.0,
 	"DiagramPadB": 1.0,
+	"FontHeight":  1.0, // By definition!
 
 	// Outer frame and diagram title
 	"FramePadLR":         0.5,
 	"FrameInternalPadB":  1.0,
+	"FrameTitleBoxWidth": 100.0,
 	"FrameTitleTextPadT": 0.5,
 	"FrameTitleTextPadB": 1.0,
 	"FrameTitleTextPadL": 1.0,

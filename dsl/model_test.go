@@ -129,6 +129,27 @@ func TestAddLifelineLetters(t *testing.T) {
 	assert.Equal("A", m.Statements()[0].LabelSegments[2])
 }
 
+func TestTitle(t *testing.T) {
+	assert := assert.New(t)
+	m := Model{
+		statements: []*Statement{
+			&Statement{
+				Keyword:     umli.Title,
+				LabelSegments : []string{"aTitle"},
+			},
+		},
+	}
+	title := m.Title()[0]
+	assert.Equal("aTitle", title)
+
+	m = Model{
+		statements: []*Statement{
+		},
+	}
+	title = m.Title()[0]
+	assert.Equal("Title Unspecified", title)
+}
+
 func makeStatement(name string, statementType string) *Statement {
 	s := NewStatement()
 	s.Keyword = statementType

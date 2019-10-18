@@ -9,10 +9,10 @@ import (
 
 func TestCreateRunsWithoutCrashing(t *testing.T) {
 	assert := assert.New(t)
-	cr, err := NewCreator()
+	creator, err := NewCreator()
 	assert.NoError(err)
 	var dslModel dsl.Model
-	graphicsModel, err := cr.Create(dslModel)
+	graphicsModel, err := creator.Create(dslModel)
 	_ = graphicsModel
 	assert.NoError(err)
 }

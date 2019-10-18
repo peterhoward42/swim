@@ -1,8 +1,10 @@
 package diag
 
 import (
+	"github.com/peterhoward42/umli/diag/frame"
 	"github.com/peterhoward42/umli/dsl"
 	"github.com/peterhoward42/umli/graphics"
+	"github.com/peterhoward42/umli/sizer"
 )
 
 /*
@@ -25,9 +27,19 @@ It orchestrates a multi-pass creation process which accumulates the graphics
 primitives required in its graphicsModel and then returns that model.
 */
 func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
-	drivers := &DrivingDimensions{}
-	width, fontHeight := drivers.WidthAndFontHeight(dslModel)
-	_ = width
-	_ = fontHeight	
+	width, fontHeight := DrivingDimensions{}.WidthAndFontHeight(dslModel)
+	sizer := sizer.NewCompleteSizer(width, fontHeight)
+
+	graphicsModel := graphics.NewModel(
+		width, fontHeight,
+		sizer.Get("DashLineDashLen"),
+		sizer.Get("DashLineDashGap"))
+	prims := graphicsModel.Primitives
+
+	frameMaker := frame.NewMaker(sizer, prims)
+	tideMark := frameMaker.InitFrameAndMakeTitleBox(dslModel.Title(),
+		sizer.Get("DiagramPadT"))
+	_ = tideMark
+
 	return nil, nil
 }
