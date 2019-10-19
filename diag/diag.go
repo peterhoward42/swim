@@ -2,6 +2,7 @@ package diag
 
 import (
 	"github.com/peterhoward42/umli/diag/frame"
+	"github.com/peterhoward42/umli/diag/lifeline"
 	"github.com/peterhoward42/umli/dsl"
 	"github.com/peterhoward42/umli/graphics"
 	"github.com/peterhoward42/umli/sizer"
@@ -39,6 +40,14 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 	frameMaker := frame.NewMaker(sizer, prims)
 	tideMark := frameMaker.InitFrameAndMakeTitleBox(dslModel.Title(),
 		sizer.Get("DiagramPadT"))
+
+	lifelines := dslModel.LifelineStatements()
+
+	tideMark = lifeline.TitleBoxes{}.Make(tideMark, lifelines, &prims)
+
+	lifelineSpacing := lifeline.NewSpacing(sizer, lifelines)
+
+	_ = lifelineSpacing
 	_ = tideMark
 
 	return nil, nil

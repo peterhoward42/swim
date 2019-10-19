@@ -19,26 +19,37 @@ boxes and as margins at the left and right edge of the diagram.
 type Spacing struct {
 	sizer     sizer.Sizer
 	lifelines []*dsl.Statement
+	drivingValues drivingValues
 }
 
 // NewSpacing  provides a Spacing  ready to use.
 func NewSpacing(sizer sizer.Sizer, lifelines []*dsl.Statement) *Spacing {
-	return &Spacing{
+	spacer := &Spacing{
 		sizer:     sizer,
 		lifelines: lifelines,
 	}
+	spacer.setDrivingValues()
+	return spacer
+}
+
+type TitleBoxXCoords struct {
+	Left float64
+	Centre float64
+	Right float64
 }
 
 /*
 CentreLine provides the X coordinate for the centreline of lifeline.
 */
-func (s Spacing) CentreLine(lifeline *dsl.Statement) (float64, error) {
-	dv := s.calcDrivingValues()
+func (s Spacing) CentreLine(lifeline *dsl.Statement) (*TitleBoxXCoords, error) {
 	num, err := s.lifelineNumber(lifeline)
 	if err != nil {
-		return 0, fmt.Errorf("lifelineNumber: %v", err)
+		return nil, fmt.Errorf("lifelineNumber: %v", err)
 	}
-	return (float64(num)+1)*dv.titleBoxGutter + (float64(num)+0.5)*dv.titleBoxWidth, nil
+	dv := s.drivingValues
+	centre :=(float64(num)+1)*dv.titleBoxGutter + (float64(num)+0.5)*dv.titleBoxWidth
+	delta := dv.titleBoxWidth / 2.0
+	return &TitleBoxXCoords{centre - delta, centre, centre + delta}, nil
 }
 
 /*
@@ -52,30 +63,28 @@ type drivingValues struct {
 }
 
 /*
-calcDrivingValues calculates the values that other spacing decisions are derived
+setDrivingValues calculates the values that other spacing decisions are derived
 from. They include trying to use an optimal looking width for lifeline title
 boxes, but backtracking when this would make the gutter between the title boxes
 too small and reducing the size of the title boxes such that a minimum gutter
 of one font height is preserved.
 */
-func (s *Spacing) calcDrivingValues() drivingValues {
-	var dv drivingValues
-	dv.titleBoxWidth = s.sizer.Get("IdealLifelineTitleBoxWidth")
+func (s *Spacing) setDrivingValues() {
+	s.drivingValues.titleBoxWidth = s.sizer.Get("IdealLifelineTitleBoxWidth")
 	n := len(s.lifelines)
 	diagWidth := s.sizer.Get("DiagWidth")
-	spaceAvail := diagWidth - dv.titleBoxWidth*float64(n)
+	spaceAvail := diagWidth - s.drivingValues.titleBoxWidth*float64(n)
 	nGuttersRequired := n + 1
-	dv.titleBoxGutter = spaceAvail / float64(nGuttersRequired)
+	s.drivingValues.titleBoxGutter = spaceAvail / float64(nGuttersRequired)
 
 	// But if that has that made the gutter too small, or even negative,
 	// make the boxes less wide to preserve a minimum gutter equal to
 	// one font height.
 	fontHt := s.sizer.Get("FontHt")
-	if dv.titleBoxGutter < fontHt {
-		dv.titleBoxGutter = fontHt
-		dv.titleBoxWidth = diagWidth - float64(n+1)*dv.titleBoxGutter/float64(n)
+	if s.drivingValues.titleBoxGutter < fontHt {
+		s.drivingValues.titleBoxGutter = fontHt
+		s.drivingValues.titleBoxWidth = diagWidth - float64(n+1)*s.drivingValues.titleBoxGutter/float64(n)
 	}
-	return dv
 }
 
 func (s *Spacing) lifelineNumber(lifeline *dsl.Statement) (int, error) {

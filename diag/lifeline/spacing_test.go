@@ -29,9 +29,11 @@ func TestCentreLineCanonicalCase(t *testing.T) {
 	lifelines := []*dsl.Statement{lifelineA, lifelineB}
 
 	spacing := NewSpacing(sizer, lifelines)
-	x, err := spacing.CentreLine(lifelineB)
+	boxXCoords, err := spacing.CentreLine(lifelineB)
 	assert.NoError(err)
-	assert.Equal(550.0, x)
+	assert.Equal(500.0, boxXCoords.Left)
+	assert.Equal(550.0, boxXCoords.Centre)
+	assert.Equal(600.0, boxXCoords.Right)
 }
 
 /*
@@ -56,9 +58,11 @@ func TestCentreLineSquashedCase(t *testing.T) {
 	lifelines := []*dsl.Statement{lifelineA, lifelineB}
 
 	spacing := NewSpacing(sizer, lifelines)
-	x, err := spacing.CentreLine(lifelineB)
+	boxXCoords, err := spacing.CentreLine(lifelineB)
 	assert.NoError(err)
-	assert.Equal(1195.0, x)
+	assert.Equal(810.0, boxXCoords.Left)
+	assert.Equal(1195.0, boxXCoords.Centre)
+	assert.Equal(1580.0, boxXCoords.Right)
 }
 
 /*
@@ -81,7 +85,9 @@ func TestCentreLineCornerCaseOfOneLifeline(t *testing.T) {
 	lifelines := []*dsl.Statement{lifelineA}
 
 	spacing := NewSpacing(sizer, lifelines)
-	x, err := spacing.CentreLine(lifelineA)
+	boxXCoords, err := spacing.CentreLine(lifelineA)
 	assert.NoError(err)
-	assert.Equal(400.0, x)
+	assert.Equal(350.0, boxXCoords.Left)
+	assert.Equal(400.0, boxXCoords.Centre)
+	assert.Equal(450.0, boxXCoords.Right)
 }
