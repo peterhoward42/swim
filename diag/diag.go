@@ -5,6 +5,7 @@ import (
 
 	"github.com/peterhoward42/umli/diag/frame"
 	"github.com/peterhoward42/umli/diag/lifeline"
+	"github.com/peterhoward42/umli/diag/interactions"
 	"github.com/peterhoward42/umli/dsl"
 	"github.com/peterhoward42/umli/graphics"
 	"github.com/peterhoward42/umli/sizer"
@@ -50,7 +51,11 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 		return nil, fmt.Errorf("titleBoxes.Make: %v", err)
 	}
 
+	makerDependencies := interactions.MakerDependencies{}
+	interactionsMaker := interactions.NewMaker(&makerDependencies, graphicsModel)
+
 	_ = tideMark
+	_ = interactionsMaker
 
 	return nil, nil
 }

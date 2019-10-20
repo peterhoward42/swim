@@ -22,14 +22,14 @@ func TestSmallestViableExampleExhaustively(t *testing.T) {
 	lifelines := []*dsl.Statement{lifeline}
 
 	sizer := sizer.NewLiteralSizer(map[string]float64{
-		"DiagWidth":                  2000,
 		"IdealLifelineTitleBoxWidth": 200.0,
 		"TitleBoxLabelPadB":          2,
 		"TitleBoxLabelPadT":          5,
 		"TitleBoxPadB":               3,
 	})
 	fontHeight := 6.0
-	spacer := NewSpacing(sizer, fontHeight, lifelines)
+	diagWidth := 2000.0
+	spacer := NewSpacing(sizer, fontHeight, diagWidth, lifelines)
 	tideMark := 10.0
 	prims := graphics.NewPrimitives()
 	titleBoxes := NewTitleBoxes(sizer, spacer, lifelines, fontHeight)
@@ -69,14 +69,14 @@ func TestIsConsumingMultipleLifelinesProperly(t *testing.T) {
 	}
 	lifelines := []*dsl.Statement{lifelineA}
 	sizer := sizer.NewLiteralSizer(map[string]float64{
-		"DiagWidth":                  2000,
 		"IdealLifelineTitleBoxWidth": 200.0,
 		"TitleBoxLabelPadB":          2,
 		"TitleBoxLabelPadT":          5,
 		"TitleBoxPadB":               3,
 	})
 	fontHeight := 6.0
-	spacer := NewSpacing(sizer, fontHeight, lifelines)
+	diagWidth := 2000.0
+	spacer := NewSpacing(sizer, fontHeight, diagWidth, lifelines)
 	tideMark := 10.0
 	prims := graphics.NewPrimitives()
 	titleBoxes := NewTitleBoxes(sizer, spacer, lifelines, fontHeight)
@@ -95,7 +95,7 @@ func TestIsConsumingMultipleLifelinesProperly(t *testing.T) {
 		LabelSegments: []string{"foo"},
 	}
 	lifelines = []*dsl.Statement{lifelineA, lifelineB}
-	spacer = NewSpacing(sizer, fontHeight, lifelines)
+	spacer = NewSpacing(sizer, fontHeight, diagWidth, lifelines)
 	tideMark = 10.0
 	prims = graphics.NewPrimitives()
 	titleBoxes = NewTitleBoxes(sizer, spacer, lifelines, fontHeight)

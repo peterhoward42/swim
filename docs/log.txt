@@ -27,17 +27,16 @@ o  sizer
 			*  push show letters behaviour into parser / dsl.Model
 			*  make a sizer and check with diag integ test
 			*  call framemaker from create
-			o  construct lifeline spacer
-				*  change lifeline.TitleBox to being plural and bound to
-				   n lifelines not just one, with height method for worst
-				   case
-				  	*  spacing centreline upgrade to return TitleBoxXCoords
-					*  prims (or model) needs ContainsLabel
-					*  test newtidemark
-						*  change HeightRequiredForLabels to return
-						   total height and labels height
-					*  test for new logic when > 1 lifeline?
-				*  no inject spacer and fontHeight into components
+			*  construct lifeline spacer
+			o  interactions maker
+				*  switch over nascent scanner code
+				*  give it a make method
+				*  tdd runs withtout crashing from diag test
+				o  switch to tdd of make method
+					o  runs without crashing
+					o  with single full does something
+				o  revert to making sure works from diag.Create
+				o  what tests possible from diag.Create?
 
 
 	o  wean off reference input?
