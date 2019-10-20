@@ -12,6 +12,21 @@ import (
 TitleBoxes knows how to draw the lifeline title boxes
 */
 type TitleBoxes struct {
+	sizer      sizer.Sizer
+	spacer     *Spacing
+	lifelines  []*dsl.Statement
+	fontHeight float64
+}
+
+// NewTitleBoxes creates a TitleBoxes ready to use.
+func NewTitleBoxes(sizer sizer.Sizer, lifelineSpacing *Spacing, lifelines []*dsl.Statement,
+	fontHeight float64) *TitleBoxes {
+	return &TitleBoxes{
+		sizer:      sizer,
+		spacer:     lifelineSpacing,
+		lifelines:  lifelines,
+		fontHeight: fontHeight,
+	}
 }
 
 /*
@@ -20,20 +35,18 @@ title boxes, and adds them to prims.
 */
 func (tbx TitleBoxes) Make(
 	currentTideMark float64,
-	lifelines []*dsl.Statement,
-	sizer sizer.Sizer,
-	spacer *Spacing,
 	prims *graphics.Primitives) (newTideMark float64, err error) {
 
-	labelHeight := tbx.HeightRequiredForLabels(sizer, lifelines)
-	for _, life := range lifelines {
-		err := tbx.MakeOne(life, currentTideMark, labelHeight,
-			sizer, spacer, prims)
+	totalHeight, forLabelsHeight := tbx.Height()
+	for _, life := range tbx.lifelines {
+		err := tbx.MakeOne(life, currentTideMark, totalHeight, forLabelsHeight,
+			prims)
 		if err != nil {
 			return -1.0, fmt.Errorf("MakeOne: %v", err)
 		}
 	}
-	return -1.0, nil
+	newTideMark = currentTideMark + totalHeight + tbx.sizer.Get("TitleBoxPadB")
+	return newTideMark, nil
 }
 
 /*
@@ -43,44 +56,39 @@ for lifeline and adds them to prims.
 func (tbx TitleBoxes) MakeOne(
 	lifeline *dsl.Statement,
 	topOfBox float64,
+	totalHeight float64,
 	labelHeight float64,
-	sizer sizer.Sizer,
-	spacing *Spacing,
 	prims *graphics.Primitives) error {
 
-	titleBoxXCoords, err := spacing.CentreLine(lifeline)
+	titleBoxXCoords, err := tbx.spacer.CentreLine(lifeline)
 	if err != nil {
 		return fmt.Errorf("spacing.CentreLine: %v", err)
 	}
-	bottom := topOfBox + labelHeight + sizer.Get("TitleBoxLabelPadT") + sizer.Get("TitleBoxLabelPadB")
+
+	// Make the rectangle.
+	bottom := topOfBox + totalHeight
 	prims.AddRect(titleBoxXCoords.Left, topOfBox, titleBoxXCoords.Right, bottom)
 
-	_ = titleBoxXCoords
+	// Make the strings.
+	topRowOfTextY := bottom - tbx.sizer.Get("TitleBoxLabelPadB") - labelHeight
+	prims.RowOfStrings(titleBoxXCoords.Centre, topRowOfTextY,
+		tbx.fontHeight, graphics.Centre, lifeline.LabelSegments)
+
 	return nil
 }
 
 /*
-HeightRequiredForLabels provides the vertical space required for the lifeline
+Height provides the height required for the titlebox, based on the lifeline
 with the most label segments.
 */
-func (tbx TitleBoxes) HeightRequiredForLabels(
-	sizer sizer.Sizer, lifelines []*dsl.Statement) float64 {
+func (tbx TitleBoxes) Height() (overallHeight, forLabels float64) {
 	var maxN int
-	for _, s := range lifelines {
+	for _, s := range tbx.lifelines {
 		if len(s.LabelSegments) > maxN {
 			maxN = len(s.LabelSegments)
 		}
 	}
-	return float64(maxN) * sizer.Get("FontHt")
+	forLabels = float64(maxN) * tbx.fontHeight
+	overallHeight = forLabels + tbx.sizer.Get("TitleBoxLabelPadT") + tbx.sizer.Get("TitleBoxLabelPadB")
+	return overallHeight, forLabels
 }
-
-/*
-// Height provides the height of the title box.
-func (tb *TitleBox) Height(sizer sizer.Sizer) float64 {
-	n := len(tb.lifeline.LabelSegments)
-	topMargin := sizer.Get("TitleBoxLabelPadT")
-	botMargin := sizer.Get("TitleBoxLabelPadB")
-	ht := topMargin + botMargin + float64(n)*sizer.Get("FontHeight")
-	return ht
-}
-*/

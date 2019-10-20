@@ -20,7 +20,6 @@ func TestCentreLineCanonicalCase(t *testing.T) {
 
 	sizer := sizer.NewLiteralSizer(map[string]float64{
 		"DiagWidth":                  800,
-		"FontHt":                     20,
 		"IdealLifelineTitleBoxWidth": 100.0,
 	})
 
@@ -28,7 +27,8 @@ func TestCentreLineCanonicalCase(t *testing.T) {
 	lifelineB := &dsl.Statement{}
 	lifelines := []*dsl.Statement{lifelineA, lifelineB}
 
-	spacing := NewSpacing(sizer, lifelines)
+	fontHeight := 20.0
+	spacing := NewSpacing(sizer, fontHeight, lifelines)
 	boxXCoords, err := spacing.CentreLine(lifelineB)
 	assert.NoError(err)
 	assert.Equal(500.0, boxXCoords.Left)
@@ -49,7 +49,6 @@ func TestCentreLineSquashedCase(t *testing.T) {
 
 	sizer := sizer.NewLiteralSizer(map[string]float64{
 		"DiagWidth":                  800,
-		"FontHt":                     20,
 		"IdealLifelineTitleBoxWidth": 99999999.0,
 	})
 
@@ -57,7 +56,8 @@ func TestCentreLineSquashedCase(t *testing.T) {
 	lifelineB := &dsl.Statement{}
 	lifelines := []*dsl.Statement{lifelineA, lifelineB}
 
-	spacing := NewSpacing(sizer, lifelines)
+	fontHeight := 20.0
+	spacing := NewSpacing(sizer, fontHeight, lifelines)
 	boxXCoords, err := spacing.CentreLine(lifelineB)
 	assert.NoError(err)
 	assert.Equal(810.0, boxXCoords.Left)
@@ -77,14 +77,14 @@ func TestCentreLineCornerCaseOfOneLifeline(t *testing.T) {
 
 	sizer := sizer.NewLiteralSizer(map[string]float64{
 		"DiagWidth":                  800,
-		"FontHt":                     20,
 		"IdealLifelineTitleBoxWidth": 100.0,
 	})
 
 	lifelineA := &dsl.Statement{}
 	lifelines := []*dsl.Statement{lifelineA}
 
-	spacing := NewSpacing(sizer, lifelines)
+	fontHeight := 20.0
+	spacing := NewSpacing(sizer, fontHeight, lifelines)
 	boxXCoords, err := spacing.CentreLine(lifelineA)
 	assert.NoError(err)
 	assert.Equal(350.0, boxXCoords.Left)

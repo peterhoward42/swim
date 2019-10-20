@@ -27,11 +27,18 @@ o  sizer
 			*  push show letters behaviour into parser / dsl.Model
 			*  make a sizer and check with diag integ test
 			*  call framemaker from create
-			*  construct lifeline spacer
-				o  change lifeline.TitleBox to being plural and bound to
+			o  construct lifeline spacer
+				*  change lifeline.TitleBox to being plural and bound to
 				   n lifelines not just one, with height method for worst
 				   case
-				  	o  spacing centreline upgrade to return TitleBoxXCoords
+				  	*  spacing centreline upgrade to return TitleBoxXCoords
+					*  prims (or model) needs ContainsLabel
+					*  test newtidemark
+						*  change HeightRequiredForLabels to return
+						   total height and labels height
+					*  test for new logic when > 1 lifeline?
+				*  no inject spacer and fontHeight into components
+
 
 	o  wean off reference input?
 	o  find other targets to use sizer

@@ -21,7 +21,6 @@ func TestInitializeStep(t *testing.T) {
 	_ = assert
 
 	sizer := sizer.NewLiteralSizer(map[string]float64{
-		"FontHeight":         6,
 		"FramePadLR":         11,
 		"FrameTitleBoxWidth": 200,
 		"FrameTitleRectPadB": 2,
@@ -30,8 +29,8 @@ func TestInitializeStep(t *testing.T) {
 		"FrameTitleTextPadT": 5,
 	})
 	prims := graphics.NewPrimitives()
-
-	maker := NewMaker(sizer, prims)
+	fontHeight := 6.0
+	maker := NewMaker(sizer, fontHeight, prims)
 	frameTop := 5.0
 	title := "My title"
 	tideMark := maker.InitFrameAndMakeTitleBox([]string{title}, frameTop)
@@ -49,7 +48,7 @@ func TestInitializeStep(t *testing.T) {
 	// Title Rect
 	assert.Len(prims.Lines, 4)
 	tl := graphics.Point{X: 11, Y: 5}
-	br := graphics.Point{X:200, Y:23}
+	br := graphics.Point{X: 200, Y: 23}
 	assert.True(prims.ContainsRect(tl, br))
 
 	// Tidemark
@@ -69,11 +68,11 @@ func TestFinalizeStep(t *testing.T) {
 
 	sizer := sizer.NewLiteralSizer(map[string]float64{
 		"FrameInternalPadB": 5,
-		"FramePadLR": 7,
+		"FramePadLR":        7,
 	})
 	prims := graphics.NewPrimitives()
-
-	maker := NewMaker(sizer, prims)
+	unusedFontHeight := 9999999999.0
+	maker := NewMaker(sizer, unusedFontHeight, prims)
 	initialTideMark := 200.0
 	diagWidth := 500.0
 
@@ -83,7 +82,7 @@ func TestFinalizeStep(t *testing.T) {
 	// Title Rect
 	assert.Len(prims.Lines, 4)
 	tl := graphics.Point{X: 7, Y: 10}
-	br := graphics.Point{X:493, Y:205}
+	br := graphics.Point{X: 493, Y: 205}
 	assert.True(prims.ContainsRect(tl, br))
 
 	// Tidemark

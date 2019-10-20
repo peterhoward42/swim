@@ -12,14 +12,17 @@ graphics.Primitives structure.
 type Maker struct {
 	sizer    sizer.Sizer
 	frameTop float64
+	fontHeight float64
 	prims    *graphics.Primitives
 }
 
 // NewMaker provides a lifelineBoxes ready to use.
-func NewMaker(s sizer.Sizer, prims *graphics.Primitives) *Maker {
+func NewMaker(
+	s sizer.Sizer, fontHeight float64, prims *graphics.Primitives) *Maker {
 	return &Maker{
 		sizer: s,
 		prims: prims,
+		fontHeight: fontHeight,
 	}
 }
 
@@ -36,8 +39,8 @@ func (fm *Maker) InitFrameAndMakeTitleBox(titleSegments []string,
 	topOfTitleTextY := tideMark
 	leftOfText := fm.sizer.Get("FramePadLR") + fm.sizer.Get("FrameTitleTextPadL")
 	fm.prims.RowOfStrings(leftOfText, topOfTitleTextY,
-		fm.sizer.Get("FontHeight"), graphics.Left, titleSegments)
-	tideMark += float64(len(titleSegments)) * fm.sizer.Get("FontHeight")
+		fm.fontHeight, graphics.Left, titleSegments)
+	tideMark += float64(len(titleSegments)) * fm.fontHeight
 	tideMark += fm.sizer.Get("FrameTitleTextPadB")
 	rightOfFrameTitleBox := fm.sizer.Get("FrameTitleBoxWidth")
 	fm.prims.AddRect(fm.sizer.Get("FramePadLR"), fm.frameTop,

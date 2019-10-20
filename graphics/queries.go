@@ -46,3 +46,14 @@ func (p *Primitives) ContainsLine(line Line) bool {
 	}
 	return false
 }
+
+// ContainsLabel evaluates if the primitives contain a label matching
+// label.
+func (p *Primitives) ContainsLabel(label Label) bool {
+	for _, x := range p.Labels {
+		if x == label {
+			return true
+		}
+	}
+	return false
+}

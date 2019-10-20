@@ -1,6 +1,8 @@
 package diag
 
 import (
+	"fmt"
+
 	"github.com/peterhoward42/umli/diag/frame"
 	"github.com/peterhoward42/umli/diag/lifeline"
 	"github.com/peterhoward42/umli/dsl"
@@ -36,18 +38,18 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 		sizer.Get("DashLineDashLen"),
 		sizer.Get("DashLineDashGap"))
 	prims := graphicsModel.Primitives
-
-	frameMaker := frame.NewMaker(sizer, prims)
+	frameMaker := frame.NewMaker(sizer, fontHeight, prims)
 	tideMark := frameMaker.InitFrameAndMakeTitleBox(dslModel.Title(),
 		sizer.Get("DiagramPadT"))
 
 	lifelines := dslModel.LifelineStatements()
+	lifelineSpacing := lifeline.NewSpacing(sizer, fontHeight, width, lifelines)
+	titleBoxes := lifeline.NewTitleBoxes(sizer, lifelineSpacing, lifelines, fontHeight)
+	tideMark, err := titleBoxes.Make(tideMark, prims)
+	if err != nil {
+		return nil, fmt.Errorf("titleBoxes.Make: %v", err)
+	}
 
-	tideMark = lifeline.TitleBoxes{}.Make(tideMark, lifelines, &prims)
-
-	lifelineSpacing := lifeline.NewSpacing(sizer, lifelines)
-
-	_ = lifelineSpacing
 	_ = tideMark
 
 	return nil, nil

@@ -68,3 +68,22 @@ func TestContainsRect(t *testing.T) {
 	present = p.ContainsRect(Point{left + 0.1, top}, Point{right, bot})
 	assert.False(present)
 }
+
+
+func TestContainsLabel(t *testing.T) {
+	assert := assert.New(t)
+
+	p := NewPrimitives()
+	p.AddLabel("foo", 3.0, 600.0, 200.0, Left, Top)
+
+	label := Label{
+		TheString: "foo",
+		FontHeight: 3.0,
+		Anchor: Point{X:600, Y:200},
+		HJust: Left,
+		VJust: Top,
+	}
+	assert.True(p.ContainsLabel(label))
+	label.Anchor.X += 1
+	assert.False(p.ContainsLabel(label))
+}

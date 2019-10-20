@@ -17,25 +17,30 @@ across the width of the diagram. It uses the same gap (gutter) between these
 boxes and as margins at the left and right edge of the diagram.
 */
 type Spacing struct {
-	sizer     sizer.Sizer
-	lifelines []*dsl.Statement
+	sizer         sizer.Sizer
+	fontHeight    float64
+	diagWidth float64
+	lifelines     []*dsl.Statement
 	drivingValues drivingValues
 }
 
 // NewSpacing  provides a Spacing  ready to use.
-func NewSpacing(sizer sizer.Sizer, lifelines []*dsl.Statement) *Spacing {
+func NewSpacing(sizer sizer.Sizer, fontHeight float64, diagWidth float64,
+	lifelines []*dsl.Statement) *Spacing {
 	spacer := &Spacing{
-		sizer:     sizer,
-		lifelines: lifelines,
+		sizer:      sizer,
+		lifelines:  lifelines,
+		fontHeight: fontHeight,
+		diagWidth: diagWidth,
 	}
 	spacer.setDrivingValues()
 	return spacer
 }
 
 type TitleBoxXCoords struct {
-	Left float64
+	Left   float64
 	Centre float64
-	Right float64
+	Right  float64
 }
 
 /*
@@ -47,7 +52,7 @@ func (s Spacing) CentreLine(lifeline *dsl.Statement) (*TitleBoxXCoords, error) {
 		return nil, fmt.Errorf("lifelineNumber: %v", err)
 	}
 	dv := s.drivingValues
-	centre :=(float64(num)+1)*dv.titleBoxGutter + (float64(num)+0.5)*dv.titleBoxWidth
+	centre := (float64(num)+1)*dv.titleBoxGutter + (float64(num)+0.5)*dv.titleBoxWidth
 	delta := dv.titleBoxWidth / 2.0
 	return &TitleBoxXCoords{centre - delta, centre, centre + delta}, nil
 }
@@ -72,18 +77,16 @@ of one font height is preserved.
 func (s *Spacing) setDrivingValues() {
 	s.drivingValues.titleBoxWidth = s.sizer.Get("IdealLifelineTitleBoxWidth")
 	n := len(s.lifelines)
-	diagWidth := s.sizer.Get("DiagWidth")
-	spaceAvail := diagWidth - s.drivingValues.titleBoxWidth*float64(n)
+	spaceAvail := s.diagWidth - s.drivingValues.titleBoxWidth*float64(n)
 	nGuttersRequired := n + 1
 	s.drivingValues.titleBoxGutter = spaceAvail / float64(nGuttersRequired)
 
 	// But if that has that made the gutter too small, or even negative,
 	// make the boxes less wide to preserve a minimum gutter equal to
 	// one font height.
-	fontHt := s.sizer.Get("FontHt")
-	if s.drivingValues.titleBoxGutter < fontHt {
-		s.drivingValues.titleBoxGutter = fontHt
-		s.drivingValues.titleBoxWidth = diagWidth - float64(n+1)*s.drivingValues.titleBoxGutter/float64(n)
+	if s.drivingValues.titleBoxGutter < s.fontHeight {
+		s.drivingValues.titleBoxGutter = s.fontHeight
+		s.drivingValues.titleBoxWidth = s.diagWidth - float64(n+1)*s.drivingValues.titleBoxGutter/float64(n)
 	}
 }
 
