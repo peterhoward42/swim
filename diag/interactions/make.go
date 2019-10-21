@@ -1,6 +1,9 @@
 package interactions
 
 import (
+	"fmt"
+
+	"github.com/peterhoward42/umli"
 	"github.com/peterhoward42/umli/dsl"
 	"github.com/peterhoward42/umli/graphics"
 )
@@ -35,26 +38,71 @@ Make goes through statements in order, and works out what graphics are
 required to represent interaction lines, activitiy boxes etc. It advances
 the tidemark as it goes, and returns the final resultant tidemark.
 */
-func (mkr *Maker) Scan(statements []*dsl.Statement) (newTidemark float64, err error) {
-	for _, _ = range statements {
-		/*
-			switch s.Keyword {
-			case umli.Dash:
-				sc.interactionLabel(s)
-				sc.potentiallyStartToBox(s)
-				sc.interactionLine(s)
-			case umli.Full:
-				sc.interactionLabel(s)
-				sc.potentiallyStartFromBox(s)
-				sc.potentiallyStartToBox(s)
-				sc.interactionLine(s)
-			case umli.Self:
-				sc.potentiallyStartFromBox(s)
-				sc.selfInteractionLines(s)
-			case umli.Stop:
-				sc.endBox(s)
-			}
-		*/
+func (mkr *Maker) Scan(
+	tidemark float64,
+	statements []*dsl.Statement) (newTidemark float64, err error) {
+
+	actions := []dispatch{}
+	for _, s := range statements {
+		switch s.Keyword {
+		case umli.Dash:
+			actions = append(actions, dispatch{mkr.interactionLabel, s})
+			actions = append(actions, dispatch{mkr.startToBox, s})
+			actions = append(actions, dispatch{mkr.interactionLine, s})
+		case umli.Full:
+			actions = append(actions, dispatch{mkr.interactionLabel, s})
+			actions = append(actions, dispatch{mkr.startFromBox, s})
+			actions = append(actions, dispatch{mkr.startToBox, s})
+			actions = append(actions, dispatch{mkr.interactionLine, s})
+		case umli.Self:
+			actions = append(actions, dispatch{mkr.startFromBox, s})
+			actions = append(actions, dispatch{mkr.interactionLine, s})
+		case umli.Stop:
+			actions = append(actions, dispatch{mkr.endBox, s})
+		}
 	}
-	return -1.0, nil
+	var prevTm float64 = tidemark
+	var newTm float64
+	for _, action := range actions {
+		newTm, err := action.fn(prevTm, action.statement)
+		if err != nil {
+			return -1, fmt.Errorf("actionFn: %v", err)
+		}
+		prevTm = newTm
+	}
+	return newTm, nil
+}
+
+func (mkr *Maker) interactionLabel(
+	tidemark float64, s *dsl.Statement) (newTidemark float64, err error) {
+	return -1, nil
+}
+
+func (mkr *Maker) startToBox(
+	tidemark float64, s *dsl.Statement) (newTidemark float64, err error) {
+	return -1, nil
+}
+
+func (mkr *Maker) startFromBox(
+	tidemark float64, s *dsl.Statement) (newTidemark float64, err error) {
+	return -1, nil
+}
+
+func (mkr *Maker) interactionLine(
+	tidemark float64, s *dsl.Statement) (newTidemark float64, err error) {
+	return -1, nil
+}
+
+func (mkr *Maker) endBox(
+	tidemark float64, s *dsl.Statement) (newTidemark float64, err error) {
+	return -1, nil
+}
+
+type actionFn func(
+	tideMark float64,
+	s *dsl.Statement) (newTidemark float64, err error)
+
+type dispatch struct {
+	fn        actionFn
+	statement *dsl.Statement
 }

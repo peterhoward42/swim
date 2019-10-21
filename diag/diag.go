@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/peterhoward42/umli/diag/frame"
-	"github.com/peterhoward42/umli/diag/lifeline"
 	"github.com/peterhoward42/umli/diag/interactions"
+	"github.com/peterhoward42/umli/diag/lifeline"
 	"github.com/peterhoward42/umli/dsl"
 	"github.com/peterhoward42/umli/graphics"
 	"github.com/peterhoward42/umli/sizer"
@@ -53,6 +53,10 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 
 	makerDependencies := interactions.MakerDependencies{}
 	interactionsMaker := interactions.NewMaker(&makerDependencies, graphicsModel)
+	tideMark, err = interactionsMaker.Scan(tideMark, dslModel.Statements())
+	if err != nil {
+		return nil, fmt.Errorf("interactionsMaker.Scan: %v", err)
+	}
 
 	_ = tideMark
 	_ = interactionsMaker
