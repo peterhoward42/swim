@@ -33,8 +33,14 @@ o  sizer
 				*  give it a make method
 				*  tdd runs withtout crashing from diag test
 				o  switch to tdd of make method
-					o  runs without crashing
+					*  runs without crashing
 					o  with single full does something
+						*  digress InteractionLabelPosition
+						*  need spacer in dependency to be used in
+						   interactionlinelabel fn
+						o  need access to rowofstrings or suchlike
+							o  provide prims thru, then can call RowOfStrings
+
 				o  revert to making sure works from diag.Create
 				o  what tests possible from diag.Create?
 

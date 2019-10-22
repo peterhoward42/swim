@@ -1,9 +1,9 @@
 package lifeline
 
 import (
-	"github.com/peterhoward42/umli/diag/interactions"
 	"github.com/peterhoward42/umli/dsl"
 	"github.com/peterhoward42/umli/geom"
+	"github.com/peterhoward42/umli/diag/nogozone"
 )
 
 /*
@@ -18,7 +18,7 @@ type Gaps struct {
 PopulateFromNoGoZones assembles the gaps that are needed in lifeline, to
 respect noGoZones.
 */
-func (gaps *Gaps) PopulateFromNoGoZones(noGoZones []interactions.NoGoZone,
+func (gaps *Gaps) PopulateFromNoGoZones(noGoZones []nogozone.NoGoZone,
 	lifeline *dsl.Statement, allLifelines []*dsl.Statement) {
 	gaps.Items = []geom.Segment{}
 	for _, noGoZone := range noGoZones {

@@ -3,7 +3,7 @@ package lifeline
 import (
 	"testing"
 
-	"github.com/peterhoward42/umli/diag/interactions"
+	"github.com/peterhoward42/umli/diag/nogozone"
 	"github.com/peterhoward42/umli/dsl"
 	"github.com/peterhoward42/umli/geom"
 	"github.com/stretchr/testify/assert"
@@ -21,9 +21,9 @@ func TestGetCorrectGapsWhenLifelineIsAffectedByAllNoGoZones(t *testing.T) {
 	seg56 := geom.Segment{Start: 5, End: 6}
 
 	// Use two NoGozone(s) between lifelines a and c.
-	nogozones := []interactions.NoGoZone{
-		interactions.NewNoGoZone(seg12, a, c),
-		interactions.NewNoGoZone(seg56, a, c),
+	nogozones := []nogozone.NoGoZone{
+		nogozone.NewNoGoZone(seg12, a, c),
+		nogozone.NewNoGoZone(seg56, a, c),
 	}
 
 	// Lifeline b is affected by these NoGoZone(s) because b lies in between
@@ -51,9 +51,9 @@ func TestGetZeroGapsWhenLifelineIsAffectedByNoneOfTheNoGoZones(t *testing.T) {
 	seg56 := geom.Segment{Start: 5, End: 6}
 
 	// Use two NoGozone(s) between lifelines a and c.
-	nogozones := []interactions.NoGoZone{
-		interactions.NewNoGoZone(seg12, a, c),
-		interactions.NewNoGoZone(seg56, a, c),
+	nogozones := []nogozone.NoGoZone{
+		nogozone.NewNoGoZone(seg12, a, c),
+		nogozone.NewNoGoZone(seg56, a, c),
 	}
 
 	// Lifeline c is not affected by these NoGoZone(s) because c does not lie

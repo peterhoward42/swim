@@ -1,4 +1,4 @@
-package interactions
+package nogozone
 
 import (
 	"github.com/peterhoward42/umli/dsl"

@@ -1,7 +1,7 @@
 package lifeline
 
 import (
-	"github.com/peterhoward42/umli/diag/interactions"
+	"github.com/peterhoward42/umli/diag/nogozone"
 	"github.com/peterhoward42/umli/dsl"
 	"github.com/peterhoward42/umli/geom"
 )
@@ -26,7 +26,7 @@ func (s *LifelineSegments) Assemble(
 	topOfLifeline float64,
 	bottomOfLifeline float64,
 	minSegLen float64,
-	noGoZones []interactions.NoGoZone,
+	noGoZones []nogozone.NoGoZone,
 	activityBoxes ActivityBoxes,
 	allLifelines []*dsl.Statement) {
 

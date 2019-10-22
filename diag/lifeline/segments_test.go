@@ -3,7 +3,7 @@ package lifeline
 import (
 	"testing"
 
-	"github.com/peterhoward42/umli/diag/interactions"
+	"github.com/peterhoward42/umli/diag/nogozone"
 	"github.com/peterhoward42/umli/dsl"
 	"github.com/peterhoward42/umli/geom"
 	"github.com/stretchr/testify/assert"
@@ -19,8 +19,8 @@ func TestWithJustOneNoGoZoneGap(t *testing.T) {
 	b := &dsl.Statement{}
 	c := &dsl.Statement{}
 	allLifelines := []*dsl.Statement{a, b, c}
-	noGoZones := []interactions.NoGoZone{
-		interactions.NoGoZone{geom.Segment{10, 50}, a, c},
+	noGoZones := []nogozone.NoGoZone{
+		nogozone.NoGoZone{geom.Segment{10, 50}, a, c},
 	}
 
 	topOfLifeline := 1.0
@@ -52,7 +52,7 @@ func TestWithJustOneActivityBoxGap(t *testing.T) {
 	minSegLen := 0.1
 	var lifeline *dsl.Statement = nil
 	segments.Assemble(lifeline, topOfLifeline, bottomOfLifeline, minSegLen,
-		[]interactions.NoGoZone{}, boxes, []*dsl.Statement{})
+		[]nogozone.NoGoZone{}, boxes, []*dsl.Statement{})
 
 	assert.Len(segments.Segs, 2)
 	assert.Equal(segments.Segs[0], geom.Segment{1.0, 70})
@@ -66,8 +66,8 @@ func TestConsumesBothNoGoZonesAndActivityBoxesWhenBothPresent(t *testing.T) {
 	b := &dsl.Statement{}
 	c := &dsl.Statement{}
 	allLifelines := []*dsl.Statement{a, b, c}
-	noGoZones := []interactions.NoGoZone{
-		interactions.NoGoZone{geom.Segment{10, 50}, a, c},
+	noGoZones := []nogozone.NoGoZone{
+		nogozone.NoGoZone{geom.Segment{10, 50}, a, c},
 	}
 
 	boxes := NewActivityBoxes()
@@ -97,9 +97,9 @@ func TestItSortsTheGaps(t *testing.T) {
 	b := &dsl.Statement{}
 	c := &dsl.Statement{}
 	allLifelines := []*dsl.Statement{a, b, c}
-	noGoZones := []interactions.NoGoZone{
-		interactions.NoGoZone{geom.Segment{50, 60}, a, c},
-		interactions.NoGoZone{geom.Segment{10, 20}, a, c},
+	noGoZones := []nogozone.NoGoZone{
+		nogozone.NoGoZone{geom.Segment{50, 60}, a, c},
+		nogozone.NoGoZone{geom.Segment{10, 20}, a, c},
 	}
 
 	boxes := *NewActivityBoxes()
@@ -125,9 +125,9 @@ func TestItMergesTheGaps(t *testing.T) {
 	b := &dsl.Statement{}
 	c := &dsl.Statement{}
 	allLifelines := []*dsl.Statement{a, b, c}
-	noGoZones := []interactions.NoGoZone{
-		interactions.NoGoZone{geom.Segment{50, 60}, a, c},
-		interactions.NoGoZone{geom.Segment{50, 70}, a, c},
+	noGoZones := []nogozone.NoGoZone{
+		nogozone.NoGoZone{geom.Segment{50, 60}, a, c},
+		nogozone.NoGoZone{geom.Segment{50, 70}, a, c},
 	}
 
 	boxes := *NewActivityBoxes()
@@ -152,8 +152,8 @@ func TestItDiscardsTinySegmentsGaps(t *testing.T) {
 	b := &dsl.Statement{}
 	c := &dsl.Statement{}
 	allLifelines := []*dsl.Statement{a, b, c}
-	noGoZones := []interactions.NoGoZone{
-		interactions.NoGoZone{geom.Segment{50, 99.99}, a, c},
+	noGoZones := []nogozone.NoGoZone{
+		nogozone.NoGoZone{geom.Segment{50, 99.99}, a, c},
 	}
 
 	boxes := *NewActivityBoxes()
