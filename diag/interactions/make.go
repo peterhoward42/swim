@@ -5,8 +5,11 @@ import (
 
 	"github.com/peterhoward42/umli"
 	"github.com/peterhoward42/umli/diag/lifeline"
+	"github.com/peterhoward42/umli/diag/nogozone"
 	"github.com/peterhoward42/umli/dsl"
+	"github.com/peterhoward42/umli/geom"
 	"github.com/peterhoward42/umli/graphics"
+	"github.com/peterhoward42/umli/sizer"
 )
 
 /*
@@ -24,15 +27,24 @@ process at the time that the Make method is called. And includes all
 the things the Maker needs from the outside to do its job.
 */
 type MakerDependencies struct {
-	fontHt float64
-	spacer *lifeline.Spacing
+	activityBoxes map[*dsl.Statement]*lifeline.ActivityBoxes
+	fontHt        float64
+	noGoZones     []*nogozone.NoGoZone
+	sizer         sizer.Sizer
+	spacer        *lifeline.Spacing
 }
 
 // NewMakerDependencies makes a MakerDependencies ready to use.
-func NewMakerDependencies(fontHt float64, spacer *lifeline.Spacing) *MakerDependencies {
+func NewMakerDependencies(fontHt float64, spacer *lifeline.Spacing,
+	sizer sizer.Sizer,
+	activityBoxes map[*dsl.Statement]*lifeline.ActivityBoxes,
+	noGoZones []*nogozone.NoGoZone) *MakerDependencies {
 	return &MakerDependencies{
-		fontHt: fontHt,
-		spacer: spacer,
+		activityBoxes: activityBoxes,
+		fontHt:        fontHt,
+		noGoZones:     noGoZones,
+		sizer:         sizer,
+		spacer:        spacer,
 	}
 }
 
@@ -92,20 +104,44 @@ func (mkr *Maker) Scan(
 // line.
 func (mkr *Maker) interactionLabel(
 	tidemark float64, s *dsl.Statement) (newTidemark float64, err error) {
-	fromX, toX, err := mkr.LifelineCentres(s)
-	x, horizJustification := NewLabelPosn(fromX, toX).Get()
+	dep := mkr.dependencies
+	sourceLifeline := s.ReferencedLifelines[0]
+	destLifeline := s.ReferencedLifelines[1]
+	fromX, toX, err := mkr.LifelineCentres(sourceLifeline, destLifeline)
+	labelX, horizJustification := NewLabelPosn(fromX, toX).Get()
 	mkr.graphicsModel.Primitives.RowOfStrings(
-		x, tidemark, mkr.dependencies.fontHt, horizJustification, s.LabelSegments)
-	/*
+		labelX, tidemark, dep.fontHt, horizJustification, s.LabelSegments)
+	newTidemark = tidemark + float64(len(s.LabelSegments))*
+		dep.fontHt + dep.sizer.Get("InteractionLineTextPadB")
+	noGoZone := nogozone.NewNoGoZone(
+		geom.Segment{Start: tidemark, End: newTidemark},
+		sourceLifeline, destLifeline)
+	dep.noGoZones = append(dep.noGoZones, &noGoZone)
+	return newTidemark, nil
+}
 
-		firstRowY := tideMark
-		c.rowOfLabels(x, firstRowY, horizJustification, s.LabelSegments)
-		tideMark += float64(len(s.LabelSegments))*
-			mkr.dependencies.fontHt + mkr.dependencies.sizer.Get("InteractionLineTextPadB")
-		c.ilZones.RegisterSpaceClaim(
-			sourceLifeline, destLifeline, firstRowY, c.tideMark)
-	*/
-	return -1, nil
+// interactionLine makes an interaction line (and its arrow)
+func (mkr *Maker) interactionLine(
+	tidemark float64, s *dsl.Statement) (newTidemark float64, err error) {
+	dep := mkr.dependencies
+	sourceLifeline := s.ReferencedLifelines[0]
+	destLifeline := s.ReferencedLifelines[1]
+	fromX, toX, err := mkr.LifelineCentres(sourceLifeline, destLifeline)
+	halfActivityBoxWidth := 0.5 * dep.sizer.Get("ActivityBoxWidth")
+	geom.ShortenLineBy(halfActivityBoxWidth, &fromX, &toX)
+	y := tidemark
+	dashed := s.Keyword == umli.Dash
+	mkr.graphicsModel.Primitives.AddLine(fromX, y, toX, y, dashed)
+	arrowLen := dep.sizer.Get("ArrowLen")
+	arrowWidth := 0.3 * arrowLen
+	arrow := geom.MakeArrow(fromX, toX, y, arrowLen, arrowWidth)
+	mkr.graphicsModel.Primitives.AddFilledPoly(arrow)
+	newTidemark = tidemark + dep.sizer.Get("InteractionLinePadB")
+	noGoZone := nogozone.NewNoGoZone(
+		geom.Segment{Start: tidemark, End: newTidemark},
+		sourceLifeline, destLifeline)
+	dep.noGoZones = append(dep.noGoZones, &noGoZone)
+	return newTidemark, nil
 }
 
 // startToBox registers with <something> that an activity box on a lifeline
@@ -119,12 +155,6 @@ func (mkr *Maker) startToBox(
 // starFromBox registers with <something> that an activity box on a lifeline
 // should be started for an activity line to emenate from it.
 func (mkr *Maker) startFromBox(
-	tidemark float64, s *dsl.Statement) (newTidemark float64, err error) {
-	return -1, nil
-}
-
-// interactionLine makes an interaction line (and its arror)
-func (mkr *Maker) interactionLine(
 	tidemark float64, s *dsl.Statement) (newTidemark float64, err error) {
 	return -1, nil
 }
@@ -155,14 +185,12 @@ LifelineCentres evaluates the X coordinates for the lifelines between which
 an interaction line travels.
 */
 func (mkr *Maker) LifelineCentres(
-	interactionLine *dsl.Statement) (fromX, toX float64, err error) {
-	fromCoords, err := mkr.dependencies.spacer.CentreLine(
-		interactionLine.ReferencedLifelines[0])
+	sourceLifeline, destLifeline *dsl.Statement) (fromX, toX float64, err error) {
+	fromCoords, err := mkr.dependencies.spacer.CentreLine(sourceLifeline)
 	if err != nil {
 		return -1.0, -1.0, fmt.Errorf("space.CentreLine: %v", err)
 	}
-	toCoords, err := mkr.dependencies.spacer.CentreLine(
-		interactionLine.ReferencedLifelines[1])
+	toCoords, err := mkr.dependencies.spacer.CentreLine(destLifeline)
 	if err != nil {
 		return -1.0, -1.0, fmt.Errorf("space.CentreLine: %v", err)
 	}

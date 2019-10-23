@@ -7,7 +7,7 @@ import (
 // makeArrow assembles the vertices required to make a horizontal!
 // arrow head polygon that has its tip at (x2, y), and points in
 // the x1->x2 direction.
-func makeArrow(x1 float64, x2 float64, y float64,
+func MakeArrow(x1 float64, x2 float64, y float64,
 	arrowLen float64, arrowHeight float64) []graphics.Point {
 	dx := arrowLen
 	dy := 0.5 * arrowHeight

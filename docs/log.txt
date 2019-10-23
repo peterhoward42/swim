@@ -38,8 +38,18 @@ o  sizer
 						*  digress InteractionLabelPosition
 						*  need spacer in dependency to be used in
 						   interactionlinelabel fn
-						o  need access to rowofstrings or suchlike
-							o  provide prims thru, then can call RowOfStrings
+						*  need access to rowofstrings or suchlike
+						*  need access to activity boxe obj per lifeline in
+						   dependencies
+						*  need access to an activityZones
+						*  right number of strings
+						*  right number of lines
+						*  right number of arrows
+						o  correct new tidemark
+						o  psuedo code or comments for all single interaction 
+						   line tests
+						  	o  Populate with hard coded values from diagram
+							   and test setup
 
 				o  revert to making sure works from diag.Create
 				o  what tests possible from diag.Create?
