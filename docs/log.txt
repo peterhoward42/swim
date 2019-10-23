@@ -48,8 +48,11 @@ o  sizer
 						o  correct new tidemark
 						o  psuedo code or comments for all single interaction 
 						   line tests
-						  	o  Populate with hard coded values from diagram
-							   and test setup
+						   	o  Won't get sensible results until have done
+							   all handlers, else tidemark maintenance wrong
+								*  need activityboxes.HasABoxInProgress
+						  	o  Populate with proper hard coded values from 
+							   test setup
 
 				o  revert to making sure works from diag.Create
 				o  what tests possible from diag.Create?

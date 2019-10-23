@@ -144,26 +144,55 @@ func (mkr *Maker) interactionLine(
 	return newTidemark, nil
 }
 
-// startToBox registers with <something> that an activity box on a lifeline
+// startToBox registers with an lifeline.ActivityBoxes that an activity box on a lifeline
 // should be started ready for an interaction line to arrive at the top of
 // it.
 func (mkr *Maker) startToBox(
 	tidemark float64, s *dsl.Statement) (newTidemark float64, err error) {
-	return -1, nil
+	dep := mkr.dependencies
+	toLifeline := s.ReferencedLifelines[1]
+	activityBoxes := dep.activityBoxes[toLifeline]
+	if activityBoxes.HasABoxInProgress() {
+		return tidemark, nil
+	}
+	activityBoxes.AddStartingAt(tidemark)
+	// Return an unchanged tidemark.
+	return tidemark, nil
 }
 
-// starFromBox registers with <something> that an activity box on a lifeline
-// should be started for an activity line to emenate from it.
+// starFromBox registers that an activity box on a lifeline
+// should be started (unless it is already) for an activity line to emenate from.
 func (mkr *Maker) startFromBox(
 	tidemark float64, s *dsl.Statement) (newTidemark float64, err error) {
-	return -1, nil
+	dep := mkr.dependencies
+	fromLifeline := s.ReferencedLifelines[0]
+	activityBoxes := dep.activityBoxes[fromLifeline]
+	if activityBoxes.HasABoxInProgress() {
+		return tidemark, nil
+	}
+	// The activity box should start just a tiny bit before the first
+	// interaction line leaving from it. This need not claim any vertical
+	// space of its own however, because the space already claimed by the interaction
+	// line label is sufficient.
+	backTrackToStart := dep.sizer.Get("wontbebacktracktostar")
+	activityBoxes.AddStartingAt(tidemark - backTrackToStart)
+	// Return an unchanged tidemark.
+	return tidemark, nil
 }
 
-// endBox registers with <something> that an activity box that has been
-// started, should now be terminated.
+// endBox processes an explicit "stop" statement.
 func (mkr *Maker) endBox(
 	tidemark float64, s *dsl.Statement) (newTidemark float64, err error) {
-	return -1, nil
+	dep := mkr.dependencies
+	fromLifeline := s.ReferencedLifelines[0]
+	activityBoxes := dep.activityBoxes[fromLifeline]
+	tidemark += dep.sizer.Get("wontbeoverlapatendofbox")
+	err = activityBoxes.TerminateAt(tidemark)
+	if err != nil {
+		return -1, fmt.Errorf("activityBoxes.TerminateAt: %v", err)
+	}
+	tidemark += dep.sizer.Get("wontbeoverendboxdaylight")
+	return tidemark, nil
 }
 
 // actionFn describes a function that can be called to draw something

@@ -67,7 +67,7 @@ func TestForSingleInteractionLineItProducesCorrectGraphicsAndSideEffects(t *test
 	label := graphicsModel.Primitives.Labels[0]
 	assert.Equal(tideMark, label.Anchor.Y)
 	assert.True(line.P1.Y > label.Anchor.Y + fontHt)
-	assert.True(line.P1.Y < label.Anchor.Y+)
+	assert.True(line.P1.Y < label.Anchor.Y+1.0)
 
 	// Label lateral dimensions, and other properties are correct.
 	assert.True(label.Anchor.X > line.P1.X)

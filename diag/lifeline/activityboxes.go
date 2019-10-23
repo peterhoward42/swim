@@ -67,3 +67,16 @@ func (ab *ActivityBoxes) GetStartOfFinalBoxIfNotTerminated() *float64 {
 	}
 	return nil
 }
+
+// HasABoxInProgress returns true if there are some boxes, and the most
+// recently added one has not yet been terminated.
+func (ab *ActivityBoxes) HasABoxInProgress() bool {
+	if len(ab.segs) == 0 {
+		return false
+	}
+	mostRecent := &ab.segs[len(ab.segs)-1]
+	if mostRecent.End == -1 {
+		return true
+	}
+	return false
+}

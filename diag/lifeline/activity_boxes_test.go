@@ -65,6 +65,30 @@ func TestGetStartOfFinalBoxIfNotTerminatedHappyPath(t *testing.T) {
 	assert.Equal(float64(50), *finalBoxStart)
 }
 
+func TestHasABoxInProgressWhenTrue(t *testing.T) {
+	assert := assert.New(t)
+	boxes := NewActivityBoxes()
+	err := boxes.AddStartingAt(25)
+	assert.NoError(err)
+	assert.True(boxes.HasABoxInProgress())
+}
+
+func TestHasABoxInProgressWhenThereAreNoBoxes(t *testing.T) {
+	assert := assert.New(t)
+	boxes := NewActivityBoxes()
+	assert.False(boxes.HasABoxInProgress())
+}
+
+func TestHasABoxInProgressWhenFinalBoxIsTerminated(t *testing.T) {
+	assert := assert.New(t)
+	boxes := NewActivityBoxes()
+	err := boxes.AddStartingAt(25)
+	assert.NoError(err)
+	err = boxes.TerminateAt(30)
+	assert.NoError(err)
+	assert.False(boxes.HasABoxInProgress())
+}
+
 func TestGetStartOfFinalBoxIfNotTerminatedWhenIsAlreadyTerminated(t *testing.T) {
 	assert := assert.New(t)
 	boxes := NewActivityBoxes()
