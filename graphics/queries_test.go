@@ -6,6 +6,58 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const lessThanTol = 0.000001
+
+func TestValEqualIsh(t *testing.T) {
+	assert := assert.New(t)
+
+	const lessThanTol = 0.000001
+
+	assert.True(ValEqualIsh(1.3, 1.3))
+	assert.True(ValEqualIsh(1.3, 1.3+lessThanTol))
+	assert.True(ValEqualIsh(1.3, 1.3-lessThanTol))
+	assert.True(ValEqualIsh(1.3, 1.3+lessThanTol))
+	assert.True(ValEqualIsh(1.3, 1.3-lessThanTol))
+
+}
+func TestPointEqualIsh(t *testing.T) {
+	assert := assert.New(t)
+
+	assert.True(Point{1, 2}.EqualIsh(Point{1, 2}))
+	assert.True(Point{1, 2}.EqualIsh(Point{1, 2 + lessThanTol}))
+	assert.True(Point{1, 2}.EqualIsh(Point{1, 2 - lessThanTol}))
+	assert.False(Point{1, 2}.EqualIsh(Point{1, 2 + 0.3}))
+	assert.False(Point{1, 2}.EqualIsh(Point{1, 2 - 0.3}))
+}
+
+func TestLabelEqualIsh(t *testing.T) {
+	assert := assert.New(t)
+
+	referenceLabel := Label{
+		TheString:  "foo",
+		FontHeight: 10.0,
+		Anchor:     Point{2, 3},
+		HJust:      Left,
+		VJust:      Top,
+	}
+	assert.True(referenceLabel.EqualIsh(
+		Label{
+			TheString:  "foo",
+			FontHeight: 10.0,
+			Anchor:     Point{2, 3},
+			HJust:      Left,
+			VJust:      Top,
+		}))
+	assert.True(referenceLabel.EqualIsh(
+			Label{
+				TheString:  "foo",
+				FontHeight: 10.0,
+				Anchor:     Point{2, 3 + lessThanTol},
+				HJust:      Left,
+				VJust:      Top,
+			}))
+}
+
 /*
 Given a Primitives containing only one Line: <X>,
 Then when calling ContainsLine with various test Line objects,
@@ -69,7 +121,6 @@ func TestContainsRect(t *testing.T) {
 	assert.False(present)
 }
 
-
 func TestContainsLabel(t *testing.T) {
 	assert := assert.New(t)
 
@@ -77,11 +128,11 @@ func TestContainsLabel(t *testing.T) {
 	p.AddLabel("foo", 3.0, 600.0, 200.0, Left, Top)
 
 	label := Label{
-		TheString: "foo",
+		TheString:  "foo",
 		FontHeight: 3.0,
-		Anchor: Point{X:600, Y:200},
-		HJust: Left,
-		VJust: Top,
+		Anchor:     Point{X: 600, Y: 200},
+		HJust:      Left,
+		VJust:      Top,
 	}
 	assert.True(p.ContainsLabel(label))
 	label.Anchor.X += 1

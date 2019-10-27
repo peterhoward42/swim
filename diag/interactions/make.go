@@ -59,11 +59,12 @@ func NewMaker(d *MakerDependencies, gm *graphics.Model) *Maker {
 }
 
 /*
-Scan goes through the DSL statements in order, and works out what graphics are
-required to represent interaction lines, and activitiy boxes etc. It advances
-the tidemark as it goes, and returns the final resultant tidemark.
+ScanInteractionStatements goes through the DSL statements in order, and
+works out what graphics are required to represent interaction lines, and
+activitiy boxes etc. It advances the tidemark as it goes, and returns the
+final resultant tidemark.
 */
-func (mkr *Maker) Scan(
+func (mkr *Maker) ScanInteractionStatements(
 	tidemark float64,
 	statements []*dsl.Statement) (newTidemark float64, err error) {
 
@@ -133,7 +134,7 @@ func (mkr *Maker) interactionLine(
 	dashed := s.Keyword == umli.Dash
 	mkr.graphicsModel.Primitives.AddLine(fromX, y, toX, y, dashed)
 	arrowLen := dep.sizer.Get("ArrowLen")
-	arrowWidth := 0.3 * arrowLen
+	arrowWidth := dep.sizer.Get("ArrowWidth")
 	arrow := geom.MakeArrow(fromX, toX, y, arrowLen, arrowWidth)
 	mkr.graphicsModel.Primitives.AddFilledPoly(arrow)
 	newTidemark = tidemark + dep.sizer.Get("InteractionLinePadB")
@@ -144,9 +145,9 @@ func (mkr *Maker) interactionLine(
 	return newTidemark, nil
 }
 
-// startToBox registers with an lifeline.ActivityBoxes that an activity box on a lifeline
-// should be started ready for an interaction line to arrive at the top of
-// it.
+// startToBox registers with a lifeline.ActivityBoxes that an activity box
+// on a lifeline should be started ready for an interaction line to arrive at
+// the top of it. (If a box is not already in progress for this lifeline.)
 func (mkr *Maker) startToBox(
 	tidemark float64, s *dsl.Statement) (newTidemark float64, err error) {
 	dep := mkr.dependencies
@@ -174,7 +175,7 @@ func (mkr *Maker) startFromBox(
 	// interaction line leaving from it. This need not claim any vertical
 	// space of its own however, because the space already claimed by the interaction
 	// line label is sufficient.
-	backTrackToStart := dep.sizer.Get("wontbebacktracktostar")
+	backTrackToStart := dep.sizer.Get("ActivityBoxVerticalOverlap")
 	activityBoxes.AddStartingAt(tidemark - backTrackToStart)
 	// Return an unchanged tidemark.
 	return tidemark, nil

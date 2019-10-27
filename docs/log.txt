@@ -1,38 +1,12 @@
 o  sizer
-	*  define sizer as an interface with a new name
-	*  rename existing sizer as an implementation
-	*  am I on a branch? if not make so
-	*  find something that we can unit test with a small implementation
-		*  framemaker
-	o  work through other bits of diag amenable to being factored out, and
-	   using new sizer.
-		*  push arrow into its own package
-		*  infact move arrow into new geom 
-		*  push segment into its own package inside geom too
-		*  lifelinegeomh
-		*  standardise of given, when, then
-      *  boxstate
-	  *  new module lifeline.titlebox with only height in so far
-	  *  revert given/then/when in favour of method names
-	  *  ilzones
-	  *  what can we do to dispense with ilzones? (ditch it)
-		   doesn't need a dedicated type - so just ditch it
 	o  now look again at creator itself for more stripping out
 		o  try making a rival creator in diag/api package and see what packages 
 		   and modules can be split out, attempting tdd as we go
-		 	*  get the whole project to build as a baseline?
-			*  fix lint problems
-			*  fix width and height
-			*  test that just exercises Create method
-			*  push show letters behaviour into parser / dsl.Model
-			*  make a sizer and check with diag integ test
-			*  call framemaker from create
-			*  construct lifeline spacer
 			o  interactions maker
 				*  switch over nascent scanner code
 				*  give it a make method
 				*  tdd runs withtout crashing from diag test
-				o  switch to tdd of make method
+				o  switch to tdd of interactions.make method
 					*  runs without crashing
 					o  with single full does something
 						*  digress InteractionLabelPosition
@@ -45,14 +19,11 @@ o  sizer
 						*  right number of strings
 						*  right number of lines
 						*  right number of arrows
-						o  correct new tidemark
-						o  psuedo code or comments for all single interaction 
-						   line tests
-						   	o  Won't get sensible results until have done
-							   all handlers, else tidemark maintenance wrong
-								*  need activityboxes.HasABoxInProgress
-						  	o  Populate with proper hard coded values from 
-							   test setup
+						*  psuedo code or comments for all single interaction 
+						   test assertions
+						*  Populate tests with proper hard coded values from 
+						   test setup
+						  	*  got as far as arrow vertices
 
 				o  revert to making sure works from diag.Create
 				o  what tests possible from diag.Create?

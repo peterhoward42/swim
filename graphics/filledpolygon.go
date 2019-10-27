@@ -1,20 +1,18 @@
 package graphics
 
 import (
-	"math"
 )
 
 // FilledPoly represents a filled polygon.
 // Which can be used for an arrow head.
 type FilledPoly []Point // Do not repeat first point as last point.
 
-// HasExactlyOneVertexWithX asserts that this polygon has one, and only one
-// vertex that has the given X coordinate. (within delta)
-func (p *FilledPoly) HasExactlyOneVertexWithX(x, delta float64) bool {
+// IncludesThisVertex asserts that this polygon has one, and only one
+// vertex matching p.
+func (p *FilledPoly) IncludesThisVertex(q Point) bool {
 	count := 0
 	for _, v := range *p {
-		dx := math.Abs(v.X - x)
-		if dx < delta {
+		if v.EqualIsh(q) {
 			count++
 		}
 	}

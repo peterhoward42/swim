@@ -9,6 +9,53 @@ The queries are optimised for code simplicity (mainly for tests) at the
 expense of Big-O complexity.
 */
 
+const tol = 0.001
+
+// ValEqualIsh checks for equality, while treating values with only
+// very small differences as equal.
+func ValEqualIsh(m, n float64) bool {
+	if m > n+tol {
+		return false
+	}
+	if m < n-tol {
+		return false
+	}
+	return true
+}
+
+// EqualIsh checks for equality of p with another point, using thes
+// same tolerance as ValEqualIsh.
+func (p Point) EqualIsh(q Point) bool {
+	if !ValEqualIsh(p.X, q.X) {
+		return false
+	}
+	if !ValEqualIsh(p.Y, q.Y) {
+		return false
+	}
+	return true
+}
+
+// EqualIsh checks for equality of lbl with otherLabel, using Point.EqualIsh
+// for the anchor points.
+func (lbl Label) EqualIsh(otherLabel Label) bool {
+	if lbl.TheString != otherLabel.TheString {
+		return false
+	}
+	if lbl.FontHeight != otherLabel.FontHeight {
+		return false
+	}
+	if !lbl.Anchor.EqualIsh(otherLabel.Anchor) {
+		return false
+	}
+	if lbl.HJust != otherLabel.HJust {
+		return false
+	}
+	if lbl.VJust != otherLabel.VJust {
+		return false
+	}
+	return true
+}
+
 // ContainsRect evaluates if the primitives contain the lines required to
 // represent the rectangle defined by tl and br?
 func (p *Primitives) ContainsRect(tl, br Point) bool {
@@ -36,11 +83,14 @@ func (p *Primitives) ContainsRect(tl, br Point) bool {
 // ContainsLine evaluates if the primitives contain a line matching
 // line. It matches also when P1 and P2 are swapped.
 func (p *Primitives) ContainsLine(line Line) bool {
-	for _, x := range p.Lines {
-		if x.P1 == line.P1 && x.P2 == line.P2 && x.Dashed == line.Dashed {
+	for _, sampleLine := range p.Lines {
+		if sampleLine.Dashed != line.Dashed {
+			continue
+		}
+		if sampleLine.P1.EqualIsh(line.P1) && sampleLine.P2.EqualIsh(line.P2) {
 			return true
 		}
-		if x.P1 == line.P2 && x.P2 == line.P1 && x.Dashed == line.Dashed {
+		if sampleLine.P1.EqualIsh(line.P2) && sampleLine.P2.EqualIsh(line.P1) {
 			return true
 		}
 	}
@@ -51,7 +101,7 @@ func (p *Primitives) ContainsLine(line Line) bool {
 // label.
 func (p *Primitives) ContainsLabel(label Label) bool {
 	for _, x := range p.Labels {
-		if x == label {
+		if x.EqualIsh(label) {
 			return true
 		}
 	}

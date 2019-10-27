@@ -6,44 +6,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const delta = 0.1
 
-func TestHasExactlyOneVertexWithXRejectsWhenNone(t *testing.T) {
+func TestIncludesThisVertex(t *testing.T) {
 	assert := assert.New(t)
-	p1 := Point{0, 0}
-	p2 := Point{0, 0}
-	poly := FilledPoly{p1, p2}
-	assert.False(poly.HasExactlyOneVertexWithX(1, delta))
-}
 
-func TestHasExactlyOneVertexWithXRejectsMoreThanOne(t *testing.T) {
-	assert := assert.New(t)
-	p1 := Point{0, 0}
-	p2 := Point{0, 0}
-	poly := &FilledPoly{p1, p2}
-	assert.False(poly.HasExactlyOneVertexWithX(0, delta))
-}
+	poly := FilledPoly{Point{2,3}}
 
-func TestHasExactlyOneVertexWithXMatchesInSimpleCase(t *testing.T) {
-	assert := assert.New(t)
-	p1 := Point{0, 0}
-	p2 := Point{1, 0}
-	poly := &FilledPoly{p1, p2}
-	assert.True(poly.HasExactlyOneVertexWithX(0, delta))
-}
-
-func TestHasExactlyOneVertexWithXMatchesDueToDelta(t *testing.T) {
-	assert := assert.New(t)
-	p1 := Point{0, 0}
-	p2 := Point{1, 0}
-	poly := &FilledPoly{p1, p2}
-	assert.True(poly.HasExactlyOneVertexWithX(0.5*delta, delta))
-}
-
-func TestHasExactlyOneVertexWithXRejectsDueToDelta(t *testing.T) {
-	assert := assert.New(t)
-	p1 := Point{0, 0}
-	p2 := Point{1, 0}
-	poly := &FilledPoly{p1, p2}
-	assert.False(poly.HasExactlyOneVertexWithX(1.5*delta, delta))
+	assert.True(poly.IncludesThisVertex(Point{2,3}))
+	assert.False(poly.IncludesThisVertex(Point{2,3.1}))
+	assert.False(poly.IncludesThisVertex(Point{2.1,3}))
 }
