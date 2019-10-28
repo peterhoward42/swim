@@ -113,12 +113,22 @@ func TestForSingleInteractionLineItProducesCorrectGraphicsAndSideEffects(t *test
 	assert.True(graphics.ValEqualIsh(zn.Height.Start, line.P1.Y))
 	assert.True(graphics.ValEqualIsh(zn.Height.End, updatedTideMark))
 
-	// A Box was registered as starting for lifeline A, starting just above
-	// the interaction line.
+	// An activity box should have been registered as starting for lifeline A,
+	// starting just abov the interaction line, and not yet terminated.
+	lifeA := lifelines[0]
+	boxSegs := activityBoxes[lifeA].AsSegments()
+	assert.Len(boxSegs, 1)
+	assert.True(graphics.ValEqualIsh(boxSegs[0].Start,
+		line.P1.Y-sizer.Get("ActivityBoxVerticalOverlap")))
+	assert.Equal(-1.0, boxSegs[0].End)
 
-	// A Box was registered as starting for lifeline B, starting exactly at
-	// the interaction line.
-
+	// An activity box should have been registered as starting for lifeline B,
+	// starting exactly at the interaction line, and not yet terminated.
+	lifeB := lifelines[1]
+	boxSegs = activityBoxes[lifeB].AsSegments()
+	assert.Len(boxSegs, 1)
+	assert.True(graphics.ValEqualIsh(boxSegs[0].Start, line.P1.Y))
+	assert.Equal(-1.0, boxSegs[0].End)
 }
 
 const tolerance = 0.001

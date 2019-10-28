@@ -8,23 +8,9 @@ o  sizer
 				*  tdd runs withtout crashing from diag test
 				o  switch to tdd of interactions.make method
 					*  runs without crashing
-					o  with single full does something
-						*  digress InteractionLabelPosition
-						*  need spacer in dependency to be used in
-						   interactionlinelabel fn
-						*  need access to rowofstrings or suchlike
-						*  need access to activity boxe obj per lifeline in
-						   dependencies
-						*  need access to an activityZones
-						*  right number of strings
-						*  right number of lines
-						*  right number of arrows
-						*  psuedo code or comments for all single interaction 
-						   test assertions
-						*  Populate tests with proper hard coded values from 
-						   test setup
-						  	*  got as far as checking activity boxes
-
+					*  with single lifeline produces all the right things
+					   in detail
+					o  what other logic should be tested for maker?
 
 				o  revert to making sure works from diag.Create
 				o  what tests possible from diag.Create?
