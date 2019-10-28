@@ -99,29 +99,14 @@ func TestForSingleInteractionLineItProducesCorrectGraphicsAndSideEffects(t *test
 		X: line.P2.X - sizer.Get("ArrowLen"),
 		Y: line.P2.Y + 0.5*sizer.Get("ArrowWidth")}
 	assert.True(arrow.IncludesThisVertex(lowerTail))
+
+	// The updated tide mark should be just below the interaction line,
+	// by the amount of a padding demanded by an interaction line.
+	assert.True(graphics.ValEqualIsh(updatedTideMark, line.P2.Y + sizer.Get(
+		"InteractionLinePadB")))
+
+
 	/*
-
-		assert.Equal(tideMark, label.Anchor.Y)
-		assert.True(line.P1.Y > label.Anchor.Y + fontHt)
-		assert.True(line.P1.Y < label.Anchor.Y+1.0)
-
-		// Label lateral dimensions, and other properties are correct.
-		assert.True(label.Anchor.X > line.P1.X)
-		assert.True(label.Anchor.X < line.P2.X)
-		assert.Equal("fibble", label.TheString)
-		assert.Equal(10.0, label.FontHeight)
-		assert.Equal(graphics.Centre, label.HJust)
-		assert.Equal(graphics.Top, label.VJust)
-
-	*/
-
-	// Label Y is at initial tidemark, and interaction line is a little below
-	// that.
-
-	// Arrow tip is at line.P2, and other vertices are above or below it, and
-	// to its left, and sensible distance away.
-
-	// Updated tidemark is a little to the South of the interaction line.
 
 	// Two no go zones got registered, with the correct X coordinates, and
 	// heights that match those occupied by the label and line.

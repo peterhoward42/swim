@@ -23,7 +23,8 @@ o  sizer
 						   test assertions
 						*  Populate tests with proper hard coded values from 
 						   test setup
-						  	*  got as far as arrow vertices
+						  	*  got as far as checking registered boxes
+
 
 				o  revert to making sure works from diag.Create
 				o  what tests possible from diag.Create?

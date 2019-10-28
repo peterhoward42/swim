@@ -92,7 +92,7 @@ func (mkr *Maker) ScanInteractionStatements(
 	var prevTidemark float64 = tidemark
 	var updatedTidemark float64
 	for _, action := range actions {
-		updatedTidemark, err := action.fn(prevTidemark, action.statement)
+		updatedTidemark, err = action.fn(prevTidemark, action.statement)
 		if err != nil {
 			return -1, fmt.Errorf("actionFn: %v", err)
 		}
