@@ -19,6 +19,7 @@ their activity boxes.
 type Maker struct {
 	dependencies  *MakerDependencies
 	graphicsModel *graphics.Model
+	noGoZones     []nogozone.NoGoZone
 }
 
 /*
@@ -29,7 +30,6 @@ the things the Maker needs from the outside to do its job.
 type MakerDependencies struct {
 	activityBoxes map[*dsl.Statement]*lifeline.ActivityBoxes
 	fontHt        float64
-	noGoZones     []*nogozone.NoGoZone
 	sizer         sizer.Sizer
 	spacer        *lifeline.Spacing
 }
@@ -37,12 +37,10 @@ type MakerDependencies struct {
 // NewMakerDependencies makes a MakerDependencies ready to use.
 func NewMakerDependencies(fontHt float64, spacer *lifeline.Spacing,
 	sizer sizer.Sizer,
-	activityBoxes map[*dsl.Statement]*lifeline.ActivityBoxes,
-	noGoZones []*nogozone.NoGoZone) *MakerDependencies {
+	activityBoxes map[*dsl.Statement]*lifeline.ActivityBoxes) *MakerDependencies {
 	return &MakerDependencies{
 		activityBoxes: activityBoxes,
 		fontHt:        fontHt,
-		noGoZones:     noGoZones,
 		sizer:         sizer,
 		spacer:        spacer,
 	}
@@ -66,7 +64,8 @@ final resultant tidemark.
 */
 func (mkr *Maker) ScanInteractionStatements(
 	tidemark float64,
-	statements []*dsl.Statement) (newTidemark float64, err error) {
+	statements []*dsl.Statement) (newTidemark float64,
+	noGoZones []nogozone.NoGoZone, err error) {
 
 	// Build a list of actions to execute depending on the statement
 	// keyword.
@@ -94,11 +93,11 @@ func (mkr *Maker) ScanInteractionStatements(
 	for _, action := range actions {
 		updatedTidemark, err = action.fn(prevTidemark, action.statement)
 		if err != nil {
-			return -1, fmt.Errorf("actionFn: %v", err)
+			return -1, nil, fmt.Errorf("actionFn: %v", err)
 		}
 		prevTidemark = updatedTidemark
 	}
-	return updatedTidemark, nil
+	return updatedTidemark, mkr.noGoZones, nil
 }
 
 // interactionLabel creates the graphics label that belongs to an interaction
@@ -117,7 +116,7 @@ func (mkr *Maker) interactionLabel(
 	noGoZone := nogozone.NewNoGoZone(
 		geom.Segment{Start: tidemark, End: newTidemark},
 		sourceLifeline, destLifeline)
-	dep.noGoZones = append(dep.noGoZones, &noGoZone)
+	mkr.noGoZones = append(mkr.noGoZones, noGoZone)
 	return newTidemark, nil
 }
 
@@ -141,7 +140,7 @@ func (mkr *Maker) interactionLine(
 	noGoZone := nogozone.NewNoGoZone(
 		geom.Segment{Start: tidemark, End: newTidemark},
 		sourceLifeline, destLifeline)
-	dep.noGoZones = append(dep.noGoZones, &noGoZone)
+	mkr.noGoZones = append(mkr.noGoZones, noGoZone)
 	return newTidemark, nil
 }
 

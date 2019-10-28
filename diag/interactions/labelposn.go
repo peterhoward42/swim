@@ -20,6 +20,8 @@ func NewLabelPosn(from, to float64) *LabelPosn {
 	return &LabelPosn{from, to}
 }
 
+// Get implements the label positioning policy and returns the X coordinate,
+// and horizontal justification to use.
 func (lp *LabelPosn) Get() (x float64, horizontalJustification graphics.Justification) {
 	// So far it looks better if it's centred regardless of direction.
 	return 0.5 * (lp.from + lp.to), graphics.Centre

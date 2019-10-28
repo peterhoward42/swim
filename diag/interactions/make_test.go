@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/peterhoward42/umli/diag/lifeline"
-	"github.com/peterhoward42/umli/diag/nogozone"
 	"github.com/peterhoward42/umli/dsl"
 	"github.com/peterhoward42/umli/graphics"
 	"github.com/peterhoward42/umli/parser"
@@ -43,12 +42,11 @@ func TestForSingleInteractionLineItProducesCorrectGraphicsAndSideEffects(t *test
 	for _, ll := range lifelines {
 		activityBoxes[ll] = lifeline.NewActivityBoxes()
 	}
-	noGoZones := []*nogozone.NoGoZone{}
 	makerDependencies := NewMakerDependencies(
-		fontHt, spacer, sizer, activityBoxes, noGoZones)
+		fontHt, spacer, sizer, activityBoxes)
 	interactionsMaker := NewMaker(makerDependencies, graphicsModel)
 	tideMark := 30.0
-	updatedTideMark, err := interactionsMaker.ScanInteractionStatements(
+	updatedTideMark, noGoZones, err := interactionsMaker.ScanInteractionStatements(
 		tideMark, dslModel.Statements())
 	assert.NoError(err)
 
@@ -102,14 +100,18 @@ func TestForSingleInteractionLineItProducesCorrectGraphicsAndSideEffects(t *test
 
 	// The updated tide mark should be just below the interaction line,
 	// by the amount of a padding demanded by an interaction line.
-	assert.True(graphics.ValEqualIsh(updatedTideMark, line.P2.Y + sizer.Get(
+	assert.True(graphics.ValEqualIsh(updatedTideMark, line.P2.Y+sizer.Get(
 		"InteractionLinePadB")))
 
-
-	/*
-
-	// Two no go zones got registered, with the correct X coordinates, and
-	// heights that match those occupied by the label and line.
+	// Two no go zones should have been registered, with the correct X
+	// coordinates, and heights that match those occupied by the label and line.
+	assert.Len(noGoZones, 2)
+	zn := noGoZones[0]
+	assert.True(graphics.ValEqualIsh(zn.Height.Start, tideMark))
+	assert.True(graphics.ValEqualIsh(zn.Height.End, line.P1.Y))
+	zn = noGoZones[1]
+	assert.True(graphics.ValEqualIsh(zn.Height.Start, line.P1.Y))
+	assert.True(graphics.ValEqualIsh(zn.Height.End, updatedTideMark))
 
 	// A Box was registered as starting for lifeline A, starting just above
 	// the interaction line.
@@ -117,7 +119,6 @@ func TestForSingleInteractionLineItProducesCorrectGraphicsAndSideEffects(t *test
 	// A Box was registered as starting for lifeline B, starting exactly at
 	// the interaction line.
 
-	_ = updatedTideMark
 }
 
 const tolerance = 0.001
