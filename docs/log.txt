@@ -11,6 +11,9 @@ o  sizer
 					*  with single lifeline produces all the right things
 					   in detail
 					o  what other logic should be tested for maker?
+						*  note in test file
+						*  dash diffs
+						 
 
 				o  revert to making sure works from diag.Create
 				o  what tests possible from diag.Create?

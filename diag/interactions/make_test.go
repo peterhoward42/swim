@@ -131,4 +131,74 @@ func TestForSingleInteractionLineItProducesCorrectGraphicsAndSideEffects(t *test
 	assert.Equal(-1.0, boxSegs[0].End)
 }
 
+func TestForSmallDifferencesInDashVsFullInteractions(t *testing.T) {
+	// Differs from
+	// TestForSingleInteractionLineItProducesCorrectGraphicsAndSideEffects
+	// only innthat the interaction line called for is a dashed
+	// one (i.e. by definition a return path), and only checks for the
+	// differences in behaviour.
+	assert := assert.New(t)
+
+	dslScript := `
+		life A foo
+		life B bar
+		dash AB fibble
+	`
+	dslModel := parser.MustCompileParse(dslScript)
+	width := 2000.0
+	fontHt := 10.0
+	sizer := sizer.NewLiteralSizer(map[string]float64{
+		"ActivityBoxVerticalOverlap": 5.0,
+		"ActivityBoxWidth":           40.0,
+		"ArrowLen":                   10.0,
+		"ArrowWidth":                 4.0,
+		"IdealLifelineTitleBoxWidth": 300.0,
+		"InteractionLinePadB":        4.0,
+		"InteractionLineTextPadB":    5.0,
+	})
+	lifelines := dslModel.LifelineStatements()
+	spacer := lifeline.NewSpacing(sizer, fontHt, width, lifelines)
+	dashLineDashLength := 5.0
+	dashLineGapLength := 1.0
+	graphicsModel := graphics.NewModel(
+		width, fontHt, dashLineDashLength, dashLineGapLength)
+
+	activityBoxes := map[*dsl.Statement]*lifeline.ActivityBoxes{}
+	for _, ll := range lifelines {
+		activityBoxes[ll] = lifeline.NewActivityBoxes()
+	}
+	makerDependencies := NewMakerDependencies(
+		fontHt, spacer, sizer, activityBoxes)
+	interactionsMaker := NewMaker(makerDependencies, graphicsModel)
+	tideMark := 30.0
+	_, _, err := interactionsMaker.ScanInteractionStatements(
+		tideMark, dslModel.Statements())
+	assert.NoError(err)
+
+	line := graphicsModel.Primitives.Lines[0]
+
+	// An activity box should NOT have been registered as starting for lifeline A,
+	// starting just abov the interaction line, and not yet terminated.
+	lifeA := lifelines[0]
+	boxSegs := activityBoxes[lifeA].AsSegments()
+	assert.Len(boxSegs, 0)
+
+	// An activity box should have been registered as starting for lifeline B,
+	// starting exactly at the interaction line, and not yet terminated.
+	lifeB := lifelines[1]
+	boxSegs = activityBoxes[lifeB].AsSegments()
+	assert.Len(boxSegs, 1)
+	assert.True(graphics.ValEqualIsh(boxSegs[0].Start, line.P1.Y))
+	assert.Equal(-1.0, boxSegs[0].End)
+}
+
 const tolerance = 0.001
+
+// entire self case - insofar is different from full
+
+// when only one interaction and it is dash, should not get a start box
+// registered, only a to box
+
+// simplest case when a stop is present
+
+// get a wrapped error when one of the dispatched fns errors
