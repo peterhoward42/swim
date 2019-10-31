@@ -10,9 +10,8 @@ o  sizer
 					*  runs without crashing
 					*  with single lifeline produces all the right things
 					   in detail
-					o  what other logic should be tested for maker?
-						*  note in test file
-						*  dash diffs
+					o  work through other maker tests (see comments)
+						o  spacer needs LifelinePitch()
 						 
 
 				o  revert to making sure works from diag.Create

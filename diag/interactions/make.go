@@ -83,7 +83,8 @@ func (mkr *Maker) ScanInteractionStatements(
 			actions = append(actions, dispatch{mkr.interactionLine, s})
 		case umli.Self:
 			actions = append(actions, dispatch{mkr.startFromBox, s})
-			actions = append(actions, dispatch{mkr.interactionLine, s})
+			actions = append(actions, dispatch{mkr.selfLabel, s})
+			actions = append(actions, dispatch{mkr.selfLines, s})
 		case umli.Stop:
 			actions = append(actions, dispatch{mkr.endBox, s})
 		}
@@ -120,6 +121,13 @@ func (mkr *Maker) interactionLabel(
 	return newTidemark, nil
 }
 
+// selfLabel creates the graphics label that belongs to a self interaction
+// line.
+func (mkr *Maker) selfLabel(
+	tidemark float64, s *dsl.Statement) (newTidemark float64, err error) {
+	return -999.0, nil
+}
+
 // interactionLine makes an interaction line (and its arrow)
 func (mkr *Maker) interactionLine(
 	tidemark float64, s *dsl.Statement) (newTidemark float64, err error) {
@@ -142,6 +150,13 @@ func (mkr *Maker) interactionLine(
 		sourceLifeline, destLifeline)
 	mkr.noGoZones = append(mkr.noGoZones, noGoZone)
 	return newTidemark, nil
+}
+
+// selfLines makes the 3 sides of a rectangle for a self interaction
+// line (and its arrow).
+func (mkr *Maker) selfLines(
+	tidemark float64, s *dsl.Statement) (newTidemark float64, err error) {
+	return -99, nil
 }
 
 // startToBox registers with a lifeline.ActivityBoxes that an activity box

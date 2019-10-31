@@ -19,7 +19,7 @@ boxes and as margins at the left and right edge of the diagram.
 type Spacing struct {
 	sizer         sizer.Sizer
 	fontHeight    float64
-	diagWidth float64
+	diagWidth     float64
 	lifelines     []*dsl.Statement
 	drivingValues drivingValues
 }
@@ -31,7 +31,7 @@ func NewSpacing(sizer sizer.Sizer, fontHeight float64, diagWidth float64,
 		sizer:      sizer,
 		lifelines:  lifelines,
 		fontHeight: fontHeight,
-		diagWidth: diagWidth,
+		diagWidth:  diagWidth,
 	}
 	spacer.setDrivingValues()
 	return spacer
@@ -41,6 +41,13 @@ type TitleBoxXCoords struct {
 	Left   float64
 	Centre float64
 	Right  float64
+}
+
+// LifelinePitch returns the spacing between adjacent lifelines.
+// It provides a sensible answer also when there is only one lifeline, and
+// maybe the caller wants to base some other size on what the pitch would be.
+func (s Spacing) LifelinePitch() float64 {
+	return s.drivingValues.titleBoxWidth + s.drivingValues.titleBoxGutter
 }
 
 /*

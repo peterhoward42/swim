@@ -68,6 +68,7 @@ var table = map[string]float64{
 	"InteractionLinePadB":     0.5,
 	"InteractionLineTextPadB": 0.5,
 	"SelfLoopHeight":          3.0,
+	"SelfLoopWidthFactor":     0.7, // proportion of lifeline pitch
 
 	// Dashes
 	"DashLineDashLen": 0.5,

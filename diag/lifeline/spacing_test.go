@@ -91,3 +91,46 @@ func TestCentreLineCornerCaseOfOneLifeline(t *testing.T) {
 	assert.Equal(400.0, boxXCoords.Centre)
 	assert.Equal(450.0, boxXCoords.Right)
 }
+
+/*
+Given a Spacing object initialised with two lifelines, and a hard-coded
+sizer...
+When calling its LifelinePitch method it should produce an X coordinate faithful
+to the internal algorithm.
+*/
+func TestLifelinePitchFnForTwoLifelines(t *testing.T) {
+	assert := assert.New(t)
+	_ = assert
+
+	sizer := sizer.NewLiteralSizer(map[string]float64{
+		"IdealLifelineTitleBoxWidth": 100.0,
+	})
+
+	lifelineA := &dsl.Statement{}
+	lifelineB := &dsl.Statement{}
+	lifelines := []*dsl.Statement{lifelineA, lifelineB}
+
+	fontHeight := 20.0
+	diagWidth := 800.0
+	spacing := NewSpacing(sizer, fontHeight, diagWidth, lifelines)
+	pitch := spacing.LifelinePitch()
+	assert.Equal(300.0, pitch)
+}
+
+func TestLifelinePitchFnForOneLifeline(t *testing.T) {
+	assert := assert.New(t)
+	_ = assert
+
+	sizer := sizer.NewLiteralSizer(map[string]float64{
+		"IdealLifelineTitleBoxWidth": 100.0,
+	})
+
+	lifelineA := &dsl.Statement{}
+	lifelines := []*dsl.Statement{lifelineA}
+
+	fontHeight := 20.0
+	diagWidth := 800.0
+	spacing := NewSpacing(sizer, fontHeight, diagWidth, lifelines)
+	pitch := spacing.LifelinePitch()
+	assert.Equal(450.0, pitch)
+}
