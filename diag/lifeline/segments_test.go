@@ -20,7 +20,7 @@ func TestWithJustOneNoGoZoneGap(t *testing.T) {
 	c := &dsl.Statement{}
 	allLifelines := []*dsl.Statement{a, b, c}
 	noGoZones := []nogozone.NoGoZone{
-		nogozone.NoGoZone{geom.Segment{10, 50}, a, c},
+		nogozone.NoGoZone{geom.Segment{Start: 10, End: 50}, a, c},
 	}
 
 	topOfLifeline := 1.0

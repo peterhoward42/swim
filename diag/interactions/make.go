@@ -82,8 +82,8 @@ func (mkr *Maker) ScanInteractionStatements(
 			actions = append(actions, dispatch{mkr.startToBox, s})
 			actions = append(actions, dispatch{mkr.interactionLine, s})
 		case umli.Self:
-			actions = append(actions, dispatch{mkr.startFromBox, s})
 			actions = append(actions, dispatch{mkr.selfLabel, s})
+			actions = append(actions, dispatch{mkr.startFromBox, s})
 			actions = append(actions, dispatch{mkr.selfLines, s})
 		case umli.Stop:
 			actions = append(actions, dispatch{mkr.endBox, s})
@@ -125,7 +125,19 @@ func (mkr *Maker) interactionLabel(
 // line.
 func (mkr *Maker) selfLabel(
 	tidemark float64, s *dsl.Statement) (newTidemark float64, err error) {
-	return -999.0, nil
+	dep := mkr.dependencies
+	lifelineXCoords, err := dep.spacer.CentreLine(s.ReferencedLifelines[0])
+	if err != nil {
+		return -1, fmt.Errorf("spacer.CentreLine: %v", err)
+	}
+	lineStartX := lifelineXCoords.Centre + 0.5*dep.sizer.Get("ActivityBoxWidth")
+	lineEndX := lineStartX + dep.sizer.Get("SelfLoopWidthFactor")*dep.spacer.LifelinePitch()
+	labelX := 0.5 * (lineStartX + lineEndX)
+	mkr.graphicsModel.Primitives.RowOfStrings(
+		labelX, tidemark, dep.fontHt, graphics.Centre, s.LabelSegments)
+	htOfLabels := float64(len(s.LabelSegments)) * dep.fontHt
+	newTidemark = tidemark + htOfLabels + dep.sizer.Get("InteractionLineTextPadB")
+	return newTidemark, nil
 }
 
 // interactionLine makes an interaction line (and its arrow)
@@ -156,7 +168,25 @@ func (mkr *Maker) interactionLine(
 // line (and its arrow).
 func (mkr *Maker) selfLines(
 	tidemark float64, s *dsl.Statement) (newTidemark float64, err error) {
-	return -99, nil
+	dep := mkr.dependencies
+	lifelineXCoords, err := dep.spacer.CentreLine(s.ReferencedLifelines[0])
+	if err != nil {
+		return -1, fmt.Errorf("spacer.CentreLine: %v", err)
+	}
+	lineStartX := lifelineXCoords.Centre + 0.5*dep.sizer.Get("ActivityBoxWidth")
+	lineEndX := lineStartX + dep.sizer.Get("SelfLoopWidthFactor")*dep.spacer.LifelinePitch()
+	y := tidemark
+	notDashed := false
+	bottom := y + dep.sizer.Get("SelfLoopHeight")
+	mkr.graphicsModel.Primitives.AddLine(lineStartX, y, lineEndX, y, notDashed)
+	mkr.graphicsModel.Primitives.AddLine(lineEndX, y, lineEndX, bottom, notDashed)
+	mkr.graphicsModel.Primitives.AddLine(lineEndX, bottom, lineStartX, bottom, notDashed)
+	arrowLen := dep.sizer.Get("ArrowLen")
+	arrowWidth := dep.sizer.Get("ArrowWidth")
+	arrow := geom.MakeArrow(lineEndX, lineStartX, bottom, arrowLen, arrowWidth)
+	mkr.graphicsModel.Primitives.AddFilledPoly(arrow)
+	newTidemark = bottom + dep.sizer.Get("InteractionLinePadB")
+	return newTidemark, nil
 }
 
 // startToBox registers with a lifeline.ActivityBoxes that an activity box

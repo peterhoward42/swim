@@ -11,11 +11,13 @@ o  sizer
 					*  with single lifeline produces all the right things
 					   in detail
 					o  work through other maker tests (see comments)
-						o  spacer needs LifelinePitch()
+						*  spacer needs LifelinePitch()
 						 
 
 				o  revert to making sure works from diag.Create
 				o  what tests possible from diag.Create?
+	o  Segment should have constructor to avoid so many warnings about it
+	   using unkeyed fields
 
 
 	o  wean off reference input?

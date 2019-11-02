@@ -192,7 +192,7 @@ func TestForSmallDifferencesInDashVsFullInteractions(t *testing.T) {
 	assert.Equal(-1.0, boxSegs[0].End)
 }
 
-func TestSelfInteractionLine(t *testing.T) {
+func TestSelfInteraction(t *testing.T) {
 	assert := assert.New(t)
 
 	dslScript := `
@@ -210,6 +210,8 @@ func TestSelfInteractionLine(t *testing.T) {
 		"IdealLifelineTitleBoxWidth": 300.0,
 		"InteractionLinePadB":        4.0,
 		"InteractionLineTextPadB":    5.0,
+		"SelfLoopHeight":             30.0,
+		"SelfLoopWidthFactor":        0.7,
 	})
 	lifelines := dslModel.LifelineStatements()
 	spacer := lifeline.NewSpacing(sizer, fontHt, width, lifelines)
@@ -233,15 +235,13 @@ func TestSelfInteractionLine(t *testing.T) {
 	// Should have generated three lines, one string, and one arrow in the
 	// graphics.
 	assert.Len(graphicsModel.Primitives.Labels, 1)
-	//assert.Len(graphicsModel.Primitives.Lines, 3)
-	//assert.Len(graphicsModel.Primitives.FilledPolys, 1)
+	assert.Len(graphicsModel.Primitives.Lines, 3)
+	assert.Len(graphicsModel.Primitives.FilledPolys, 1)
 
 	// Inspect details of these primitives...
 
-	// Make sure the self interaction comprises 3 sides of a rectangle
-	// of the correct depth and width.
-
-	// Ensure the label sits at the tidemark, and left justified near the lifeline
+	// Ensure the label sits at the tidemark, and centred on the lines
+	// it belongs to.
 	lifelineXCoords, err := spacer.CentreLine(lifelines[0])
 	assert.NoError(err)
 	lineStartX := lifelineXCoords.Centre + 0.5*sizer.Get("ActivityBoxWidth")
@@ -256,47 +256,65 @@ func TestSelfInteractionLine(t *testing.T) {
 	}
 	assert.True(graphicsModel.Primitives.ContainsLabel(expectedLabel))
 
+	// Make sure the self interaction comprises 3 sides of a rectangle
+	// of the correct depth and width.
+	expectedTopLineY := tideMark + 1.0*fontHt + sizer.Get("InteractionLineTextPadB")
+	expectedTopLine := graphics.Line{
+		P1:     graphics.Point{lineStartX, expectedTopLineY},
+		P2:     graphics.Point{lineEndX, expectedTopLineY},
+		Dashed: false,
+	}
+	assert.True(graphicsModel.Primitives.ContainsLine(expectedTopLine))
+
+	expectedBotLineY := expectedTopLineY + sizer.Get("SelfLoopHeight")
+	expectedBotLine := graphics.Line{
+		P1:     graphics.Point{lineEndX, expectedBotLineY},
+		P2:     graphics.Point{lineStartX, expectedBotLineY},
+		Dashed: false,
+	}
+	assert.True(graphicsModel.Primitives.ContainsLine(expectedBotLine))
+
+	expectedVerticalLine := graphics.Line{
+		P1:     graphics.Point{lineEndX, expectedTopLineY},
+		P2:     graphics.Point{lineEndX, expectedBotLineY},
+		Dashed: false,
+	}
+	assert.True(graphicsModel.Primitives.ContainsLine(expectedVerticalLine))
+
 	// The polygon representing the arrow should have a tip vertex
 	// at the same as the the bottom line's left hand end, and two others a little
 	// way to the right, and distributed above and below the tip.
-	/*
-		arrow := graphicsModel.Primitives.FilledPolys[0]
-		line := graphicsModel.Primitives.Lines[2]
-		assert.True(arrow.IncludesThisVertex(line.P2))
-		upperTail := graphics.Point{
-			X: line.P2.X - sizer.Get("ArrowLen"),
-			Y: line.P2.Y - 0.5*sizer.Get("ArrowWidth")}
-		assert.True(arrow.IncludesThisVertex(upperTail))
-		lowerTail := graphics.Point{
-			X: line.P2.X - sizer.Get("ArrowLen"),
-			Y: line.P2.Y + 0.5*sizer.Get("ArrowWidth")}
-		assert.True(arrow.IncludesThisVertex(lowerTail))
+	arrow := graphicsModel.Primitives.FilledPolys[0]
+	assert.True(arrow.IncludesThisVertex(expectedBotLine.P2))
+	upperTail := graphics.Point{
+		X: expectedBotLine.P2.X + sizer.Get("ArrowLen"),
+		Y: expectedBotLineY - 0.5*sizer.Get("ArrowWidth")}
+	assert.True(arrow.IncludesThisVertex(upperTail))
+	lowerTail := graphics.Point{
+		X: expectedBotLine.P2.X + sizer.Get("ArrowLen"),
+		Y: expectedBotLineY + 0.5*sizer.Get("ArrowWidth")}
+	assert.True(arrow.IncludesThisVertex(lowerTail))
 
-		// The updated tide mark should be just below the bottom
-		// interaction line, by the amount of a padding demanded by an
-		// interaction line.
-		assert.True(graphics.ValEqualIsh(updatedTideMark, line.P2.Y+sizer.Get(
-			"InteractionLinePadB")))
+	// The updated tide mark should be just below the bottom
+	// interaction line, by the amount of a padding demanded by an
+	// interaction line.
+	assert.True(graphics.ValEqualIsh(updatedTideMark, expectedBotLineY+sizer.Get(
+		"InteractionLinePadB")))
 
-		// Zero no go zones should have been registered.
-		assert.Len(noGoZones, 0)
+	// Zero no go zones should have been registered.
+	assert.Len(noGoZones, 0)
 
-		// An activity box should have been registered as starting for lifeline A,
-		// starting just abov the interaction line, and not yet terminated.
-		lifeA := lifelines[0]
-		boxSegs := activityBoxes[lifeA].AsSegments()
-		assert.Len(boxSegs, 1)
-		assert.True(graphics.ValEqualIsh(boxSegs[0].Start,
-			line.P1.Y-sizer.Get("ActivityBoxVerticalOverlap")))
-		assert.Equal(-1.0, boxSegs[0].End)
-	*/
-	_ = updatedTideMark
-	_ = noGoZones
+	// An activity box should have been registered as starting for the lifeline,
+	// starting just above the top interaction line, and not yet terminated.
+	lifeA := lifelines[0]
+	boxSegs := activityBoxes[lifeA].AsSegments()
+	assert.Len(boxSegs, 1)
+	assert.True(graphics.ValEqualIsh(boxSegs[0].Start,
+		expectedTopLineY-sizer.Get("ActivityBoxVerticalOverlap")))
+	assert.Equal(-1.0, boxSegs[0].End)
 }
 
 const tolerance = 0.001
-
-// entire self case - insofar is different from full
 
 // when only one interaction and it is dash, should not get a start box
 // registered, only a to box
