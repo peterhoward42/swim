@@ -231,12 +231,11 @@ func (mkr *Maker) endBox(
 	dep := mkr.dependencies
 	fromLifeline := s.ReferencedLifelines[0]
 	activityBoxes := dep.activityBoxes[fromLifeline]
-	tidemark += dep.sizer.Get("wontbeoverlapatendofbox")
 	err = activityBoxes.TerminateAt(tidemark)
 	if err != nil {
 		return -1, fmt.Errorf("activityBoxes.TerminateAt: %v", err)
 	}
-	tidemark += dep.sizer.Get("wontbeoverendboxdaylight")
+	tidemark += dep.sizer.Get("IndividualStoppedBoxPadB")
 	return tidemark, nil
 }
 

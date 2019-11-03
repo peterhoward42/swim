@@ -11,7 +11,8 @@ o  sizer
 					*  with single lifeline produces all the right things
 					   in detail
 					o  work through other maker tests (see comments)
-						*  spacer needs LifelinePitch()
+						o  stop present
+							o  refactor boiler plate in make test
 						 
 
 				o  revert to making sure works from diag.Create

@@ -134,7 +134,7 @@ func TestForSingleInteractionLineItProducesCorrectGraphicsAndSideEffects(t *test
 func TestForSmallDifferencesInDashVsFullInteractions(t *testing.T) {
 	// Differs from
 	// TestForSingleInteractionLineItProducesCorrectGraphicsAndSideEffects
-	// only innthat the interaction line called for is a dashed
+	// only in that the interaction line called for is a dashed
 	// one (i.e. by definition a return path), and only checks for the
 	// differences in behaviour.
 	assert := assert.New(t)
@@ -314,11 +314,63 @@ func TestSelfInteraction(t *testing.T) {
 	assert.Equal(-1.0, boxSegs[0].End)
 }
 
+func TestWhenExplicitStopIsPresent(t *testing.T) {
+	assert := assert.New(t)
+
+	dslScript := `
+		life A foo
+		life B bar
+		full AB fibble
+		stop B
+	`
+	dslModel := parser.MustCompileParse(dslScript)
+	width := 2000.0
+	fontHt := 10.0
+	sizer := sizer.NewLiteralSizer(map[string]float64{
+		"ActivityBoxVerticalOverlap": 5.0,
+		"ActivityBoxWidth":           40.0,
+		"ArrowLen":                   10.0,
+		"ArrowWidth":                 4.0,
+		"IdealLifelineTitleBoxWidth": 300.0,
+		"IndividualStoppedBoxPadB": 3.0,
+		"InteractionLinePadB":        4.0,
+		"InteractionLineTextPadB":    5.0,
+	})
+	lifelines := dslModel.LifelineStatements()
+	spacer := lifeline.NewSpacing(sizer, fontHt, width, lifelines)
+	dashLineDashLength := 5.0
+	dashLineGapLength := 1.0
+	graphicsModel := graphics.NewModel(
+		width, fontHt, dashLineDashLength, dashLineGapLength)
+
+	activityBoxes := map[*dsl.Statement]*lifeline.ActivityBoxes{}
+	for _, ll := range lifelines {
+		activityBoxes[ll] = lifeline.NewActivityBoxes()
+	}
+	makerDependencies := NewMakerDependencies(
+		fontHt, spacer, sizer, activityBoxes)
+	interactionsMaker := NewMaker(makerDependencies, graphicsModel)
+	tideMark := 30.0
+	updatedTideMark, _, err := interactionsMaker.ScanInteractionStatements(
+		tideMark, dslModel.Statements())
+	assert.NoError(err)
+
+	// An activity box should have been registered as stopping for lifeline B,
+	// beyond the interaction line by the line's bottom padding.
+	lifeB := lifelines[1]
+	boxSegs := activityBoxes[lifeB].AsSegments()
+	assert.Len(boxSegs, 1)
+	linePadding := sizer.Get("InteractionLinePadB")
+	line := graphicsModel.Primitives.Lines[0]
+	expectedStopY := line.P1.Y + linePadding
+	assert.True(graphics.ValEqualIsh(boxSegs[0].End, expectedStopY))
+
+	// The updated tide mark should be a little below where the box ends.
+	stopPadding := sizer.Get("IndividualStoppedBoxPadB")
+	expectedTidemark := expectedStopY + stopPadding
+	assert.True(graphics.ValEqualIsh(updatedTideMark, expectedTidemark))
+}
+
 const tolerance = 0.001
-
-// when only one interaction and it is dash, should not get a start box
-// registered, only a to box
-
-// simplest case when a stop is present
 
 // get a wrapped error when one of the dispatched fns errors

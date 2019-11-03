@@ -78,6 +78,7 @@ var table = map[string]float64{
 	"ActivityBoxWidth":           1.5,
 	"ActivityBoxVerticalOverlap": 0.5,
 	"FinalizedActivityBoxesPadB": 1.0,
+	"IndividualStoppedBoxPadB":   0.5,
 
 	// Lifelines
 	"MinLifelineSegLength": 0.5,
