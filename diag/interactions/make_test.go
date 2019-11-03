@@ -371,6 +371,5 @@ func TestWhenExplicitStopIsPresent(t *testing.T) {
 	assert.True(graphics.ValEqualIsh(updatedTideMark, expectedTidemark))
 }
 
-const tolerance = 0.001
 
-// get a wrapped error when one of the dispatched fns errors
+const tolerance = 0.001

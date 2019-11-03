@@ -6,16 +6,15 @@ o  sizer
 				*  switch over nascent scanner code
 				*  give it a make method
 				*  tdd runs withtout crashing from diag test
-				o  switch to tdd of interactions.make method
-					*  runs without crashing
-					*  with single lifeline produces all the right things
-					   in detail
-					o  work through other maker tests (see comments)
-						o  stop present
-							o  refactor boiler plate in make test
-						 
-
-				o  revert to making sure works from diag.Create
+				*  switch to tdd of interactions.make method
+				*  revert to making sure works from diag.Create
+				*  finalize activity boxes
+				o  finalize lifelines
+					o  anticipate a lifeline Finalizer
+						*  design
+						*  express intent in diag.Create
+					o  tdd the Finalizer
+					o  deploy it in diag.Create
 				o  what tests possible from diag.Create?
 	o  Segment should have constructor to avoid so many warnings about it
 	   using unkeyed fields
@@ -89,8 +88,11 @@ o  sizer
 
 
 ----------------------------------------------------------------------------
-ilzones
+lifeline finalizer
 ----------------------------------------------------------------------------
-o  one clear responsibiity is registry
-o  another is which lifelines does A->B cross
-o  another is which reg claims affect C 
+o  construct DI:
+	o  all lifelines
+	o  nogozones keyed on lifeline
+	o  activity boxes keyed on lifeline
+	o  prims
+o  finalize method(atY) updatedTideMark
