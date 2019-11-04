@@ -14,6 +14,9 @@ o  sizer
 						*  design
 						*  express intent in diag.Create
 					o  tdd the Finalizer
+						o  gap logic with simple case
+							o  in middle of
+						o  what is different about other cases?
 					o  deploy it in diag.Create
 				o  what tests possible from diag.Create?
 	o  Segment should have constructor to avoid so many warnings about it

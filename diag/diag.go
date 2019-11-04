@@ -105,9 +105,10 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 	// Draw the lifelines from top to bottom, leaving gaps where there are
 	// activity boxes, or NoGoZone(s) in the way.
 	lifelineF := lifelines.NewFinalizer(lifelines, noGoZones, activityBoxes)
-	bottom := tideMark + sizer.Get("")
+	top := bottom of title boxes
+	bottom := tideMark
 	err := lifelineF.Finalize(bottom, graphicsModel.Primitives)
-	tideMark = bottom
+	tideMark += sizer.Get("LifelinePadB")
 
 	_ = tideMark
 	_ = interactionsMaker
