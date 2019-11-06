@@ -1,5 +1,6 @@
 package graphics
 
+
 /*
 This module provides some queries that can be made against the model's
 contents. For example does it contain the four lines required to represent

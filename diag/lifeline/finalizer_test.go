@@ -28,6 +28,7 @@ func TestGapLogicWithSimpleCase(t *testing.T) {
 	width := 2000.0
 	fontHt := 10.0
 	sizer := sizer.NewLiteralSizer(map[string]float64{
+		"FrameInternalPadB":          10,
 		"IdealLifelineTitleBoxWidth": 300.0,
 	})
 	lifelines := dslModel.LifelineStatements()
@@ -45,28 +46,46 @@ func TestGapLogicWithSimpleCase(t *testing.T) {
 	err = boxesForLifeB.TerminateAt(90)
 	assert.NoError(err)
 
-	lifelineF := NewFinalizer(lifelines, noGoZones, activityBoxes)
+	minSegLen := 1.0
+	lifelineF := NewFinalizer(lifelines, spacer, noGoZones, activityBoxes, sizer)
 	top := 10.0
 	bottom := 100.0
 	primitives := graphics.NewPrimitives()
-	err = lifelineF.Finalize(top, bottom, primitives)
+	updatedTidemark, err := lifelineF.Finalize(top, bottom, minSegLen, primitives)
 	assert.NoError(err)
 
-	// The lines created for lifelines A and C should run from top to bottom
-	// uninterrupted.
-	lifeACoords, err := spacer.CentreLine(lifelines[0])
-	assert.NoError(err)
-	expectedX := lifeACoords.Centre
-	expectedLineA := graphics.Line{
-		P1:     graphics.Point{X: expectedX, Y: top},
-		P2:     graphics.Point{X: expectedX, Y: bottom},
-		Dashed: true,
+	// The lines created for lifelines A and C (only) should run from
+	// top to bottom uninterrupted.
+	for _, i := range []int{0, 2} {
+		lifeCoords, err := spacer.CentreLine(lifelines[i])
+		assert.NoError(err)
+		expectedX := lifeCoords.Centre
+		expectedLine := graphics.Line{
+			P1:     graphics.Point{X: expectedX, Y: top},
+			P2:     graphics.Point{X: expectedX, Y: bottom},
+			Dashed: true,
+		}
+		assert.True(primitives.ContainsLine(expectedLine))
 	}
-	assert.True(primitives.ContainsLine(expectedLineA))
 
 	// The lines created for lifeline B should have gaps in.
-
-	// segs should be various top to bottom coords
+	lifeCoords, err := spacer.CentreLine(lifelines[1])
+	assert.NoError(err)
+	expectedX := lifeCoords.Centre
+	expectedSegments := []geom.Segment{
+		geom.Segment{Start: 10, End: 50},
+		geom.Segment{Start: 60, End: 80},
+		geom.Segment{Start: 90, End: 100},
+	}
+	for _, seg := range expectedSegments {
+		expectedLine := graphics.Line{
+			P1:     graphics.Point{X: expectedX, Y: seg.Start},
+			P2:     graphics.Point{X: expectedX, Y: seg.End},
+			Dashed: true,
+		}
+		assert.True(primitives.ContainsLine(expectedLine))
+	}
 
 	// tidemark should be what it should be
+	assert.True(graphics.ValEqualIsh(updatedTidemark, bottom+sizer.Get("FrameInternalPadB")))
 }
