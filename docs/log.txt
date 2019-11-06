@@ -14,8 +14,7 @@ o  sizer
 						*  design
 						*  express intent in diag.Create
 					o  tdd the Finalizer
-						o  gap logic with simple case
-							o  in middle of
+						*  gap logic with simple case
 						o  what is different about other cases?
 					o  deploy it in diag.Create
 				o  what tests possible from diag.Create?

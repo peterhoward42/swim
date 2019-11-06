@@ -8,7 +8,9 @@ dashed lines, arrow sizing, the margins or padding required for each thing etc.
 */
 package sizer
 
-// Sizer defines the contract for a thing that can provide sizes.
+// Sizer defines the contract for a thing that can provide sizes for diagram
+// elements. E.g. the width of an activity box, or the padding required below
+// and interaction line label.
 type Sizer interface {
 
 	// Get returns the size specified by propertyName, or panics

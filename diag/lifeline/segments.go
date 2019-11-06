@@ -7,7 +7,7 @@ import (
 )
 
 /*
-Segments represents the separate line segments that should be drawn to
+LifelineSegments represents the separate line segments that should be drawn to
 represent a lifeline, once the gaps that are needed in it  have been taken into
 account.
 */
@@ -16,7 +16,8 @@ type LifelineSegments struct {
 }
 
 /*
-Assemble populates s by working out the segments required taking into account
+Assemble populates a LifelineSegments by working out the segments
+required taking into account
 both the gaps that are required to avoid NoGoZone(s), and the gaps required to
 not interfere with the lifeline's activity boxes. It also makes a few
 adjustments - for example to avoid ending up with very tiny segments.

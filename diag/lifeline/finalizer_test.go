@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGapLogicWithSimpleCase(t *testing.T) {
+func TestLifelinesGetDrawnCorrectlyIncludingMakingTheRequiredGaps(t *testing.T) {
 	assert := assert.New(t)
 
 	// Our test case will have 3 lifelines from left to right A,B,C,

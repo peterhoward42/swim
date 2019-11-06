@@ -47,7 +47,7 @@ func (f *Finalizer) Finalize(
 	return bottom + f.sizer.Get("FrameInternalPadB"), nil
 }
 
-// finalizeOne draws on lifeline.
+// finalizeOne draws one lifeline.
 func (f *Finalizer) finalizeOne(
 	lifeline *dsl.Statement, top float64, bottom float64,
 	minSegLen float64, primitives *graphics.Primitives) error {
