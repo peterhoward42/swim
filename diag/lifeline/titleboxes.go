@@ -35,18 +35,19 @@ title boxes, and adds them to prims.
 */
 func (tbx TitleBoxes) Make(
 	currentTideMark float64,
-	prims *graphics.Primitives) (newTideMark float64, err error) {
+	prims *graphics.Primitives) (newTideMark float64, bottomOfBoxes float64, err error) {
 
 	totalHeight, forLabelsHeight := tbx.Height()
 	for _, life := range tbx.lifelines {
 		err := tbx.MakeOne(life, currentTideMark, totalHeight, forLabelsHeight,
 			prims)
 		if err != nil {
-			return -1.0, fmt.Errorf("MakeOne: %v", err)
+			return -1.0, -1.0, fmt.Errorf("MakeOne: %v", err)
 		}
 	}
-	newTideMark = currentTideMark + totalHeight + tbx.sizer.Get("TitleBoxPadB")
-	return newTideMark, nil
+	bottomOfBoxes = currentTideMark + totalHeight
+	newTideMark = bottomOfBoxes + tbx.sizer.Get("TitleBoxPadB")
+	return newTideMark, bottomOfBoxes, nil
 }
 
 /*

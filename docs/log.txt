@@ -2,24 +2,16 @@ o  sizer
 	o  now look again at creator itself for more stripping out
 		o  try making a rival creator in diag/api package and see what packages 
 		   and modules can be split out, attempting tdd as we go
-			o  interactions maker
-				*  switch over nascent scanner code
-				*  give it a make method
-				*  tdd runs withtout crashing from diag test
-				*  switch to tdd of interactions.make method
-				*  revert to making sure works from diag.Create
-				*  finalize activity boxes
-				o  finalize lifelines
-					o  anticipate a lifeline Finalizer
-						*  design
-						*  express intent in diag.Create
-					o  tdd the Finalizer
-						*  gap logic with simple case
-						o  what is different about other cases?
-					o  deploy it in diag.Create
-				o  what tests possible from diag.Create?
+			*  interactions maker
+			*  finalize activity boxes
+			*  finalize lifelines
+			o  finalize frame itself
+			o  finalize diagram height
+			o  have we covered adding letters to lifeline labels?
+			o  what tests possible from diag.Create?
 	o  Segment should have constructor to avoid so many warnings about it
 	   using unkeyed fields
+	o  Capitulate 100 char lines and lint enforce, improve
 
 
 	o  wean off reference input?

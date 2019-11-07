@@ -33,7 +33,7 @@ func TestSmallestViableExampleExhaustively(t *testing.T) {
 	tideMark := 10.0
 	prims := graphics.NewPrimitives()
 	titleBoxes := NewTitleBoxes(sizer, spacer, lifelines, fontHeight)
-	newTideMark, err := titleBoxes.Make(tideMark, prims)
+	newTideMark, bottomOfBoxes, err := titleBoxes.Make(tideMark, prims)
 	assert.NoError(err)
 
 	// Correct title box rectangle present?
@@ -55,6 +55,7 @@ func TestSmallestViableExampleExhaustively(t *testing.T) {
 	}
 	assert.True(prims.ContainsLabel(expectedLabel))
 
+	assert.Equal(23.0, bottomOfBoxes)
 	assert.Equal(26.0, newTideMark)
 }
 
@@ -80,7 +81,7 @@ func TestIsConsumingMultipleLifelinesProperly(t *testing.T) {
 	tideMark := 10.0
 	prims := graphics.NewPrimitives()
 	titleBoxes := NewTitleBoxes(sizer, spacer, lifelines, fontHeight)
-	newTideMark, err := titleBoxes.Make(tideMark, prims)
+	newTideMark, _, err := titleBoxes.Make(tideMark, prims)
 	assert.NoError(err)
 
 	// Capture metrics
@@ -99,7 +100,7 @@ func TestIsConsumingMultipleLifelinesProperly(t *testing.T) {
 	tideMark = 10.0
 	prims = graphics.NewPrimitives()
 	titleBoxes = NewTitleBoxes(sizer, spacer, lifelines, fontHeight)
-	newTideMark, err = titleBoxes.Make(tideMark, prims)
+	newTideMark, _, err = titleBoxes.Make(tideMark, prims)
 
 	newLinesProduced := len(prims.Lines)
 	assert.True(newLinesProduced > linesProduced)

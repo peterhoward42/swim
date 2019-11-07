@@ -81,5 +81,6 @@ var table = map[string]float64{
 	"IndividualStoppedBoxPadB":   0.5,
 
 	// Lifelines
+	"LifelinePadB":         0.5,
 	"MinLifelineSegLength": 0.5,
 }

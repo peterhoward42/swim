@@ -16,7 +16,6 @@ type Finalizer struct {
 	spacer        *Spacing
 	noGoZones     []nogozone.NoGoZone
 	activityBoxes map[*dsl.Statement]*ActivityBoxes
-	sizer         sizer.Sizer
 }
 
 // NewFinalizer provides a Finalizer ready to use.
@@ -31,20 +30,19 @@ func NewFinalizer(
 		spacer:        spacer,
 		noGoZones:     noGoZones,
 		activityBoxes: activityBoxes,
-		sizer:         sizer,
 	}
 }
 
 // Finalize draws all the lifelines.
 func (f *Finalizer) Finalize(
 	top float64, bottom float64, minSegLen float64,
-	primitives *graphics.Primitives) (updatedTidemark float64, err error) {
+	primitives *graphics.Primitives) error {
 	for _, ll := range f.lifelines {
 		if err := f.finalizeOne(ll, top, bottom, minSegLen, primitives); err != nil {
-			return -1, fmt.Errorf("finalizeOne: %v", err)
+			return fmt.Errorf("finalizeOne: %v", err)
 		}
 	}
-	return bottom + f.sizer.Get("FrameInternalPadB"), nil
+	return nil
 }
 
 // finalizeOne draws one lifeline.

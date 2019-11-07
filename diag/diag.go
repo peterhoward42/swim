@@ -49,7 +49,7 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 		sizer.Get("DashLineDashGap"))
 	prims := graphicsModel.Primitives
 
-	// Delegate to a specialise object to take responsibility for the graphics
+	// Delegate to a specialised object to take responsibility for the graphics
 	// of the overall outer frame and title box.
 	frameMaker := frame.NewMaker(sizer, fontHeight, prims)
 	tideMark := frameMaker.InitFrameAndMakeTitleBox(dslModel.Title(),
@@ -64,7 +64,7 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 	// of the diagram, we can delegate to a component that knows how to make
 	// the title boxes at the top of each lifeline.
 	titleBoxes := lifeline.NewTitleBoxes(sizer, lifelineSpacing, lifelines, fontHeight)
-	tideMark, err := titleBoxes.Make(tideMark, prims)
+	tideMark, bottomOfTitleBoxes, err := titleBoxes.Make(tideMark, prims)
 	if err != nil {
 		return nil, fmt.Errorf("titleBoxes.Make: %v", err)
 	}
@@ -81,7 +81,8 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 		activityBoxes[ll] = lifeline.NewActivityBoxes()
 	}
 
-	// Now construct the component that make the interaction lines.
+	// Now construct the component that makes the interaction lines and their
+	// labels and arrows.
 	makerDependencies := interactions.NewMakerDependencies(
 		fontHeight, lifelineSpacing, sizer, activityBoxes)
 	interactionsMaker := interactions.NewMaker(makerDependencies, graphicsModel)
@@ -104,10 +105,14 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 
 	// Draw the lifelines from top to bottom, leaving gaps where there are
 	// activity boxes, or NoGoZone(s) in the way.
-	lifelineF := lifelines.NewFinalizer(lifelines, noGoZones, activityBoxes)
-	top := bottom of title boxes
-	bottom := tideMark
-	err := lifelineF.Finalize(bottom, graphicsModel.Primitives)
+	lifelineFinalizer := lifeline.NewFinalizer(
+		lifelines, lifelineSpacing, noGoZones, activityBoxes, sizer)
+	minSegLen := sizer.Get("MinLifelineSegLength")
+	err = lifelineFinalizer.Finalize(
+		bottomOfTitleBoxes, tideMark, minSegLen, graphicsModel.Primitives)
+	if err != nil {
+		return nil, fmt.Errorf("lifelineFinalizer.Finalize: %v", err)
+	}
 	tideMark += sizer.Get("LifelinePadB")
 
 	_ = tideMark

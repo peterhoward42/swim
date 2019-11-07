@@ -51,7 +51,7 @@ func TestLifelinesGetDrawnCorrectlyIncludingMakingTheRequiredGaps(t *testing.T) 
 	top := 10.0
 	bottom := 100.0
 	primitives := graphics.NewPrimitives()
-	updatedTidemark, err := lifelineF.Finalize(top, bottom, minSegLen, primitives)
+	err = lifelineF.Finalize(top, bottom, minSegLen, primitives)
 	assert.NoError(err)
 
 	// The lines created for lifelines A and C (only) should run from
@@ -85,7 +85,4 @@ func TestLifelinesGetDrawnCorrectlyIncludingMakingTheRequiredGaps(t *testing.T) 
 		}
 		assert.True(primitives.ContainsLine(expectedLine))
 	}
-
-	// tidemark should be what it should be
-	assert.True(graphics.ValEqualIsh(updatedTidemark, bottom+sizer.Get("FrameInternalPadB")))
 }
