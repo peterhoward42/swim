@@ -16,10 +16,12 @@ Creator is the type that provides the API and entry point for the diag package.
 It provides the main Create method that produces a diagram.
 */
 type Creator struct {
-	// The state used during the creation process is complex, so the design
-	// aim is to avoid holding it at this level, and introduce it for as
-	// short a lifecycle as possible, and with as little propagation as
-	// possible only in the Create method call.
+	// The creation algorithm is highly stateful, so the design
+	// aim is to avoid holding it as Creator attributes, and create it instead
+	// where needed in local variables in the Create method, and to
+	// dependency-inject values from the state into the constructors of
+	// helper objects, so that, as far as is possible, they do not need to be
+	// stateful in of themselves.
 }
 
 /*
@@ -31,7 +33,7 @@ func NewCreator() (*Creator, error) {
 
 /*
 Create is the main API method which work out what the diagram should look like.
-It orchestrates a multi-pass creation process which accumulates the graphics
+It orchestrates the creation process which accumulates the graphics
 primitives required in its graphicsModel and then returns that model.
 */
 func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
@@ -71,8 +73,7 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 
 	// Now we're going to make the graphics for all the interaction lines,
 	// and "work down the page" as we do so.
-	// It requires us to prepare some helper components on which that part
-	// is dependent.
+	// It requires us to prepare some helper components.
 
 	// A set of components that keep track of where activity boxes should be
 	// started and stopped on each lifeline.
@@ -83,9 +84,9 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 
 	// Now construct the component that makes the interaction lines and their
 	// labels and arrows.
-	makerDependencies := interactions.NewMakerDependencies(
+	d := interactions.NewMakerDependencies(
 		fontHeight, lifelineSpacing, sizer, activityBoxes)
-	interactionsMaker := interactions.NewMaker(makerDependencies, graphicsModel)
+	interactionsMaker := interactions.NewMaker(d, graphicsModel)
 
 	// And mandate it to do so.
 	tideMark, noGoZones, err := interactionsMaker.ScanInteractionStatements(
@@ -115,9 +116,12 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 	}
 	tideMark += sizer.Get("LifelinePadB")
 
-	_ = tideMark
-	_ = interactionsMaker
-	_ = noGoZones
+	// Finish up by drawing the frame's enclosing rectangle.
+	tideMark = frameMaker.FinalizeFrame(tideMark, width)
 
-	return nil, nil
+	// Tell the graphicsModel what its resultant height is.
+	tideMark += sizer.Get("DiagramPadB")
+	graphicsModel.Height = tideMark
+
+	return graphicsModel, nil
 }

@@ -7,8 +7,7 @@ import (
 
 /*
 NoGoZone models the space that a (horizontal) interaction line and its label
-occupies, in order to advise crossing (vertical) lifelines where they must be
-broken, so as to avoid clashing.
+occupies.
 */
 type NoGoZone struct {
 	Height           geom.Segment

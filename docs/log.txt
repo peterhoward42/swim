@@ -5,10 +5,16 @@ o  sizer
 			*  interactions maker
 			*  finalize activity boxes
 			*  finalize lifelines
-			o  finalize frame itself
-			o  finalize diagram height
-			o  have we covered adding letters to lifeline labels?
-			o  what tests possible from diag.Create?
+			*  finalize frame itself
+			*  finalize diagram height
+			*  have we covered adding letters to lifeline labels? = yes
+			*  be nicer if diag.diag was more distinct
+			o  what tests possible for diag.Creator?
+				o  number of lines
+					o  too few?
+						o  we are modelling but not drawing activity boxes
+							o  tdd from activity box pov first
+				o  continue with tests in create_test.go comments
 	o  Segment should have constructor to avoid so many warnings about it
 	   using unkeyed fields
 	o  Capitulate 100 char lines and lint enforce, improve

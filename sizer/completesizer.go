@@ -65,6 +65,7 @@ var table = map[string]float64{
 
 	// Interaction lines
 	"ArrowLen":                1.5,
+	"ArrowWidth":              0.5,
 	"InteractionLinePadB":     0.5,
 	"InteractionLineTextPadB": 0.5,
 	"SelfLoopHeight":          3.0,
