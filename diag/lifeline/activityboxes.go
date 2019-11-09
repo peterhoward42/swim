@@ -13,7 +13,7 @@ don't know when an activity box should be closed off, at the time you have
 to register where it should start.
 */
 type ActivityBoxes struct {
-	segs []geom.Segment // Used to track the box start and end Y coordinate.
+	segs []geom.Segment // Used to track the start and end of each box.
 }
 
 // NewActivityBoxes provides an an ActivityBoxes ready to use.

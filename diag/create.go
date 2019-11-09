@@ -95,12 +95,19 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 		return nil, fmt.Errorf("interactionsMaker.ScanInteractionStatements: %v", err)
 	}
 
-	// Now we know how far south the diagram has grown, we can terminate any
-	// activity boxes that have not been closed explicity with a stop command.
+	// Now we know how far south the diagram has grown, we can terminate and draw,
+	// any activity boxes that have not been closed explicity with a stop command.
 	for _, ll := range lifelines {
-		if err := activityBoxes[ll].TerminateAt(tideMark); err != nil {
+		boxes := activityBoxes[ll]
+		if err := boxes.TerminateAt(tideMark); err != nil {
 			return nil, fmt.Errorf("activityBoxes.TerminateAt: %v", err)
 		}
+		lifeCoords, err := lifelineSpacing.CentreLine(ll)
+		if err != nil {
+			return nil, fmt.Errorf("lifelineSpacing.CentreLine: %v", err)
+		}
+		lifeline.NewActivityBoxDrawer(*boxes, lifeCoords.Centre, 
+			sizer.Get("ActivityBoxWidth")).Draw(prims)
 	}
 	tideMark += sizer.Get("FinalizedActivityBoxesPadB")
 
