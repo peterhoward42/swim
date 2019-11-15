@@ -27,8 +27,10 @@ var _ Sizer = cs
 
 // NewCompleteSizer provides a NewSizer structure that has been initialised
 // and is ready for use.
-func NewCompleteSizer(diagramWidth float64, fontHeight float64) *CompleteSizer {
-	return &CompleteSizer{diagramWidth}
+func NewCompleteSizer(fontHeight float64) *CompleteSizer {
+	return &CompleteSizer{
+		fontHeight: fontHeight,
+	}
 }
 
 // Get returns the size specified by propertyName, or panics
@@ -51,7 +53,6 @@ var table = map[string]float64{
 	// Outer frame and diagram title
 	"FramePadLR":         0.5,
 	"FrameInternalPadB":  1.0,
-	"FrameTitleBoxWidth": 100.0,
 	"FrameTitleTextPadT": 0.5,
 	"FrameTitleTextPadB": 1.0,
 	"FrameTitleTextPadL": 1.0,

@@ -16,12 +16,6 @@ Creator is the type that provides the API and entry point for the diag package.
 It provides the main Create method that produces a diagram.
 */
 type Creator struct {
-	// The creation algorithm is highly stateful, so the design
-	// aim is to avoid holding it as Creator attributes, and create it instead
-	// where needed in local variables in the Create method, and to
-	// dependency-inject values from the state into the constructors of
-	// helper objects, so that, as far as is possible, they do not need to be
-	// stateful in of themselves.
 }
 
 /*
@@ -41,7 +35,7 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 	// the help of a sizer.Sizer that is initialised with these, before we do
 	// much else.
 	width, fontHeight := DrivingDimensions{}.WidthAndFontHeight(dslModel)
-	sizer := sizer.NewCompleteSizer(width, fontHeight)
+	sizer := sizer.NewCompleteSizer(fontHeight)
 
 	// Initialise the graphics model that will be populated with lines, text,
 	// arrows etc.
@@ -53,9 +47,11 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 
 	// Delegate to a specialised object to take responsibility for the graphics
 	// of the overall outer frame and title box.
-	frameMaker := frame.NewMaker(sizer, fontHeight, prims)
+	frameMaker := frame.NewMaker(sizer, fontHeight, width, prims)
 	tideMark := frameMaker.InitFrameAndMakeTitleBox(dslModel.Title(),
 		sizer.Get("DiagramPadT"))
+
+	fmt.Printf("XXXXX initframe: %v\n", len(prims.Lines))
 
 	// Seek help from another sizing/spacing component - this time, one that is
 	// knows how to spread lifelines across the diagram width-wise.
@@ -70,6 +66,7 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 	if err != nil {
 		return nil, fmt.Errorf("titleBoxes.Make: %v", err)
 	}
+	fmt.Printf("XXXXX titleboxes: %v\n", len(prims.Lines))
 
 	// Now we're going to make the graphics for all the interaction lines,
 	// and "work down the page" as we do so.
@@ -94,6 +91,7 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 	if err != nil {
 		return nil, fmt.Errorf("interactionsMaker.ScanInteractionStatements: %v", err)
 	}
+	fmt.Printf("XXXXX interactions: %v\n", len(prims.Lines))
 
 	// Now we know how far south the diagram has grown, we can terminate and draw,
 	// any activity boxes that have not been closed explicity with a stop command.
@@ -109,6 +107,8 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 		lifeline.NewActivityBoxDrawer(*boxes, lifeCoords.Centre, 
 			sizer.Get("ActivityBoxWidth")).Draw(prims)
 	}
+	fmt.Printf("XXXXX activity boxes: %v\n", len(prims.Lines))
+
 	tideMark += sizer.Get("FinalizedActivityBoxesPadB")
 
 	// Draw the lifelines from top to bottom, leaving gaps where there are
@@ -121,10 +121,13 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 	if err != nil {
 		return nil, fmt.Errorf("lifelineFinalizer.Finalize: %v", err)
 	}
+	fmt.Printf("XXXXX lifelines: %v\n", len(prims.Lines))
+
 	tideMark += sizer.Get("LifelinePadB")
 
 	// Finish up by drawing the frame's enclosing rectangle.
-	tideMark = frameMaker.FinalizeFrame(tideMark, width)
+	tideMark = frameMaker.FinalizeFrame(tideMark)
+	fmt.Printf("XXXXX frame rect: %v\n", len(prims.Lines))
 
 	// Tell the graphicsModel what its resultant height is.
 	tideMark += sizer.Get("DiagramPadB")

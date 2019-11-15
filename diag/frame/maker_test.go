@@ -22,7 +22,6 @@ func TestInitializeStep(t *testing.T) {
 
 	sizer := sizer.NewLiteralSizer(map[string]float64{
 		"FramePadLR":         11,
-		"FrameTitleBoxWidth": 200,
 		"FrameTitleRectPadB": 2,
 		"FrameTitleTextPadL": 4,
 		"FrameTitleTextPadB": 7,
@@ -30,7 +29,8 @@ func TestInitializeStep(t *testing.T) {
 	})
 	prims := graphics.NewPrimitives()
 	fontHeight := 6.0
-	maker := NewMaker(sizer, fontHeight, prims)
+	diagWidth := 2000.0
+	maker := NewMaker(sizer, fontHeight, diagWidth, prims)
 	frameTop := 5.0
 	title := "My title"
 	tideMark := maker.InitFrameAndMakeTitleBox([]string{title}, frameTop)
@@ -48,7 +48,7 @@ func TestInitializeStep(t *testing.T) {
 	// Title Rect
 	assert.Len(prims.Lines, 4)
 	tl := graphics.Point{X: 11, Y: 5}
-	br := graphics.Point{X: 200, Y: 23}
+	br := graphics.Point{X: 611, Y: 23}
 	assert.True(prims.ContainsRect(tl, br))
 
 	// Tidemark
@@ -72,17 +72,17 @@ func TestFinalizeStep(t *testing.T) {
 	})
 	prims := graphics.NewPrimitives()
 	unusedFontHeight := 9999999999.0
-	maker := NewMaker(sizer, unusedFontHeight, prims)
+	diagWidth := 2000.0
+	maker := NewMaker(sizer, unusedFontHeight, diagWidth, prims)
 	initialTideMark := 200.0
-	diagWidth := 500.0
 
 	maker.frameTop = 10 // Simulates this state having been set in earlier step.
-	tideMark := maker.FinalizeFrame(initialTideMark, diagWidth)
+	tideMark := maker.FinalizeFrame(initialTideMark)
 
 	// Title Rect
 	assert.Len(prims.Lines, 4)
 	tl := graphics.Point{X: 7, Y: 10}
-	br := graphics.Point{X: 493, Y: 205}
+	br := graphics.Point{X: 1993, Y: 205}
 	assert.True(prims.ContainsRect(tl, br))
 
 	// Tidemark

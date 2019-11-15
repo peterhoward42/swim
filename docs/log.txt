@@ -1,63 +1,20 @@
 o  sizer
-	o  now look again at creator itself for more stripping out
-		o  try making a rival creator in diag/api package and see what packages 
-		   and modules can be split out, attempting tdd as we go
-			*  interactions maker
-			*  finalize activity boxes
-			*  finalize lifelines
-			*  finalize frame itself
-			*  finalize diagram height
-			*  have we covered adding letters to lifeline labels? = yes
-			*  be nicer if diag.diag was more distinct
-			o  what tests possible for diag.Creator?
-				o  number of lines
-					o  getting 29, expect 28
-				o  continue with tests in create_test.go comments
+	*  now look again at creator itself for more stripping out
+	o  get rid of hidden creator and tests
+	o  see if can get all tests to pass?
+	o  commit as sizer change
+	o  merge to main
+	o  new branch
 	o  rename activyBoxes?
 	o  Segment should have constructor to avoid so many warnings about it
-	   using unkeyed fields
+	   using unkeyed fields, so should Point, Line, Prims
 	o  Capitulate 100 char lines and lint enforce, improve
-	o  Add explicit arrows choice to graphics model?
-	o  Add scaling helpers to graphics model
-
 
 	o  wean off reference input?
-	o  find other targets to use sizer
-	o  decide which of now disparate packages to pull back into diag
-	o  fix up all existing places that use old sizer without trying torefactor
-	   more than that
-	o  commit as sizer change
 
-	o  sizer could be defined as interface, so that then provide 
-	   locked down one for tests, and be free to tune over time 
-	   without breaking tests
-	o  could be defined as single method interface with string
-	   dict lookup to allow sparse implementations
-	o  could have concrete implemenation that takes sparse
-	   dict constructor dict
-
-
-
-    o  reduce creator attributes and member methods in favour of DI to 
-       methods, so that...
-    o  main lifecycle helper methods can be split out to other diag modules,
-       leaving diag package (below) as only containing only synthesis
-       phases types and methods
-
-        o  the following helper modules should be stdalong packages, with
-           private attributes, DI and unit tests:
-           o  boxstate
-           o  framemaker
-           o  ilzones
-           o  lifelinegeom
-           o  lifelinemaker
-           o  segment
-
-        o  come back to creator itself
-            o  can creator be split into api and internal?
-            o  none of the new methods in creator init should take a 
-               creator argument
 	o  box state looks like it can be simplified, and could do with a test
+	o  Add explicit arrows choice to graphics model?
+	o  Add scaling helpers to graphics model
 	o  arrow could go into something like a plain geom package
 	o  design docco, package docco  and readme needs reflecting
                

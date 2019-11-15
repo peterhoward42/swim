@@ -1,6 +1,5 @@
 package graphics
 
-
 /*
 This module provides some queries that can be made against the model's
 contents. For example does it contain the four lines required to represent
@@ -107,4 +106,31 @@ func (p *Primitives) ContainsLabel(label Label) bool {
 		}
 	}
 	return false
+}
+
+// BoundingBoxOfLines provides the bounding box extents of the lines
+// present in the Primitives object.
+func (p *Primitives) BoundingBoxOfLines() (left, top, right, bottom float64) {
+	const huge = 1e12
+	left = huge
+	top = huge
+	right = -huge
+	bottom = -huge
+	for _, line := range p.Lines {
+		for _, pt := range []Point{line.P1, line.P2} {
+			if pt.X < left {
+				left = pt.X
+			}
+			if pt.Y < top {
+				top = pt.Y
+			}
+			if pt.X > right {
+				right = pt.X
+			}
+			if pt.Y > bottom {
+				bottom = pt.Y
+			}
+		}
+	}
+	return
 }

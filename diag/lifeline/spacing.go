@@ -12,7 +12,7 @@ import (
 Spacing holds the knowledge about the horizontal pitch and geometry
 of lifelines. For example, how to space them out across the page.
 
-It makes all the title boxes the same width, and distributes these equally
+The implementation makes all the title boxes the same width, and distributes these equally
 across the width of the diagram. It uses the same gap (gutter) between these
 boxes and as margins at the left and right edge of the diagram.
 */

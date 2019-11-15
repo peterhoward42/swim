@@ -138,3 +138,16 @@ func TestContainsLabel(t *testing.T) {
 	label.Anchor.X += 1
 	assert.False(p.ContainsLabel(label))
 }
+
+func TestContentsBoundingBox(t *testing.T) {
+	assert := assert.New(t)
+	p := NewPrimitives()
+	dashed := true
+	p.AddLine(10, 11, 100, 101, dashed)
+	p.AddLine(20, 3, 150, 80, dashed)
+	left, top, right, bottom := p.BoundingBoxOfLines()
+	assert.Equal(10.0, left)
+	assert.Equal(3.0, top)
+	assert.Equal(150.0, right)
+	assert.Equal(101.0, bottom)
+}

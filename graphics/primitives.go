@@ -1,6 +1,9 @@
 package graphics
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 /*
 This module provides graphics primitive types like Point and Line etc, along
@@ -65,6 +68,7 @@ func (p *Primitives) AddLine(
 	x1 float64, y1 float64, x2 float64, y2 float64, dashed bool) {
 	line := Line{Point{x1, y1}, Point{x2, y2}, dashed}
 	p.Lines = append(p.Lines, line)
+	fmt.Printf("XXXXX Adding line to X: %v\n", math.Max(x1, x2))
 }
 
 // AddFilledPoly adds the given filled polygon to the Primitive's store.
