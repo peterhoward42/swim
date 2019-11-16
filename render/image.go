@@ -6,12 +6,9 @@ This module provides the ImageFileCreator type and its methods.
 
 import (
 	"fmt"
-
 	"golang.org/x/image/colornames"
-
 	"github.com/fogleman/gg"
 	"github.com/golang/freetype/truetype"
-
 	"github.com/peterhoward42/umli/graphics"
 )
 

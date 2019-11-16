@@ -54,7 +54,7 @@ func TestStrippingOutWords(t *testing.T) {
 	// Make sure it works when one of the words to remove is not present
 	stripped = (&Parser{}).removeStrings(
 		"the quick lazy brown fox",
-		"quick", "XXXXXXX", "fox")
+		"quick", "QQQQQQ", "fox")
 	assert.Equal("the  lazy brown", stripped)
 }
 

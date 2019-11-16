@@ -1,11 +1,13 @@
 o  sizer
 	*  now look again at creator itself for more stripping out
-	o  get rid of hidden creator and tests
-	o  see if can get all tests to pass?
+	*  get rid of hidden creator and tests
+	*  see if can get all existing tests to pass?
+	*  get rid of XXXX
 	o  commit as sizer change
 	o  merge to main
-	o  new branch
+	o  new branches now
 	o  rename activyBoxes?
+	o  some kind of end to end test or cmd?
 	o  Segment should have constructor to avoid so many warnings about it
 	   using unkeyed fields, so should Point, Line, Prims
 	o  Capitulate 100 char lines and lint enforce, improve

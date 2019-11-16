@@ -51,7 +51,6 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 	tideMark := frameMaker.InitFrameAndMakeTitleBox(dslModel.Title(),
 		sizer.Get("DiagramPadT"))
 
-	fmt.Printf("XXXXX initframe: %v\n", len(prims.Lines))
 
 	// Seek help from another sizing/spacing component - this time, one that is
 	// knows how to spread lifelines across the diagram width-wise.
@@ -66,7 +65,6 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 	if err != nil {
 		return nil, fmt.Errorf("titleBoxes.Make: %v", err)
 	}
-	fmt.Printf("XXXXX titleboxes: %v\n", len(prims.Lines))
 
 	// Now we're going to make the graphics for all the interaction lines,
 	// and "work down the page" as we do so.
@@ -91,7 +89,6 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 	if err != nil {
 		return nil, fmt.Errorf("interactionsMaker.ScanInteractionStatements: %v", err)
 	}
-	fmt.Printf("XXXXX interactions: %v\n", len(prims.Lines))
 
 	// Now we know how far south the diagram has grown, we can terminate and draw,
 	// any activity boxes that have not been closed explicity with a stop command.
@@ -107,7 +104,6 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 		lifeline.NewActivityBoxDrawer(*boxes, lifeCoords.Centre, 
 			sizer.Get("ActivityBoxWidth")).Draw(prims)
 	}
-	fmt.Printf("XXXXX activity boxes: %v\n", len(prims.Lines))
 
 	tideMark += sizer.Get("FinalizedActivityBoxesPadB")
 
@@ -121,13 +117,11 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 	if err != nil {
 		return nil, fmt.Errorf("lifelineFinalizer.Finalize: %v", err)
 	}
-	fmt.Printf("XXXXX lifelines: %v\n", len(prims.Lines))
 
 	tideMark += sizer.Get("LifelinePadB")
 
 	// Finish up by drawing the frame's enclosing rectangle.
 	tideMark = frameMaker.FinalizeFrame(tideMark)
-	fmt.Printf("XXXXX frame rect: %v\n", len(prims.Lines))
 
 	// Tell the graphicsModel what its resultant height is.
 	tideMark += sizer.Get("DiagramPadB")

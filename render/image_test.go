@@ -13,16 +13,24 @@ import (
 
 var testResultsDir = filepath.Join(".", "testresults", "new")
 
+
+func TestThatSavesExampleModelAsPNGForVisualInspection(t *testing.T) {
+	createAndsaveImageFileForExampleModel(t, PNG, "example")
+}
+
+func TestThatSavesExampleModelAsJPGForVisualInspection(t *testing.T) {
+	createAndsaveImageFileForExampleModel(t, JPG, "example")
+}
+
 // fullCoverageModel is a DRY test helper that makes a graphics model
 // with one example of every graphics primitive in.
 func fullCoverageModel() *graphics.Model {
 	width := 2000.0
-	height := 1000.0
 	fh := 45.0
 	dashLineDashLen := 45.0
 	dashLineGapLen := 20.0
-	graphicsModel := graphics.NewModel(width, height, fh,
-		dashLineDashLen, dashLineGapLen)
+	graphicsModel := graphics.NewModel(width, fh, dashLineDashLen, dashLineGapLen)
+	graphicsModel.Height = 1000.0
 	prims := graphicsModel.Primitives
 
 	// We draw two solid horizontal lines separated by the font height.
@@ -87,10 +95,3 @@ func createAndsaveImageFileForExampleModel(t *testing.T, encoding Encoding,
 	return saveAs
 }
 
-func TestThatSavesExampleModelAsPNGForVisualInspection(t *testing.T) {
-	createAndsaveImageFileForExampleModel(t, PNG, "example")
-}
-
-func TestThatSavesExampleModelAsJPGForVisualInspection(t *testing.T) {
-	createAndsaveImageFileForExampleModel(t, JPG, "example")
-}
