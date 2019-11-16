@@ -3,10 +3,9 @@ o  sizer
 	*  get rid of hidden creator and tests
 	*  see if can get all existing tests to pass?
 	*  get rid of XXXX
-	o  commit as sizer change
-	o  merge to main
-	o  new branches now
-	o  rename activyBoxes?
+	*  commit as sizer change
+	*  merge to main
+	*  rename activyBoxes?
 	o  some kind of end to end test or cmd?
 	o  Segment should have constructor to avoid so many warnings about it
 	   using unkeyed fields, so should Point, Line, Prims
@@ -31,6 +30,8 @@ o  sizer
        to save in - fix when decide on visual image difference testing
 	  	o  make similar to stdalone gui would be good to include linting
     o  Lifeline should be different mark space than response line
+	o  make lifecycle, incl making test dirs prereq or put this into
+	   tests
     o  Web assembly
     o  cli
     o  benchmarks and tuning
@@ -48,11 +49,3 @@ o  sizer
 
 
 ----------------------------------------------------------------------------
-lifeline finalizer
-----------------------------------------------------------------------------
-o  construct DI:
-	o  all lifelines
-	o  nogozones keyed on lifeline
-	o  activity boxes keyed on lifeline
-	o  prims
-o  finalize method(atY) updatedTideMark

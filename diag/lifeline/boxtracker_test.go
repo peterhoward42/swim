@@ -10,7 +10,7 @@ import (
 func TestHappyPath(t *testing.T) {
 	assert := assert.New(t)
 
-	boxes := NewActivityBoxes()
+	boxes := NewBoxTracker()
 	err := boxes.AddStartingAt(25)
 	assert.NoError(err)
 	err = boxes.TerminateAt(60)
@@ -27,14 +27,14 @@ func TestHappyPath(t *testing.T) {
 
 func TestErrorWhenThereIsNoBoxToTerminate(t *testing.T) {
 	assert := assert.New(t)
-	boxes := NewActivityBoxes()
+	boxes := NewBoxTracker()
 	err := boxes.TerminateAt(105)
 	assert.EqualError(err, "There is no box to terminate")
 }
 
 func TestCannotTerminateAnAlreadyTerminatedBox(t *testing.T) {
 	assert := assert.New(t)
-	boxes := NewActivityBoxes()
+	boxes := NewBoxTracker()
 	err := boxes.AddStartingAt(25)
 	assert.NoError(err)
 	err = boxes.TerminateAt(60)
@@ -45,7 +45,7 @@ func TestCannotTerminateAnAlreadyTerminatedBox(t *testing.T) {
 
 func TestCannotAddNewBoxWhenPreviousIsNotTerminated(t *testing.T) {
 	assert := assert.New(t)
-	boxes := NewActivityBoxes()
+	boxes := NewBoxTracker()
 	err := boxes.AddStartingAt(25)
 	assert.NoError(err)
 	err = boxes.AddStartingAt(50)
@@ -54,7 +54,7 @@ func TestCannotAddNewBoxWhenPreviousIsNotTerminated(t *testing.T) {
 
 func TestGetStartOfFinalBoxIfNotTerminatedHappyPath(t *testing.T) {
 	assert := assert.New(t)
-	boxes := NewActivityBoxes()
+	boxes := NewBoxTracker()
 	err := boxes.AddStartingAt(25)
 	assert.NoError(err)
 	err = boxes.TerminateAt(30)
@@ -67,7 +67,7 @@ func TestGetStartOfFinalBoxIfNotTerminatedHappyPath(t *testing.T) {
 
 func TestHasABoxInProgressWhenTrue(t *testing.T) {
 	assert := assert.New(t)
-	boxes := NewActivityBoxes()
+	boxes := NewBoxTracker()
 	err := boxes.AddStartingAt(25)
 	assert.NoError(err)
 	assert.True(boxes.HasABoxInProgress())
@@ -75,13 +75,13 @@ func TestHasABoxInProgressWhenTrue(t *testing.T) {
 
 func TestHasABoxInProgressWhenThereAreNoBoxes(t *testing.T) {
 	assert := assert.New(t)
-	boxes := NewActivityBoxes()
+	boxes := NewBoxTracker()
 	assert.False(boxes.HasABoxInProgress())
 }
 
 func TestHasABoxInProgressWhenFinalBoxIsTerminated(t *testing.T) {
 	assert := assert.New(t)
-	boxes := NewActivityBoxes()
+	boxes := NewBoxTracker()
 	err := boxes.AddStartingAt(25)
 	assert.NoError(err)
 	err = boxes.TerminateAt(30)
@@ -91,7 +91,7 @@ func TestHasABoxInProgressWhenFinalBoxIsTerminated(t *testing.T) {
 
 func TestGetStartOfFinalBoxIfNotTerminatedWhenIsAlreadyTerminated(t *testing.T) {
 	assert := assert.New(t)
-	boxes := NewActivityBoxes()
+	boxes := NewBoxTracker()
 	err := boxes.AddStartingAt(25)
 	assert.NoError(err)
 	err = boxes.TerminateAt(30)
@@ -102,7 +102,7 @@ func TestGetStartOfFinalBoxIfNotTerminatedWhenIsAlreadyTerminated(t *testing.T) 
 
 func TestGetStartOfFinalBoxIfNotTerminatedWhenThereAreNoBoxes(t *testing.T) {
 	assert := assert.New(t)
-	boxes := NewActivityBoxes()
+	boxes := NewBoxTracker()
 	finalBoxStart := boxes.GetStartOfFinalBoxIfNotTerminated()
 	assert.Nil(finalBoxStart)
 }

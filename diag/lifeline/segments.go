@@ -28,13 +28,13 @@ func (s *LifelineSegments) Assemble(
 	bottomOfLifeline float64,
 	minSegLen float64,
 	noGoZones []nogozone.NoGoZone,
-	activityBoxes ActivityBoxes,
+	boxes BoxTracker,
 	allLifelines []*dsl.Statement) {
 
 	gaps := Gaps{}
 	gaps.PopulateFromNoGoZones(noGoZones, lifeline, allLifelines)
-	gapsForActivityBoxes := activityBoxes.AsSegments()
-	gaps.Items = append(gaps.Items, gapsForActivityBoxes...)
+	gapsForBoxes := boxes.AsSegments()
+	gaps.Items = append(gaps.Items, gapsForBoxes...)
 	geom.SortSegments(gaps.Items)
 	mergedGaps := geom.MergeSegments(gaps.Items)
 

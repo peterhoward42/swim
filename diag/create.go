@@ -72,15 +72,15 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 
 	// A set of components that keep track of where activity boxes should be
 	// started and stopped on each lifeline.
-	activityBoxes := map[*dsl.Statement]*lifeline.ActivityBoxes{}
+	boxes := map[*dsl.Statement]*lifeline.BoxTracker{}
 	for _, ll := range lifelines {
-		activityBoxes[ll] = lifeline.NewActivityBoxes()
+		boxes[ll] = lifeline.NewBoxTracker()
 	}
 
 	// Now construct the component that makes the interaction lines and their
 	// labels and arrows.
 	d := interactions.NewMakerDependencies(
-		fontHeight, lifelineSpacing, sizer, activityBoxes)
+		fontHeight, lifelineSpacing, sizer, boxes)
 	interactionsMaker := interactions.NewMaker(d, graphicsModel)
 
 	// And mandate it to do so.
@@ -93,15 +93,15 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 	// Now we know how far south the diagram has grown, we can terminate and draw,
 	// any activity boxes that have not been closed explicity with a stop command.
 	for _, ll := range lifelines {
-		boxes := activityBoxes[ll]
+		boxes := boxes[ll]
 		if err := boxes.TerminateAt(tideMark); err != nil {
-			return nil, fmt.Errorf("activityBoxes.TerminateAt: %v", err)
+			return nil, fmt.Errorf("boxes.TerminateAt: %v", err)
 		}
 		lifeCoords, err := lifelineSpacing.CentreLine(ll)
 		if err != nil {
 			return nil, fmt.Errorf("lifelineSpacing.CentreLine: %v", err)
 		}
-		lifeline.NewActivityBoxDrawer(*boxes, lifeCoords.Centre, 
+		lifeline.NewBoxDrawer(*boxes, lifeCoords.Centre, 
 			sizer.Get("ActivityBoxWidth")).Draw(prims)
 	}
 
@@ -110,7 +110,7 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 	// Draw the lifelines from top to bottom, leaving gaps where there are
 	// activity boxes, or NoGoZone(s) in the way.
 	lifelineFinalizer := lifeline.NewFinalizer(
-		lifelines, lifelineSpacing, noGoZones, activityBoxes, sizer)
+		lifelines, lifelineSpacing, noGoZones, boxes, sizer)
 	minSegLen := sizer.Get("MinLifelineSegLength")
 	err = lifelineFinalizer.Finalize(
 		bottomOfTitleBoxes, tideMark, minSegLen, graphicsModel.Primitives)

@@ -29,17 +29,17 @@ func TestWithJustOneNoGoZoneGap(t *testing.T) {
 	segments := LifelineSegments{}
 	minSegLen := 0.1
 	segments.Assemble(b, topOfLifeline, bottomOfLifeline, minSegLen,
-		noGoZones, *NewActivityBoxes(), allLifelines)
+		noGoZones, *NewBoxTracker(), allLifelines)
 
 	assert.Len(segments.Segs, 2)
 	assert.Equal(segments.Segs[0], geom.Segment{1.0, 10})
 	assert.Equal(segments.Segs[1], geom.Segment{50.0, 100})
 }
 
-func TestWithJustOneActivityBoxGap(t *testing.T) {
+func TestWithJustOneBoxGap(t *testing.T) {
 	assert := assert.New(t)
 
-	boxes := *NewActivityBoxes()
+	boxes := *NewBoxTracker()
 	err := boxes.AddStartingAt(70)
 	assert.NoError(err)
 	err = boxes.TerminateAt(90)
@@ -70,7 +70,7 @@ func TestConsumesBothNoGoZonesAndActivityBoxesWhenBothPresent(t *testing.T) {
 		nogozone.NoGoZone{geom.Segment{10, 50}, a, c},
 	}
 
-	boxes := NewActivityBoxes()
+	boxes := NewBoxTracker()
 	err := boxes.AddStartingAt(70)
 	assert.NoError(err)
 	err = boxes.TerminateAt(90)
@@ -102,7 +102,7 @@ func TestItSortsTheGaps(t *testing.T) {
 		nogozone.NoGoZone{geom.Segment{10, 20}, a, c},
 	}
 
-	boxes := *NewActivityBoxes()
+	boxes := *NewBoxTracker()
 
 	topOfLifeline := 1.0
 	bottomOfLifeline := 100.0
@@ -130,7 +130,7 @@ func TestItMergesTheGaps(t *testing.T) {
 		nogozone.NoGoZone{geom.Segment{50, 70}, a, c},
 	}
 
-	boxes := *NewActivityBoxes()
+	boxes := *NewBoxTracker()
 
 	topOfLifeline := 1.0
 	bottomOfLifeline := 100.0
@@ -156,7 +156,7 @@ func TestItDiscardsTinySegmentsGaps(t *testing.T) {
 		nogozone.NoGoZone{geom.Segment{50, 99.99}, a, c},
 	}
 
-	boxes := *NewActivityBoxes()
+	boxes := *NewBoxTracker()
 
 	topOfLifeline := 1.0
 	bottomOfLifeline := 100.0

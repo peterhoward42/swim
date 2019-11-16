@@ -28,7 +28,7 @@ process at the time that the Make method is called. And includes all
 the things the Maker needs from the outside to do its job.
 */
 type MakerDependencies struct {
-	activityBoxes map[*dsl.Statement]*lifeline.ActivityBoxes
+	boxes map[*dsl.Statement]*lifeline.BoxTracker
 	fontHt        float64
 	sizer         sizer.Sizer
 	spacer        *lifeline.Spacing
@@ -37,9 +37,9 @@ type MakerDependencies struct {
 // NewMakerDependencies makes a MakerDependencies ready to use.
 func NewMakerDependencies(fontHt float64, spacer *lifeline.Spacing,
 	sizer sizer.Sizer,
-	activityBoxes map[*dsl.Statement]*lifeline.ActivityBoxes) *MakerDependencies {
+	boxes map[*dsl.Statement]*lifeline.BoxTracker) *MakerDependencies {
 	return &MakerDependencies{
-		activityBoxes: activityBoxes,
+		boxes: boxes,
 		fontHt:        fontHt,
 		sizer:         sizer,
 		spacer:        spacer,
@@ -189,18 +189,18 @@ func (mkr *Maker) selfLines(
 	return newTidemark, nil
 }
 
-// startToBox registers with a lifeline.ActivityBoxes that an activity box
+// startToBox registers with a lifeline.BoxTracker that an activity box
 // on a lifeline should be started ready for an interaction line to arrive at
 // the top of it. (If a box is not already in progress for this lifeline.)
 func (mkr *Maker) startToBox(
 	tidemark float64, s *dsl.Statement) (newTidemark float64, err error) {
 	dep := mkr.dependencies
 	toLifeline := s.ReferencedLifelines[1]
-	activityBoxes := dep.activityBoxes[toLifeline]
-	if activityBoxes.HasABoxInProgress() {
+	boxes := dep.boxes[toLifeline]
+	if boxes.HasABoxInProgress() {
 		return tidemark, nil
 	}
-	activityBoxes.AddStartingAt(tidemark)
+	boxes.AddStartingAt(tidemark)
 	// Return an unchanged tidemark.
 	return tidemark, nil
 }
@@ -211,8 +211,8 @@ func (mkr *Maker) startFromBox(
 	tidemark float64, s *dsl.Statement) (newTidemark float64, err error) {
 	dep := mkr.dependencies
 	fromLifeline := s.ReferencedLifelines[0]
-	activityBoxes := dep.activityBoxes[fromLifeline]
-	if activityBoxes.HasABoxInProgress() {
+	boxes := dep.boxes[fromLifeline]
+	if boxes.HasABoxInProgress() {
 		return tidemark, nil
 	}
 	// The activity box should start just a tiny bit before the first
@@ -220,7 +220,7 @@ func (mkr *Maker) startFromBox(
 	// space of its own however, because the space already claimed by the interaction
 	// line label is sufficient.
 	backTrackToStart := dep.sizer.Get("ActivityBoxVerticalOverlap")
-	activityBoxes.AddStartingAt(tidemark - backTrackToStart)
+	boxes.AddStartingAt(tidemark - backTrackToStart)
 	// Return an unchanged tidemark.
 	return tidemark, nil
 }
@@ -230,10 +230,10 @@ func (mkr *Maker) endBox(
 	tidemark float64, s *dsl.Statement) (newTidemark float64, err error) {
 	dep := mkr.dependencies
 	fromLifeline := s.ReferencedLifelines[0]
-	activityBoxes := dep.activityBoxes[fromLifeline]
-	err = activityBoxes.TerminateAt(tidemark)
+	boxes := dep.boxes[fromLifeline]
+	err = boxes.TerminateAt(tidemark)
 	if err != nil {
-		return -1, fmt.Errorf("activityBoxes.TerminateAt: %v", err)
+		return -1, fmt.Errorf("boxes.TerminateAt: %v", err)
 	}
 	tidemark += dep.sizer.Get("IndividualStoppedBoxPadB")
 	return tidemark, nil

@@ -38,12 +38,12 @@ func TestForSingleInteractionLineItProducesCorrectGraphicsAndSideEffects(t *test
 	graphicsModel := graphics.NewModel(
 		width, fontHt, dashLineDashLength, dashLineGapLength)
 
-	activityBoxes := map[*dsl.Statement]*lifeline.ActivityBoxes{}
+	boxes := map[*dsl.Statement]*lifeline.BoxTracker{}
 	for _, ll := range lifelines {
-		activityBoxes[ll] = lifeline.NewActivityBoxes()
+		boxes[ll] = lifeline.NewBoxTracker()
 	}
 	makerDependencies := NewMakerDependencies(
-		fontHt, spacer, sizer, activityBoxes)
+		fontHt, spacer, sizer, boxes)
 	interactionsMaker := NewMaker(makerDependencies, graphicsModel)
 	tideMark := 30.0
 	updatedTideMark, noGoZones, err := interactionsMaker.ScanInteractionStatements(
@@ -116,7 +116,7 @@ func TestForSingleInteractionLineItProducesCorrectGraphicsAndSideEffects(t *test
 	// An activity box should have been registered as starting for lifeline A,
 	// starting just abov the interaction line, and not yet terminated.
 	lifeA := lifelines[0]
-	boxSegs := activityBoxes[lifeA].AsSegments()
+	boxSegs := boxes[lifeA].AsSegments()
 	assert.Len(boxSegs, 1)
 	assert.True(graphics.ValEqualIsh(boxSegs[0].Start,
 		line.P1.Y-sizer.Get("ActivityBoxVerticalOverlap")))
@@ -125,7 +125,7 @@ func TestForSingleInteractionLineItProducesCorrectGraphicsAndSideEffects(t *test
 	// An activity box should have been registered as starting for lifeline B,
 	// starting exactly at the interaction line, and not yet terminated.
 	lifeB := lifelines[1]
-	boxSegs = activityBoxes[lifeB].AsSegments()
+	boxSegs = boxes[lifeB].AsSegments()
 	assert.Len(boxSegs, 1)
 	assert.True(graphics.ValEqualIsh(boxSegs[0].Start, line.P1.Y))
 	assert.Equal(-1.0, boxSegs[0].End)
@@ -163,12 +163,12 @@ func TestForSmallDifferencesInDashVsFullInteractions(t *testing.T) {
 	graphicsModel := graphics.NewModel(
 		width, fontHt, dashLineDashLength, dashLineGapLength)
 
-	activityBoxes := map[*dsl.Statement]*lifeline.ActivityBoxes{}
+	boxes := map[*dsl.Statement]*lifeline.BoxTracker{}
 	for _, ll := range lifelines {
-		activityBoxes[ll] = lifeline.NewActivityBoxes()
+		boxes[ll] = lifeline.NewBoxTracker()
 	}
 	makerDependencies := NewMakerDependencies(
-		fontHt, spacer, sizer, activityBoxes)
+		fontHt, spacer, sizer, boxes)
 	interactionsMaker := NewMaker(makerDependencies, graphicsModel)
 	tideMark := 30.0
 	_, _, err := interactionsMaker.ScanInteractionStatements(
@@ -180,13 +180,13 @@ func TestForSmallDifferencesInDashVsFullInteractions(t *testing.T) {
 	// An activity box should NOT have been registered as starting for lifeline A,
 	// starting just abov the interaction line, and not yet terminated.
 	lifeA := lifelines[0]
-	boxSegs := activityBoxes[lifeA].AsSegments()
+	boxSegs := boxes[lifeA].AsSegments()
 	assert.Len(boxSegs, 0)
 
 	// An activity box should have been registered as starting for lifeline B,
 	// starting exactly at the interaction line, and not yet terminated.
 	lifeB := lifelines[1]
-	boxSegs = activityBoxes[lifeB].AsSegments()
+	boxSegs = boxes[lifeB].AsSegments()
 	assert.Len(boxSegs, 1)
 	assert.True(graphics.ValEqualIsh(boxSegs[0].Start, line.P1.Y))
 	assert.Equal(-1.0, boxSegs[0].End)
@@ -220,12 +220,12 @@ func TestSelfInteraction(t *testing.T) {
 	graphicsModel := graphics.NewModel(
 		width, fontHt, dashLineDashLength, dashLineGapLength)
 
-	activityBoxes := map[*dsl.Statement]*lifeline.ActivityBoxes{}
+	boxes := map[*dsl.Statement]*lifeline.BoxTracker{}
 	for _, ll := range lifelines {
-		activityBoxes[ll] = lifeline.NewActivityBoxes()
+		boxes[ll] = lifeline.NewBoxTracker()
 	}
 	makerDependencies := NewMakerDependencies(
-		fontHt, spacer, sizer, activityBoxes)
+		fontHt, spacer, sizer, boxes)
 	interactionsMaker := NewMaker(makerDependencies, graphicsModel)
 	tideMark := 30.0
 	updatedTideMark, noGoZones, err := interactionsMaker.ScanInteractionStatements(
@@ -307,7 +307,7 @@ func TestSelfInteraction(t *testing.T) {
 	// An activity box should have been registered as starting for the lifeline,
 	// starting just above the top interaction line, and not yet terminated.
 	lifeA := lifelines[0]
-	boxSegs := activityBoxes[lifeA].AsSegments()
+	boxSegs := boxes[lifeA].AsSegments()
 	assert.Len(boxSegs, 1)
 	assert.True(graphics.ValEqualIsh(boxSegs[0].Start,
 		expectedTopLineY-sizer.Get("ActivityBoxVerticalOverlap")))
@@ -343,12 +343,12 @@ func TestWhenExplicitStopIsPresent(t *testing.T) {
 	graphicsModel := graphics.NewModel(
 		width, fontHt, dashLineDashLength, dashLineGapLength)
 
-	activityBoxes := map[*dsl.Statement]*lifeline.ActivityBoxes{}
+	boxes := map[*dsl.Statement]*lifeline.BoxTracker{}
 	for _, ll := range lifelines {
-		activityBoxes[ll] = lifeline.NewActivityBoxes()
+		boxes[ll] = lifeline.NewBoxTracker()
 	}
 	makerDependencies := NewMakerDependencies(
-		fontHt, spacer, sizer, activityBoxes)
+		fontHt, spacer, sizer, boxes)
 	interactionsMaker := NewMaker(makerDependencies, graphicsModel)
 	tideMark := 30.0
 	updatedTideMark, _, err := interactionsMaker.ScanInteractionStatements(
@@ -358,7 +358,7 @@ func TestWhenExplicitStopIsPresent(t *testing.T) {
 	// An activity box should have been registered as stopping for lifeline B,
 	// beyond the interaction line by the line's bottom padding.
 	lifeB := lifelines[1]
-	boxSegs := activityBoxes[lifeB].AsSegments()
+	boxSegs := boxes[lifeB].AsSegments()
 	assert.Len(boxSegs, 1)
 	linePadding := sizer.Get("InteractionLinePadB")
 	line := graphicsModel.Primitives.Lines[0]

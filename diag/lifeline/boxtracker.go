@@ -7,24 +7,24 @@ import (
 )
 
 /*
-ActivityBoxes keeps track of the vertical extents of the activity boxes
+BoxTracker keeps track of the vertical extents of the activity boxes
 on a single lifeline. The nub of the problem it takes care of, is that you
 don't know when an activity box should be closed off, at the time you have
 to register where it should start.
 */
-type ActivityBoxes struct {
+type BoxTracker struct {
 	segs []geom.Segment // Used to track the start and end of each box.
 }
 
-// NewActivityBoxes provides an an ActivityBoxes ready to use.
-func NewActivityBoxes() *ActivityBoxes {
-	return &ActivityBoxes{}
+// NewBoxTracker provides an an BoxTracker ready to use.
+func NewBoxTracker() *BoxTracker {
+	return &BoxTracker{}
 }
 
 // AddStartingAt registers a new box, with the Y coordinate at which it
 // should start, but with the Y coordinate at which it should end - as yet
 // unknown.
-func (ab *ActivityBoxes) AddStartingAt(startY float64) error {
+func (ab *BoxTracker) AddStartingAt(startY float64) error {
 	if len(ab.segs) != 0 && ab.segs[len(ab.segs)-1].End == -1 {
 		return errors.New("Cannot add new box when previous is not terminated")
 	}
@@ -34,7 +34,7 @@ func (ab *ActivityBoxes) AddStartingAt(startY float64) error {
 
 // TerminateAt finalises the Segment representing the most recently registered
 // box, noting that it should end at endY.
-func (ab *ActivityBoxes) TerminateAt(endY float64) error {
+func (ab *BoxTracker) TerminateAt(endY float64) error {
 	if len(ab.segs) == 0 {
 		return errors.New("There is no box to terminate")
 	}
@@ -47,7 +47,7 @@ func (ab *ActivityBoxes) TerminateAt(endY float64) error {
 }
 
 // AsSegments provides all the boxes that have been registered.
-func (ab *ActivityBoxes) AsSegments() []geom.Segment {
+func (ab *BoxTracker) AsSegments() []geom.Segment {
 	return ab.segs
 }
 
@@ -57,7 +57,7 @@ most recently added box starts at - but only when there is at least one
 box, and the most recently added box has not yet been terminated. Otherwise
 it returns nil.
 */
-func (ab *ActivityBoxes) GetStartOfFinalBoxIfNotTerminated() *float64 {
+func (ab *BoxTracker) GetStartOfFinalBoxIfNotTerminated() *float64 {
 	if len(ab.segs) == 0 {
 		return nil
 	}
@@ -70,7 +70,7 @@ func (ab *ActivityBoxes) GetStartOfFinalBoxIfNotTerminated() *float64 {
 
 // HasABoxInProgress returns true if there are some boxes, and the most
 // recently added one has not yet been terminated.
-func (ab *ActivityBoxes) HasABoxInProgress() bool {
+func (ab *BoxTracker) HasABoxInProgress() bool {
 	if len(ab.segs) == 0 {
 		return false
 	}

@@ -16,7 +16,7 @@ func TestLifelinesGetDrawnCorrectlyIncludingMakingTheRequiredGaps(t *testing.T) 
 	assert := assert.New(t)
 
 	// Our test case will have 3 lifelines from left to right A,B,C,
-	// There will be one NoGoZone and one ActivityBox interrupting
+	// There will be one NoGoZone and one activity box interrupting
 	// lifeline B.
 
 	dslScript := `
@@ -36,18 +36,18 @@ func TestLifelinesGetDrawnCorrectlyIncludingMakingTheRequiredGaps(t *testing.T) 
 	noGoSeg := geom.Segment{Start: 50, End: 60}
 	zone := nogozone.NewNoGoZone(noGoSeg, lifelines[0], lifelines[2])
 	noGoZones := []nogozone.NoGoZone{zone}
-	activityBoxes := map[*dsl.Statement]*ActivityBoxes{}
+	boxes := map[*dsl.Statement]*BoxTracker{}
 	for _, ll := range lifelines {
-		activityBoxes[ll] = NewActivityBoxes()
+		boxes[ll] = NewBoxTracker()
 	}
-	boxesForLifeB := activityBoxes[lifelines[1]]
+	boxesForLifeB := boxes[lifelines[1]]
 	err := boxesForLifeB.AddStartingAt(80)
 	assert.NoError(err)
 	err = boxesForLifeB.TerminateAt(90)
 	assert.NoError(err)
 
 	minSegLen := 1.0
-	lifelineF := NewFinalizer(lifelines, spacer, noGoZones, activityBoxes, sizer)
+	lifelineF := NewFinalizer(lifelines, spacer, noGoZones, boxes, sizer)
 	top := 10.0
 	bottom := 100.0
 	primitives := graphics.NewPrimitives()

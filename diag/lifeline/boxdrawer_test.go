@@ -10,9 +10,9 @@ import (
 func TestDrawsTheRightLines(t *testing.T) {
 	assert := assert.New(t)
 
-	// We need only one activity box on the lifeline to check correct
+	// We need only one box on the lifeline to check correct
 	// operation,
-	boxes := NewActivityBoxes()
+	boxes := NewBoxTracker()
 	err := boxes.AddStartingAt(25)
 	assert.NoError(err)
 	err = boxes.TerminateAt(60)
@@ -21,7 +21,7 @@ func TestDrawsTheRightLines(t *testing.T) {
 	
 	centreX := 100.0
 	boxWidth := 10.0
-	drawer := NewActivityBoxDrawer(*boxes, centreX, boxWidth)
+	drawer := NewBoxDrawer(*boxes, centreX, boxWidth)
 	prims := graphics.NewPrimitives()
 	drawer.Draw(prims)
 

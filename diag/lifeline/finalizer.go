@@ -15,7 +15,7 @@ type Finalizer struct {
 	lifelines     []*dsl.Statement
 	spacer        *Spacing
 	noGoZones     []nogozone.NoGoZone
-	activityBoxes map[*dsl.Statement]*ActivityBoxes
+	boxes map[*dsl.Statement]*BoxTracker
 }
 
 // NewFinalizer provides a Finalizer ready to use.
@@ -23,13 +23,13 @@ func NewFinalizer(
 	lifelines []*dsl.Statement,
 	spacer *Spacing,
 	noGoZones []nogozone.NoGoZone,
-	activityBoxes map[*dsl.Statement]*ActivityBoxes,
+	boxes map[*dsl.Statement]*BoxTracker,
 	sizer sizer.Sizer) *Finalizer {
 	return &Finalizer{
 		lifelines:     lifelines,
 		spacer:        spacer,
 		noGoZones:     noGoZones,
-		activityBoxes: activityBoxes,
+		boxes: boxes,
 	}
 }
 
@@ -49,9 +49,9 @@ func (f *Finalizer) Finalize(
 func (f *Finalizer) finalizeOne(
 	lifeline *dsl.Statement, top float64, bottom float64,
 	minSegLen float64, primitives *graphics.Primitives) error {
-	activityBoxes := *f.activityBoxes[lifeline]
+	boxes := *f.boxes[lifeline]
 	lifelineSegments := LifelineSegments{}
-	lifelineSegments.Assemble(lifeline, top, bottom, minSegLen, f.noGoZones, activityBoxes, f.lifelines)
+	lifelineSegments.Assemble(lifeline, top, bottom, minSegLen, f.noGoZones, boxes, f.lifelines)
 	lifelineXCoords, err := f.spacer.CentreLine(lifeline)
 	if err != nil {
 		return fmt.Errorf("space.CentreLine: %v", err)
