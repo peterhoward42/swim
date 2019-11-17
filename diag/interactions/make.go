@@ -115,7 +115,7 @@ func (mkr *Maker) interactionLabel(
 	newTidemark = tidemark + float64(len(s.LabelSegments))*
 		dep.fontHt + dep.sizer.Get("InteractionLineTextPadB")
 	noGoZone := nogozone.NewNoGoZone(
-		geom.Segment{Start: tidemark, End: newTidemark},
+		geom.NewSegment(tidemark,newTidemark),
 		sourceLifeline, destLifeline)
 	mkr.noGoZones = append(mkr.noGoZones, noGoZone)
 	return newTidemark, nil
@@ -158,7 +158,7 @@ func (mkr *Maker) interactionLine(
 	mkr.graphicsModel.Primitives.AddFilledPoly(arrow)
 	newTidemark = tidemark + dep.sizer.Get("InteractionLinePadB")
 	noGoZone := nogozone.NewNoGoZone(
-		geom.Segment{Start: tidemark, End: newTidemark},
+		geom.NewSegment(tidemark, newTidemark),
 		sourceLifeline, destLifeline)
 	mkr.noGoZones = append(mkr.noGoZones, noGoZone)
 	return newTidemark, nil

@@ -21,8 +21,8 @@ func TestHappyPath(t *testing.T) {
 	assert.NoError(err)
 
 	segments := boxes.AsSegments()
-	assert.Equal(geom.Segment{Start: 25, End: 60}, segments[0])
-	assert.Equal(geom.Segment{Start: 90, End: 105}, segments[1])
+	assert.Equal(geom.NewSegment(25,60), segments[0])
+	assert.Equal(geom.NewSegment(90,105), segments[1])
 }
 
 func TestErrorWhenThereIsNoBoxToTerminate(t *testing.T) {

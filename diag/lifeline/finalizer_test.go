@@ -33,7 +33,7 @@ func TestLifelinesGetDrawnCorrectlyIncludingMakingTheRequiredGaps(t *testing.T) 
 	})
 	lifelines := dslModel.LifelineStatements()
 	spacer := NewSpacing(sizer, fontHt, width, lifelines)
-	noGoSeg := geom.Segment{Start: 50, End: 60}
+	noGoSeg := geom.NewSegment(50, 60)
 	zone := nogozone.NewNoGoZone(noGoSeg, lifelines[0], lifelines[2])
 	noGoZones := []nogozone.NoGoZone{zone}
 	boxes := map[*dsl.Statement]*BoxTracker{}
@@ -73,9 +73,9 @@ func TestLifelinesGetDrawnCorrectlyIncludingMakingTheRequiredGaps(t *testing.T) 
 	assert.NoError(err)
 	expectedX := lifeCoords.Centre
 	expectedSegments := []geom.Segment{
-		geom.Segment{Start: 10, End: 50},
-		geom.Segment{Start: 60, End: 80},
-		geom.Segment{Start: 90, End: 100},
+		geom.NewSegment(10, 50},
+		geom.NewSegment(60, 80},
+		geom.NewSegment(90, 100},
 	}
 	for _, seg := range expectedSegments {
 		expectedLine := graphics.Line{

@@ -7,15 +7,17 @@ import (
 
 /*
 Segment can be used represent a gap in a line, or a short section of
-a line. It provides methods to sort and merge segments when you have
-multiple Segments that belong to the same underlying line.
-
-Note it is modelled in one-dimension only, and has no knowledge of
-the underlying continuous line it relates to.
+a line, or any kind of band in a one dimensional continuum.
+It includes methods to sort and merge them.
 */
 type Segment struct {
 	Start float64
 	End   float64
+}
+
+// NewSegment provides an initialised Segment.
+func NewSegment(start, end float64) Segment {
+	return Segment{start, end}
 }
 
 // Length provides the length of the segment.

@@ -6,10 +6,12 @@ o  sizer
 	*  commit as sizer change
 	*  merge to main
 	*  rename activyBoxes?
-	o  some kind of end to end test or cmd?
 	o  Segment should have constructor to avoid so many warnings about it
 	   using unkeyed fields, so should Point, Line, Prims
+	o  make lifecycle, incl making test dirs prereq or put this into
+	   tests, plus autoformat, and both go and posh linter
 	o  Capitulate 100 char lines and lint enforce, improve
+	o  some kind of end to end test or cmd?
 
 	o  wean off reference input?
 
@@ -30,8 +32,6 @@ o  sizer
        to save in - fix when decide on visual image difference testing
 	  	o  make similar to stdalone gui would be good to include linting
     o  Lifeline should be different mark space than response line
-	o  make lifecycle, incl making test dirs prereq or put this into
-	   tests
     o  Web assembly
     o  cli
     o  benchmarks and tuning

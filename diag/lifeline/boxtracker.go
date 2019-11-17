@@ -28,7 +28,7 @@ func (ab *BoxTracker) AddStartingAt(startY float64) error {
 	if len(ab.segs) != 0 && ab.segs[len(ab.segs)-1].End == -1 {
 		return errors.New("Cannot add new box when previous is not terminated")
 	}
-	ab.segs = append(ab.segs, geom.Segment{Start: startY, End: -1})
+	ab.segs = append(ab.segs, geom.NewSegment(startY,-1))
 	return nil
 }
 
