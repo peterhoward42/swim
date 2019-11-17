@@ -26,7 +26,7 @@ func TestDrawsTheRightLines(t *testing.T) {
 	drawer.Draw(prims)
 
 	assert.Equal(4, len(prims.Lines))
-	topLeft := graphics.Point{X: 95, Y:25}
-	bottomRight := graphics.Point{X: 105, Y:60}
+	topLeft := graphics.NewPoint( 95, 25)
+	bottomRight := graphics.NewPoint( 105, 60)
 	assert.True(prims.ContainsRect(topLeft, bottomRight))
 }

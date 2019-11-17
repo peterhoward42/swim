@@ -61,8 +61,8 @@ func TestLifelinesGetDrawnCorrectlyIncludingMakingTheRequiredGaps(t *testing.T) 
 		assert.NoError(err)
 		expectedX := lifeCoords.Centre
 		expectedLine := graphics.Line{
-			P1:     graphics.Point{X: expectedX, Y: top},
-			P2:     graphics.Point{X: expectedX, Y: bottom},
+			P1:     graphics.NewPoint(expectedX, top),
+			P2:     graphics.NewPoint(expectedX, bottom),
 			Dashed: true,
 		}
 		assert.True(primitives.ContainsLine(expectedLine))
@@ -73,14 +73,14 @@ func TestLifelinesGetDrawnCorrectlyIncludingMakingTheRequiredGaps(t *testing.T) 
 	assert.NoError(err)
 	expectedX := lifeCoords.Centre
 	expectedSegments := []geom.Segment{
-		geom.NewSegment(10, 50},
-		geom.NewSegment(60, 80},
-		geom.NewSegment(90, 100},
+		geom.NewSegment(10, 50),
+		geom.NewSegment(60, 80),
+		geom.NewSegment(90, 100),
 	}
 	for _, seg := range expectedSegments {
 		expectedLine := graphics.Line{
-			P1:     graphics.Point{X: expectedX, Y: seg.Start},
-			P2:     graphics.Point{X: expectedX, Y: seg.End},
+			P1:     graphics.NewPoint(expectedX, seg.Start),
+			P2:     graphics.NewPoint(expectedX, seg.End),
 			Dashed: true,
 		}
 		assert.True(primitives.ContainsLine(expectedLine))

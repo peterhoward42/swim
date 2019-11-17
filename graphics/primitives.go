@@ -17,6 +17,11 @@ type Point struct {
 	Y float64
 }
 
+// Point provides an initialised Point
+func NewPoint(x, y float64) Point {
+	return Point{x, y}
+}
+
 // Line represents a line, optionally dashed.
 type Line struct {
 	P1     Point

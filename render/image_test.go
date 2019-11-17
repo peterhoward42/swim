@@ -62,9 +62,9 @@ func fullCoverageModel() *graphics.Model {
 
 	polyRight := right + fh
 	prims.AddFilledPoly([]graphics.Point{
-		graphics.Point{X: right, Y: top},
-		graphics.Point{X: polyRight, Y: bot},
-		graphics.Point{X: right, Y: bot},
+		graphics.NewPoint( right, top),
+		graphics.NewPoint( polyRight, bot),
+		graphics.NewPoint( right, bot),
 	})
 
 	prims.AddLabel("LeftBot", fh, left, bot, graphics.Left, graphics.Bottom)

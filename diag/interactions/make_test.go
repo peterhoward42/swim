@@ -71,7 +71,7 @@ func TestForSingleInteractionLineItProducesCorrectGraphicsAndSideEffects(t *test
 	expectedLabel := graphics.Label{
 		TheString:  "fibble",
 		FontHeight: fontHt,
-		Anchor:     graphics.Point{X: 1000, Y: 30},
+		Anchor:     graphics.NewPoint(1000, 30),
 		HJust:      graphics.Centre,
 		VJust:      graphics.Top,
 	}
@@ -89,13 +89,11 @@ func TestForSingleInteractionLineItProducesCorrectGraphicsAndSideEffects(t *test
 	// way to the left, and distributed above and below the tip.
 	arrow := graphicsModel.Primitives.FilledPolys[0]
 	assert.True(arrow.IncludesThisVertex(line.P2))
-	upperTail := graphics.Point{
-		X: line.P2.X - sizer.Get("ArrowLen"),
-		Y: line.P2.Y - 0.5*sizer.Get("ArrowWidth")}
+	upperTail := graphics.NewPoint(line.P2.X-sizer.Get("ArrowLen"),
+		line.P2.Y-0.5*sizer.Get("ArrowWidth"))
 	assert.True(arrow.IncludesThisVertex(upperTail))
-	lowerTail := graphics.Point{
-		X: line.P2.X - sizer.Get("ArrowLen"),
-		Y: line.P2.Y + 0.5*sizer.Get("ArrowWidth")}
+	lowerTail := graphics.NewPoint(line.P2.X-sizer.Get("ArrowLen"),
+		line.P2.Y+0.5*sizer.Get("ArrowWidth"))
 	assert.True(arrow.IncludesThisVertex(lowerTail))
 
 	// The updated tide mark should be just below the interaction line,
@@ -250,7 +248,7 @@ func TestSelfInteraction(t *testing.T) {
 	expectedLabel := graphics.Label{
 		TheString:  "fibble",
 		FontHeight: fontHt,
-		Anchor:     graphics.Point{X: labelX, Y: tideMark},
+		Anchor:     graphics.NewPoint(labelX, tideMark),
 		HJust:      graphics.Centre,
 		VJust:      graphics.Top,
 	}
@@ -260,23 +258,23 @@ func TestSelfInteraction(t *testing.T) {
 	// of the correct depth and width.
 	expectedTopLineY := tideMark + 1.0*fontHt + sizer.Get("InteractionLineTextPadB")
 	expectedTopLine := graphics.Line{
-		P1:     graphics.Point{lineStartX, expectedTopLineY},
-		P2:     graphics.Point{lineEndX, expectedTopLineY},
+		P1:     graphics.NewPoint(lineStartX, expectedTopLineY),
+		P2:     graphics.NewPoint(lineEndX, expectedTopLineY),
 		Dashed: false,
 	}
 	assert.True(graphicsModel.Primitives.ContainsLine(expectedTopLine))
 
 	expectedBotLineY := expectedTopLineY + sizer.Get("SelfLoopHeight")
 	expectedBotLine := graphics.Line{
-		P1:     graphics.Point{lineEndX, expectedBotLineY},
-		P2:     graphics.Point{lineStartX, expectedBotLineY},
+		P1:     graphics.NewPoint(lineEndX, expectedBotLineY),
+		P2:     graphics.NewPoint(lineStartX, expectedBotLineY),
 		Dashed: false,
 	}
 	assert.True(graphicsModel.Primitives.ContainsLine(expectedBotLine))
 
 	expectedVerticalLine := graphics.Line{
-		P1:     graphics.Point{lineEndX, expectedTopLineY},
-		P2:     graphics.Point{lineEndX, expectedBotLineY},
+		P1:     graphics.NewPoint(lineEndX, expectedTopLineY),
+		P2:     graphics.NewPoint(lineEndX, expectedBotLineY),
 		Dashed: false,
 	}
 	assert.True(graphicsModel.Primitives.ContainsLine(expectedVerticalLine))
@@ -286,13 +284,11 @@ func TestSelfInteraction(t *testing.T) {
 	// way to the right, and distributed above and below the tip.
 	arrow := graphicsModel.Primitives.FilledPolys[0]
 	assert.True(arrow.IncludesThisVertex(expectedBotLine.P2))
-	upperTail := graphics.Point{
-		X: expectedBotLine.P2.X + sizer.Get("ArrowLen"),
-		Y: expectedBotLineY - 0.5*sizer.Get("ArrowWidth")}
+	upperTail := graphics.NewPoint(expectedBotLine.P2.X+sizer.Get("ArrowLen"),
+		expectedBotLineY-0.5*sizer.Get("ArrowWidth"))
 	assert.True(arrow.IncludesThisVertex(upperTail))
-	lowerTail := graphics.Point{
-		X: expectedBotLine.P2.X + sizer.Get("ArrowLen"),
-		Y: expectedBotLineY + 0.5*sizer.Get("ArrowWidth")}
+	lowerTail := graphics.NewPoint(expectedBotLine.P2.X+sizer.Get("ArrowLen"),
+		expectedBotLineY+0.5*sizer.Get("ArrowWidth"))
 	assert.True(arrow.IncludesThisVertex(lowerTail))
 
 	// The updated tide mark should be just below the bottom
@@ -332,7 +328,7 @@ func TestWhenExplicitStopIsPresent(t *testing.T) {
 		"ArrowLen":                   10.0,
 		"ArrowWidth":                 4.0,
 		"IdealLifelineTitleBoxWidth": 300.0,
-		"IndividualStoppedBoxPadB": 3.0,
+		"IndividualStoppedBoxPadB":   3.0,
 		"InteractionLinePadB":        4.0,
 		"InteractionLineTextPadB":    5.0,
 	})
@@ -370,6 +366,5 @@ func TestWhenExplicitStopIsPresent(t *testing.T) {
 	expectedTidemark := expectedStopY + stopPadding
 	assert.True(graphics.ValEqualIsh(updatedTideMark, expectedTidemark))
 }
-
 
 const tolerance = 0.001
