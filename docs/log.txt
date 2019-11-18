@@ -1,15 +1,13 @@
 o  sizer
-	*  now look again at creator itself for more stripping out
-	*  get rid of hidden creator and tests
-	*  see if can get all existing tests to pass?
-	*  get rid of XXXX
-	*  commit as sizer change
-	*  merge to main
-	*  rename activyBoxes?
-	o  Segment should have constructor to avoid so many warnings about it
-	   using unkeyed fields, so should Point, Line, Prims
 	o  make lifecycle, incl making test dirs prereq or put this into
 	   tests, plus autoformat, and both go and posh linter
+		*  start with that of gui demo
+		*  add basic go linter
+		*  add auto format before style
+		o  commit at this point
+		o  get to work
+		o  add go doc
+	o  How come is 20 Mb?
 	o  Capitulate 100 char lines and lint enforce, improve
 	o  some kind of end to end test or cmd?
 
@@ -49,3 +47,25 @@ o  sizer
 
 
 ----------------------------------------------------------------------------
+Make seq
+----------------------------------------------------------------------------
+
+test: testdirs lint
+	go test ./...
+
+testdirs
+	install -d render/testresults/new
+
+lint: format
+	golint ./...
+
+format: build
+	gofmt -w -s ./...
+
+build		
+	go build ./...
+
+
+
+
+
