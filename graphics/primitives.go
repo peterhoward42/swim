@@ -1,9 +1,5 @@
 package graphics
 
-import (
-	"fmt"
-)
-
 /*
 This module provides graphics primitive types like Point and Line etc, along
 with a container (Primitives) that can hold a list of each primitive type.
@@ -27,10 +23,6 @@ type Line struct {
 	P1     Point
 	P2     Point
 	Dashed bool // vs. Full
-}
-
-func (l *Line) string() string {
-	return fmt.Sprintf("%v,%v to %v,%v, (%v)", l.P1.X, l.P1.Y, l.P2.X, l.P2.Y, l.Dashed)
 }
 
 // Justification is a type safe string for text justifications

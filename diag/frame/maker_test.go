@@ -47,8 +47,8 @@ func TestInitializeStep(t *testing.T) {
 
 	// Title Rect
 	assert.Len(prims.Lines, 4)
-	tl := graphics.NewPoint( 11, 5)
-	br := graphics.NewPoint( 611, 23)
+	tl := graphics.NewPoint(11, 5)
+	br := graphics.NewPoint(611, 23)
 	assert.True(prims.ContainsRect(tl, br))
 
 	// Tidemark
@@ -81,8 +81,8 @@ func TestFinalizeStep(t *testing.T) {
 
 	// Title Rect
 	assert.Len(prims.Lines, 4)
-	tl := graphics.NewPoint( 7, 10)
-	br := graphics.NewPoint( 1993, 205)
+	tl := graphics.NewPoint(7, 10)
+	br := graphics.NewPoint(1993, 205)
 	assert.True(prims.ContainsRect(tl, br))
 
 	// Tidemark

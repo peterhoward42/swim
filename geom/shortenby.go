@@ -13,5 +13,4 @@ func ShortenLineBy(shortenBy float64, x1 *float64, x2 *float64) {
 	}
 	*x1 -= shortenBy
 	*x2 += shortenBy
-	return
 }

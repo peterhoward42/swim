@@ -49,13 +49,13 @@ func TestLabelEqualIsh(t *testing.T) {
 			VJust:      Top,
 		}))
 	assert.True(referenceLabel.EqualIsh(
-			Label{
-				TheString:  "foo",
-				FontHeight: 10.0,
-				Anchor:     Point{2, 3 + lessThanTol},
-				HJust:      Left,
-				VJust:      Top,
-			}))
+		Label{
+			TheString:  "foo",
+			FontHeight: 10.0,
+			Anchor:     Point{2, 3 + lessThanTol},
+			HJust:      Left,
+			VJust:      Top,
+		}))
 }
 
 /*

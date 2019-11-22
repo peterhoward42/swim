@@ -1,9 +1,9 @@
 package lifeline
 
 import (
+	"github.com/peterhoward42/umli/diag/nogozone"
 	"github.com/peterhoward42/umli/dsl"
 	"github.com/peterhoward42/umli/geom"
-	"github.com/peterhoward42/umli/diag/nogozone"
 )
 
 /*

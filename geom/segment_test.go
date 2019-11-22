@@ -48,7 +48,7 @@ func TestMergeSegments(t *testing.T) {
 	// Make sure contiguous Segments are treated as overlapping
 	a = Segment{1, 2}
 	b = Segment{3, 4}
-	b = Segment{4, 5}
+	c = Segment{4, 5}
 	segments = []Segment{a, b, c}
 	newSegments = MergeSegments(segments)
 	assert.Len(newSegments, 2)

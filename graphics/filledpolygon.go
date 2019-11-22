@@ -1,8 +1,5 @@
 package graphics
 
-import (
-)
-
 // FilledPoly represents a filled polygon.
 // Which can be used for an arrow head.
 type FilledPoly []Point // Do not repeat first point as last point.

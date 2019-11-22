@@ -18,7 +18,6 @@ func TestDrawsTheRightLines(t *testing.T) {
 	err = boxes.TerminateAt(60)
 	assert.NoError(err)
 
-	
 	centreX := 100.0
 	boxWidth := 10.0
 	drawer := NewBoxDrawer(*boxes, centreX, boxWidth)
@@ -26,7 +25,7 @@ func TestDrawsTheRightLines(t *testing.T) {
 	drawer.Draw(prims)
 
 	assert.Equal(4, len(prims.Lines))
-	topLeft := graphics.NewPoint( 95, 25)
-	bottomRight := graphics.NewPoint( 105, 60)
+	topLeft := graphics.NewPoint(95, 25)
+	bottomRight := graphics.NewPoint(105, 60)
 	assert.True(prims.ContainsRect(topLeft, bottomRight))
 }

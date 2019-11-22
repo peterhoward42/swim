@@ -41,15 +41,15 @@ func TestSmallestViableExampleExhaustively(t *testing.T) {
 	left := 900.0
 	bot := 23.0
 	right := 1100.0
-	tl := graphics.NewPoint( left, top)
-	br := graphics.NewPoint( right, bot)
+	tl := graphics.NewPoint(left, top)
+	br := graphics.NewPoint(right, bot)
 	assert.True(prims.ContainsRect(tl, br))
 
 	// Correct title string present?
 	expectedLabel := graphics.Label{
 		TheString:  "foo",
 		FontHeight: 6.0,
-		Anchor:     graphics.NewPoint( 1000, 15),
+		Anchor:     graphics.NewPoint(1000, 15),
 		HJust:      graphics.Centre,
 		VJust:      graphics.Top,
 	}
@@ -101,6 +101,7 @@ func TestIsConsumingMultipleLifelinesProperly(t *testing.T) {
 	prims = graphics.NewPrimitives()
 	titleBoxes = NewTitleBoxes(sizer, spacer, lifelines, fontHeight)
 	newTideMark, _, err = titleBoxes.Make(tideMark, prims)
+	assert.NoError(err)
 
 	newLinesProduced := len(prims.Lines)
 	assert.True(newLinesProduced > linesProduced)

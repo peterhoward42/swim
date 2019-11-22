@@ -41,13 +41,13 @@ func (s *LifelineSegments) Assemble(
 	prev := topOfLifeline
 	var segs []geom.Segment
 	for _, gap := range mergedGaps {
-		seg := geom.Segment{prev, gap.Start}
+		seg := geom.NewSegment(prev, gap.Start)
 		if seg.Length() >= minSegLen {
 			segs = append(segs, seg)
 		}
 		prev = gap.End
 	}
-	finalSeg := geom.Segment{prev, bottomOfLifeline}
+	finalSeg := geom.NewSegment(prev, bottomOfLifeline)
 	if finalSeg.Length() >= minSegLen {
 		segs = append(segs, finalSeg)
 	}

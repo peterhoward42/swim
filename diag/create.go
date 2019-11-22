@@ -51,7 +51,6 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 	tideMark := frameMaker.InitFrameAndMakeTitleBox(dslModel.Title(),
 		sizer.Get("DiagramPadT"))
 
-
 	// Seek help from another sizing/spacing component - this time, one that is
 	// knows how to spread lifelines across the diagram width-wise.
 	lifelines := dslModel.LifelineStatements()
@@ -101,7 +100,7 @@ func (c *Creator) Create(dslModel dsl.Model) (*graphics.Model, error) {
 		if err != nil {
 			return nil, fmt.Errorf("lifelineSpacing.CentreLine: %v", err)
 		}
-		lifeline.NewBoxDrawer(*boxes, lifeCoords.Centre, 
+		lifeline.NewBoxDrawer(*boxes, lifeCoords.Centre,
 			sizer.Get("ActivityBoxWidth")).Draw(prims)
 	}
 

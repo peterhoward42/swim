@@ -61,7 +61,7 @@ func MergeSegments(segs []Segment) (newSegs []Segment) {
 			tail = &newSegs[0]
 			continue
 		}
-		if seg.Start >= tail.End {
+		if seg.Start > tail.End {
 			newSegs = append(newSegs, seg)
 			tail = &newSegs[len(newSegs)-1]
 			continue

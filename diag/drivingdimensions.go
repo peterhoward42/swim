@@ -28,7 +28,7 @@ func (dd DrivingDimensions) WidthAndFontHeight(dslModel dsl.Model) (
 	if ok {
 		if sizeValue == 0 {
 			panic("Developer error, this must not be allowed to happen")
-		}	
+		}
 		// 5  -> 0.005
 		// 10 -> 0.010
 		// 20 -> 0.020

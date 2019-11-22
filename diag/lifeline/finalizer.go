@@ -12,10 +12,10 @@ import (
 // Finalizer knows how to draw lifelines including making the gaps required
 // in them to avoid activity boxes and interaction line no go zones.
 type Finalizer struct {
-	lifelines     []*dsl.Statement
-	spacer        *Spacing
-	noGoZones     []nogozone.NoGoZone
-	boxes map[*dsl.Statement]*BoxTracker
+	lifelines []*dsl.Statement
+	spacer    *Spacing
+	noGoZones []nogozone.NoGoZone
+	boxes     map[*dsl.Statement]*BoxTracker
 }
 
 // NewFinalizer provides a Finalizer ready to use.
@@ -26,10 +26,10 @@ func NewFinalizer(
 	boxes map[*dsl.Statement]*BoxTracker,
 	sizer sizer.Sizer) *Finalizer {
 	return &Finalizer{
-		lifelines:     lifelines,
-		spacer:        spacer,
-		noGoZones:     noGoZones,
-		boxes: boxes,
+		lifelines: lifelines,
+		spacer:    spacer,
+		noGoZones: noGoZones,
+		boxes:     boxes,
 	}
 }
 

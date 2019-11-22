@@ -15,4 +15,3 @@ func TestAnswerForLeftToRightLabel(t *testing.T) {
 	assert.Equal(60.0, x)
 	assert.Equal(graphics.Centre, horizJustification)
 }
-

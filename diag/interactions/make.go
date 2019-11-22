@@ -28,10 +28,10 @@ process at the time that the Make method is called. And includes all
 the things the Maker needs from the outside to do its job.
 */
 type MakerDependencies struct {
-	boxes map[*dsl.Statement]*lifeline.BoxTracker
-	fontHt        float64
-	sizer         sizer.Sizer
-	spacer        *lifeline.Spacing
+	boxes  map[*dsl.Statement]*lifeline.BoxTracker
+	fontHt float64
+	sizer  sizer.Sizer
+	spacer *lifeline.Spacing
 }
 
 // NewMakerDependencies makes a MakerDependencies ready to use.
@@ -39,10 +39,10 @@ func NewMakerDependencies(fontHt float64, spacer *lifeline.Spacing,
 	sizer sizer.Sizer,
 	boxes map[*dsl.Statement]*lifeline.BoxTracker) *MakerDependencies {
 	return &MakerDependencies{
-		boxes: boxes,
-		fontHt:        fontHt,
-		sizer:         sizer,
-		spacer:        spacer,
+		boxes:  boxes,
+		fontHt: fontHt,
+		sizer:  sizer,
+		spacer: spacer,
 	}
 }
 
@@ -109,13 +109,16 @@ func (mkr *Maker) interactionLabel(
 	sourceLifeline := s.ReferencedLifelines[0]
 	destLifeline := s.ReferencedLifelines[1]
 	fromX, toX, err := mkr.LifelineCentres(sourceLifeline, destLifeline)
+	if err != nil {
+		return -1, fmt.Errorf("mkr.LifelineCentres: %v", err)
+	}
 	labelX, horizJustification := NewLabelPosn(fromX, toX).Get()
 	mkr.graphicsModel.Primitives.RowOfStrings(
 		labelX, tidemark, dep.fontHt, horizJustification, s.LabelSegments)
 	newTidemark = tidemark + float64(len(s.LabelSegments))*
 		dep.fontHt + dep.sizer.Get("InteractionLineTextPadB")
 	noGoZone := nogozone.NewNoGoZone(
-		geom.NewSegment(tidemark,newTidemark),
+		geom.NewSegment(tidemark, newTidemark),
 		sourceLifeline, destLifeline)
 	mkr.noGoZones = append(mkr.noGoZones, noGoZone)
 	return newTidemark, nil
@@ -147,6 +150,9 @@ func (mkr *Maker) interactionLine(
 	sourceLifeline := s.ReferencedLifelines[0]
 	destLifeline := s.ReferencedLifelines[1]
 	fromX, toX, err := mkr.LifelineCentres(sourceLifeline, destLifeline)
+	if err != nil {
+		return -1, fmt.Errorf("mkr.LifelineCentres: %v", err)
+	}
 	halfActivityBoxWidth := 0.5 * dep.sizer.Get("ActivityBoxWidth")
 	geom.ShortenLineBy(halfActivityBoxWidth, &fromX, &toX)
 	y := tidemark
@@ -200,7 +206,9 @@ func (mkr *Maker) startToBox(
 	if boxes.HasABoxInProgress() {
 		return tidemark, nil
 	}
-	boxes.AddStartingAt(tidemark)
+	if err := boxes.AddStartingAt(tidemark); err != nil {
+		return -1, fmt.Errorf("boxes.AddStartingAt: %v", err)
+	}
 	// Return an unchanged tidemark.
 	return tidemark, nil
 }
@@ -220,7 +228,9 @@ func (mkr *Maker) startFromBox(
 	// space of its own however, because the space already claimed by the interaction
 	// line label is sufficient.
 	backTrackToStart := dep.sizer.Get("ActivityBoxVerticalOverlap")
-	boxes.AddStartingAt(tidemark - backTrackToStart)
+	if err := boxes.AddStartingAt(tidemark - backTrackToStart); err != nil {
+		return -1, fmt.Errorf("boxes.AddStartingAt: %v", err)
+	}
 	// Return an unchanged tidemark.
 	return tidemark, nil
 }

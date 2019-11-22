@@ -21,7 +21,7 @@ func TestRightwardsArrowIsWellFormed(t *testing.T) {
 	arrowLen := 2.0
 	arrowHeight := 1.0
 	vertices := MakeArrow(x1, x2, y, arrowLen, arrowHeight)
-	assert.Equal(graphics.NewPoint( 8, 4.5), vertices[0])
-	assert.Equal(graphics.NewPoint( 10, 5.0), vertices[1])
-	assert.Equal(graphics.NewPoint( 8, 5.5), vertices[2])
+	assert.Equal(graphics.NewPoint(8, 4.5), vertices[0])
+	assert.Equal(graphics.NewPoint(10, 5.0), vertices[1])
+	assert.Equal(graphics.NewPoint(8, 5.5), vertices[2])
 }

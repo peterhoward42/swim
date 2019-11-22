@@ -13,7 +13,6 @@ import (
 
 var testResultsDir = filepath.Join(".", "testresults", "new")
 
-
 func TestThatSavesExampleModelAsPNGForVisualInspection(t *testing.T) {
 	createAndsaveImageFileForExampleModel(t, PNG, "example")
 }
@@ -62,9 +61,9 @@ func fullCoverageModel() *graphics.Model {
 
 	polyRight := right + fh
 	prims.AddFilledPoly([]graphics.Point{
-		graphics.NewPoint( right, top),
-		graphics.NewPoint( polyRight, bot),
-		graphics.NewPoint( right, bot),
+		graphics.NewPoint(right, top),
+		graphics.NewPoint(polyRight, bot),
+		graphics.NewPoint(right, bot),
 	})
 
 	prims.AddLabel("LeftBot", fh, left, bot, graphics.Left, graphics.Bottom)
@@ -94,4 +93,3 @@ func createAndsaveImageFileForExampleModel(t *testing.T, encoding Encoding,
 	assert.NoError(err)
 	return saveAs
 }
-

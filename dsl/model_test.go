@@ -41,7 +41,7 @@ func TestLifelineStatementByName(t *testing.T) {
 	assert.True(ok)
 	assert.Equal(c, s)
 
-	s, ok = mdl.LifelineStatementByName("nosuch")
+	_, ok = mdl.LifelineStatementByName("nosuch")
 	assert.False(ok)
 }
 
@@ -59,7 +59,7 @@ func TestFirstStatementOfType(t *testing.T) {
 	assert.True(ok)
 	assert.Equal(b, s)
 
-	s, ok = mdl.FirstStatementOfType(umli.Full)
+	_, ok = mdl.FirstStatementOfType(umli.Full)
 	assert.False(ok)
 }
 
@@ -102,14 +102,14 @@ func TestTextSizeWhenNotPresent(t *testing.T) {
 func TestLifelineLettersSupressed(t *testing.T) {
 	assert := assert.New(t)
 	m := Model{
-		statements: []*Statement{&Statement{
+		statements: []*Statement{{
 			Keyword:     umli.ShowLetters,
 			ShowLetters: true,
 		}}}
 	assert.False(m.LifelineLettersSupressed())
 
 	m = Model{
-		statements: []*Statement{&Statement{
+		statements: []*Statement{{
 			Keyword:     umli.ShowLetters,
 			ShowLetters: false,
 		}}}
@@ -119,9 +119,9 @@ func TestLifelineLettersSupressed(t *testing.T) {
 func TestAddLifelineLetters(t *testing.T) {
 	assert := assert.New(t)
 	m := Model{
-		statements: []*Statement{&Statement{
-			Keyword:     umli.Life,
-			LifelineName: "A",
+		statements: []*Statement{{
+			Keyword:       umli.Life,
+			LifelineName:  "A",
 			LabelSegments: []string{"foo"},
 		}}}
 	m.AddLifelineLetters()
@@ -133,9 +133,9 @@ func TestTitle(t *testing.T) {
 	assert := assert.New(t)
 	m := Model{
 		statements: []*Statement{
-			&Statement{
-				Keyword:     umli.Title,
-				LabelSegments : []string{"aTitle"},
+			{
+				Keyword:       umli.Title,
+				LabelSegments: []string{"aTitle"},
 			},
 		},
 	}
@@ -143,8 +143,7 @@ func TestTitle(t *testing.T) {
 	assert.Equal("aTitle", title)
 
 	m = Model{
-		statements: []*Statement{
-		},
+		statements: []*Statement{},
 	}
 	title = m.Title()[0]
 	assert.Equal("Title Unspecified", title)

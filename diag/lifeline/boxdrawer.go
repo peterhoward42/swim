@@ -7,18 +7,18 @@ import (
 // BoxDrawer knows how to draw the lines required to represent the
 // activity boxes on a lifeline - as specified by an BoxTracker object.
 type BoxDrawer struct {
-	boxes BoxTracker
-	centreX       float64
-	boxWidth      float64
+	boxes    BoxTracker
+	centreX  float64
+	boxWidth float64
 }
 
 // NewBoxDrawer provides an BoxDrawer ready to use.
 func NewBoxDrawer(boxes BoxTracker, centreX float64,
 	boxWidth float64) *BoxDrawer {
 	return &BoxDrawer{
-		boxes: boxes,
-		centreX:       centreX,
-		boxWidth:      boxWidth,
+		boxes:    boxes,
+		centreX:  centreX,
+		boxWidth: boxWidth,
 	}
 }
 

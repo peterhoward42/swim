@@ -20,7 +20,7 @@ func TestWithJustOneNoGoZoneGap(t *testing.T) {
 	c := &dsl.Statement{}
 	allLifelines := []*dsl.Statement{a, b, c}
 	noGoZones := []nogozone.NoGoZone{
-		nogozone.NoGoZone{geom.NewSegment(10, 50), a, c},
+		nogozone.NewNoGoZone(geom.NewSegment(10, 50), a, c),
 	}
 
 	topOfLifeline := 1.0
@@ -32,8 +32,8 @@ func TestWithJustOneNoGoZoneGap(t *testing.T) {
 		noGoZones, *NewBoxTracker(), allLifelines)
 
 	assert.Len(segments.Segs, 2)
-	assert.Equal(segments.Segs[0], geom.Segment{1.0, 10})
-	assert.Equal(segments.Segs[1], geom.Segment{50.0, 100})
+	assert.Equal(segments.Segs[0], geom.NewSegment(1.0, 10))
+	assert.Equal(segments.Segs[1], geom.NewSegment(50.0, 100))
 }
 
 func TestWithJustOneBoxGap(t *testing.T) {
@@ -55,8 +55,8 @@ func TestWithJustOneBoxGap(t *testing.T) {
 		[]nogozone.NoGoZone{}, boxes, []*dsl.Statement{})
 
 	assert.Len(segments.Segs, 2)
-	assert.Equal(segments.Segs[0], geom.Segment{1.0, 70})
-	assert.Equal(segments.Segs[1], geom.Segment{90.0, 100})
+	assert.Equal(segments.Segs[0], geom.NewSegment(1.0, 70))
+	assert.Equal(segments.Segs[1], geom.NewSegment(90.0, 100))
 }
 
 func TestConsumesBothNoGoZonesAndActivityBoxesWhenBothPresent(t *testing.T) {
@@ -67,7 +67,7 @@ func TestConsumesBothNoGoZonesAndActivityBoxesWhenBothPresent(t *testing.T) {
 	c := &dsl.Statement{}
 	allLifelines := []*dsl.Statement{a, b, c}
 	noGoZones := []nogozone.NoGoZone{
-		nogozone.NoGoZone{geom.Segment{10, 50}, a, c},
+		nogozone.NewNoGoZone(geom.NewSegment(10, 50), a, c),
 	}
 
 	boxes := NewBoxTracker()
@@ -85,9 +85,9 @@ func TestConsumesBothNoGoZonesAndActivityBoxesWhenBothPresent(t *testing.T) {
 		noGoZones, *boxes, allLifelines)
 
 	assert.Len(segments.Segs, 3)
-	assert.Equal(segments.Segs[0], geom.Segment{1.0, 10})
-	assert.Equal(segments.Segs[1], geom.Segment{50.0, 70})
-	assert.Equal(segments.Segs[2], geom.Segment{90.0, 100})
+	assert.Equal(segments.Segs[0], geom.NewSegment(1.0, 10))
+	assert.Equal(segments.Segs[1], geom.NewSegment(50.0, 70))
+	assert.Equal(segments.Segs[2], geom.NewSegment(90.0, 100))
 }
 
 func TestItSortsTheGaps(t *testing.T) {
@@ -98,8 +98,8 @@ func TestItSortsTheGaps(t *testing.T) {
 	c := &dsl.Statement{}
 	allLifelines := []*dsl.Statement{a, b, c}
 	noGoZones := []nogozone.NoGoZone{
-		nogozone.NoGoZone{geom.Segment{50, 60}, a, c},
-		nogozone.NoGoZone{geom.Segment{10, 20}, a, c},
+		nogozone.NewNoGoZone(geom.NewSegment(50, 60), a, c),
+		nogozone.NewNoGoZone(geom.NewSegment(10, 20), a, c),
 	}
 
 	boxes := *NewBoxTracker()
@@ -113,9 +113,9 @@ func TestItSortsTheGaps(t *testing.T) {
 		noGoZones, boxes, allLifelines)
 
 	assert.Len(segments.Segs, 3)
-	assert.Equal(segments.Segs[0], geom.Segment{1.0, 10})
-	assert.Equal(segments.Segs[1], geom.Segment{20.0, 50})
-	assert.Equal(segments.Segs[2], geom.Segment{60.0, 100})
+	assert.Equal(segments.Segs[0], geom.NewSegment(1.0, 10))
+	assert.Equal(segments.Segs[1], geom.NewSegment(20.0, 50))
+	assert.Equal(segments.Segs[2], geom.NewSegment(60.0, 100))
 }
 
 func TestItMergesTheGaps(t *testing.T) {
@@ -126,8 +126,8 @@ func TestItMergesTheGaps(t *testing.T) {
 	c := &dsl.Statement{}
 	allLifelines := []*dsl.Statement{a, b, c}
 	noGoZones := []nogozone.NoGoZone{
-		nogozone.NoGoZone{geom.Segment{50, 60}, a, c},
-		nogozone.NoGoZone{geom.Segment{50, 70}, a, c},
+		nogozone.NewNoGoZone(geom.NewSegment(50, 60), a, c),
+		nogozone.NewNoGoZone(geom.NewSegment(50, 70), a, c),
 	}
 
 	boxes := *NewBoxTracker()
@@ -141,8 +141,8 @@ func TestItMergesTheGaps(t *testing.T) {
 		noGoZones, boxes, allLifelines)
 
 	assert.Len(segments.Segs, 2)
-	assert.Equal(segments.Segs[0], geom.Segment{1.0, 50})
-	assert.Equal(segments.Segs[1], geom.Segment{70.0, 100})
+	assert.Equal(segments.Segs[0], geom.NewSegment(1.0, 50))
+	assert.Equal(segments.Segs[1], geom.NewSegment(70.0, 100))
 }
 
 func TestItDiscardsTinySegmentsGaps(t *testing.T) {
@@ -153,7 +153,7 @@ func TestItDiscardsTinySegmentsGaps(t *testing.T) {
 	c := &dsl.Statement{}
 	allLifelines := []*dsl.Statement{a, b, c}
 	noGoZones := []nogozone.NoGoZone{
-		nogozone.NoGoZone{geom.Segment{50, 99.99}, a, c},
+		nogozone.NewNoGoZone(geom.NewSegment(50, 99.99), a, c),
 	}
 
 	boxes := *NewBoxTracker()
@@ -167,5 +167,5 @@ func TestItDiscardsTinySegmentsGaps(t *testing.T) {
 		noGoZones, boxes, allLifelines)
 
 	assert.Len(segments.Segs, 1)
-	assert.Equal(segments.Segs[0], geom.Segment{1.0, 50})
+	assert.Equal(segments.Segs[0], geom.NewSegment(1.0, 50))
 }
