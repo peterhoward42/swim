@@ -1,65 +1,59 @@
 o  sizer
 	*  put in Makefile lifecycle
-	o  How come is 20 Mb?
-	o  Capitulate 100 char lines and lint enforce, improve
-	o  some kind of end to end test or cmd?
+	*  How come is 20 Mb?
+	*  more interfaces to simplify tests
+	*  wean off reference input? - no need now, it's ok
 
-	o  wean off reference input?
-	o  apply marco's recommended design principles
-
-	o  box state looks like it can be simplified, and could do with a test
-	o  Add explicit arrows choice to graphics model?
-	o  Add scaling helpers to graphics model
-	o  arrow could go into something like a plain geom package
-	o  design docco, package docco  and readme needs reflecting
-               
-    o  consider if image regression tests needed - or maybe only canonical?
-    o  what happens if you introduce a lifeline late in the script?
-    o  what happens if you put title in too late?
-    o  question merit of sizer unit test given visual test efficiency
-    o  tune settings
     o  Change reference model to make label not too long, and maybe
        be more computer sciency - plus update readme to suit
+		o  Make it like this: https://d33wubrfki0l68.cloudfront.net/0f233672bb8653cf58fe80f4e414e6d48609265c/9a97d/assets-jekyll/blog/client-creds-with-spring-boot/password-sequence-425e0b5f98c58bdf5b977262eaa422c275c63ec3b2d4c4c670fd866d90c0f69b.png
+		o  Branch
+		o  Change it
+		o  Fix broken tests
+		o  Merge to main
+	o  some kind of end to end test or cmd?
+	o  update to later go and newest dependencies
+	o  Add scaling helpers to graphics model and integration test
+	o  Am I happy with the title visuals?
+
+	o  design docco, package docco  and readme needs reflecting
+    o  example / integration test using cmd line
+    o  what happens if you introduce a lifeline late in the script?
+    o  what happens if you put title in too late?
+    o  tune settings
     o  virgin clone of umli fails create tests because no directory
        to save in - fix when decide on visual image difference testing
 	  	o  make similar to stdalone gui would be good to include linting
     o  Lifeline should be different mark space than response line
     o  Web assembly
-    o  cli
+	o  canvas renderer
+	o  svg renderer?
+	o  what other renderer?
     o  benchmarks and tuning
     o  ci/cd
         o  circle?
         o  go releases?
+		o  dockerized cmd line
     o  resolution and crispness
-    o  consumption in the anticipated forms
     o  update readme
-    o  design docco
+		o  include DSL spec and things omitted from reference example
     o  godoc example
     o  cf creately and sequencediag.com differentiate
-    o  Todo resurrect regressions tests for images
-        o  include tinternet examples?
 
 
 ----------------------------------------------------------------------------
-Make seq
+New reference model
 ----------------------------------------------------------------------------
 
-test: testdirs lint
-	go test ./...
+title Authentication
 
-testdirs
-	install -d render/testresults/new
+life A Client
+life B API Server
+life C User Store
 
-lint: format
-	golint ./...
-
-format: build
-	gofmt -w -s ./...
-
-build		
-	go build ./...
-
-
-
-
-
+full AB API Request | With User/Passwd
+full BC Validate user/pass
+dash CB valid?
+stop C
+self B Handle Request
+full BA API Response

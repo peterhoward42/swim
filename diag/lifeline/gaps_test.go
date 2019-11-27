@@ -65,8 +65,3 @@ func TestGetZeroGapsWhenLifelineIsAffectedByNoneOfTheNoGoZones(t *testing.T) {
 	segs := gaps.Items
 	assert.Len(segs, 0)
 }
-
-// make into table test
-// make sure get no segs when lifeline unaffected by those registered
-
-// make sure hybrid case works
