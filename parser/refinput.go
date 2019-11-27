@@ -1,21 +1,17 @@
 package parser
 
-// ReferenceInput is a convenient example DSL script for testing.
+// ReferenceInput is a convenient example DSL script.
 const ReferenceInput = `
-title This is the | Working Title
-textsize 10
-showletters true
+title Authentication
 
-life A  SL App
-life B  Core Permissions API
-life C  SL Admin API | edit_facilities | endpoint
+life A  Client
+life B  API Server
+life C  User Store
 
-full AC  edit_facilities( | payload, user_token)
-full CB  get_user_permissions( | token)
-dash BC  permissions_list
-stop B
-self C   [has EDIT_FACILITIES permission] | store changes etc
-dash CA  status_ok, payload
-self C   [no permission]
-dash CA  status_not_authorized
+full AB API Request | With User/Passwd
+full BC Validate user/pass
+dash CB Valid?
+stop C
+self B Handle Request
+full BA API Response
 `

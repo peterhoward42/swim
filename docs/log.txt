@@ -7,9 +7,9 @@ o  sizer
     o  Change reference model to make label not too long, and maybe
        be more computer sciency - plus update readme to suit
 		o  Make it like this: https://d33wubrfki0l68.cloudfront.net/0f233672bb8653cf58fe80f4e414e6d48609265c/9a97d/assets-jekyll/blog/client-creds-with-spring-boot/password-sequence-425e0b5f98c58bdf5b977262eaa422c275c63ec3b2d4c4c670fd866d90c0f69b.png
-		o  Branch
-		o  Change it
-		o  Fix broken tests
+		*  Branch
+		*  Change it
+		*  Fix broken tests
 		o  Merge to main
 	o  some kind of end to end test or cmd?
 	o  update to later go and newest dependencies

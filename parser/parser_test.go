@@ -203,14 +203,13 @@ func TestMakeSureARepresentativeStatementOutputIsProperlyFormed(t *testing.T) {
 	model, err := NewParser(ReferenceInput).Parse()
 	assert.Nil(err)
 
-	// full CB  get_user_permissions( | token)
+	// full BC Validate user/pass
 	statements := model.Statements()
-	s := statements[7]
+	s := statements[5]
 	assert.Equal("full", s.Keyword)
-	assert.Equal("C", s.ReferencedLifelines[0].LifelineName)
-	assert.Equal("B", s.ReferencedLifelines[1].LifelineName)
-	assert.Equal("get_user_permissions(", s.LabelSegments[0])
-	assert.Equal("token)", s.LabelSegments[1])
+	assert.Equal("B", s.ReferencedLifelines[0].LifelineName)
+	assert.Equal("C", s.ReferencedLifelines[1].LifelineName)
+	assert.Equal("Validate user/pass", s.LabelSegments[0])
 }
 
 func TestNoErrorsWhenOptionalStatementsAreOmitted(t *testing.T) {
