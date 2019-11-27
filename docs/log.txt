@@ -11,6 +11,7 @@ o  sizer
 		*  Change it
 		*  Fix broken tests
 		o  Merge to main
+	o  are we properly architecting with interfaces?
 	o  some kind of end to end test or cmd?
 	o  update to later go and newest dependencies
 	o  Add scaling helpers to graphics model and integration test
