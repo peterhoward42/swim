@@ -5,9 +5,11 @@
     *  Change reference model to make label not too long, and maybe
        be more computer sciency
 	o  update to later go once kaluza sorted it, and newest dependencies
-		o  Branch
-		o  Fix up
+		*  Branch
+		*  Fix up
+		o  Commit/push/merge
 
+	o  resurrect jpget rendering
 	o  some kind of end to end test or cmd?
 		o  read cobra go package for cli's
 	o  Add scaling helpers to graphics model and integration test
