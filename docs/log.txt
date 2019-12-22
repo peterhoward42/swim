@@ -1,19 +1,15 @@
-o  sizer
 	*  put in Makefile lifecycle
 	*  How come is 20 Mb?
 	*  more interfaces to simplify tests
 	*  wean off reference input? - no need now, it's ok
+    *  Change reference model to make label not too long, and maybe
+       be more computer sciency
+	o  update to later go once kaluza sorted it, and newest dependencies
+		o  Branch
+		o  Fix up
 
-    o  Change reference model to make label not too long, and maybe
-       be more computer sciency - plus update readme to suit
-		o  Make it like this: https://d33wubrfki0l68.cloudfront.net/0f233672bb8653cf58fe80f4e414e6d48609265c/9a97d/assets-jekyll/blog/client-creds-with-spring-boot/password-sequence-425e0b5f98c58bdf5b977262eaa422c275c63ec3b2d4c4c670fd866d90c0f69b.png
-		*  Branch
-		*  Change it
-		*  Fix broken tests
-		o  Merge to main
-	o  are we properly architecting with interfaces?
 	o  some kind of end to end test or cmd?
-	o  update to later go and newest dependencies
+		o  read cobra go package for cli's
 	o  Add scaling helpers to graphics model and integration test
 	o  Am I happy with the title visuals?
 
