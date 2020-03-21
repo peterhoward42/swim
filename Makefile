@@ -1,5 +1,5 @@
 
-GOLANGCI_LINT_DEP=github.com/golangci/golangci-lint/cmd/golangci-lint@v1.16.0
+GOLANGCI_LINT_DEP=github.com/golangci/golangci-lint/cmd/golangci-lint
 
 .PHONY: test
 test: style
