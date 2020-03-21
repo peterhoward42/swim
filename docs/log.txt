@@ -4,39 +4,31 @@
 	*  wean off reference input? - no need now, it's ok
     *  Change reference model to make label not too long, and maybe
        be more computer sciency
-	o  update to later go once kaluza sorted it, and newest dependencies
-		*  Branch
-		*  Fix up
-		o  Commit/push/merge
-
-	o  resurrect jpget rendering
-	o  some kind of end to end test or cmd?
-		o  read cobra go package for cli's
+	*  update to go 1.4 and refresh dependencies to newer
+	o  restructure file organisation to match latest pattern
+	o  v simple command line, with cuter example to demo in interviews
 	o  Add scaling helpers to graphics model and integration test
 	o  Am I happy with the title visuals?
 
 	o  design docco, package docco  and readme needs reflecting
-    o  example / integration test using cmd line
-    o  what happens if you introduce a lifeline late in the script?
-    o  what happens if you put title in too late?
-    o  tune settings
-    o  virgin clone of umli fails create tests because no directory
-       to save in - fix when decide on visual image difference testing
-	  	o  make similar to stdalone gui would be good to include linting
+	o  example test using command line?
+    o  potential bug: what happens if you introduce a lifeline late in the script?
+    o  potential bug: what happens if you put title in too late?
+    o  tune settings for visual improvement
+    o  benchmarks and tuning of non interactive parts
     o  Lifeline should be different mark space than response line
-    o  Web assembly
-	o  canvas renderer
-	o  svg renderer?
+    o  Research web assembly potential
+		o  just output ds or:?
+			o  canvas renderer
+			o  svg renderer?
 	o  what other renderer?
-    o  benchmarks and tuning
     o  ci/cd
         o  circle?
         o  go releases?
-		o  dockerized cmd line
+		o  dockerized cmd line release
     o  resolution and crispness
     o  update readme
 		o  include DSL spec and things omitted from reference example
-    o  godoc example
     o  cf creately and sequencediag.com differentiate
 
 
